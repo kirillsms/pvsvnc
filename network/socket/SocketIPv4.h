@@ -159,7 +159,7 @@ protected:
    * Mutex for thread-safety.
    */
   LocalMutex m_mutex;
-
+  static const int one = 1;
   /**
    * WinSock socket.
    */

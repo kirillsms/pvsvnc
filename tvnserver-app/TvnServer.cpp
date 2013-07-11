@@ -52,7 +52,7 @@
 
 #include <crtdbg.h>
 #include <time.h>
-
+#include "OutgoingRepeaterRfbConnectionThread.h"
 TvnServer::TvnServer(bool runsInServiceContext,
                      NewConnectionEvents *newConnectionEvents,
                      LogInitListener *logInitListener,
@@ -124,6 +124,12 @@ TvnServer::TvnServer(bool runsInServiceContext,
     (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
     restartHttpServer();
     restartControlServer();
+	OutgoingRepeaterRfbConnectionThread *out = new OutgoingRepeaterRfbConnectionThread(_T("vnc.kontur.ru"),
+		                                    (UINT)443,
+											false,
+											m_rfbClientManager,
+											&m_log);
+	out->resume();
   }
 }
 
