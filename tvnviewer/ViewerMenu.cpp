@@ -74,8 +74,6 @@ void ViewerMenu::loadMenu()
     {MENU_ITEM, IDS_TB_FULLSCREEN},
     {SEPARATOR, 0},
     {MENU_ITEM, IDS_TB_CONFIGURATION},
-	{SEPARATOR, 0},
-	{MENU_ITEM, IDS_TB_CHAT},
     {MENU_ITEM, IDS_ABOUT_VIEWER}
   };
   findStartIndex();
