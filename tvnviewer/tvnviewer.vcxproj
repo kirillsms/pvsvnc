@@ -418,6 +418,9 @@
     <ProjectReference Include="..\zlib\zlib.vcxproj">
       <Project>{f9597c92-5d25-4a3c-bad6-8a2566fddd6f}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\avilog\avilogv11.vcxproj">
+      <Project>{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
