@@ -37,6 +37,8 @@
 #include "gui/drawing/Graphics.h"
 #include "rfb/RfbKeySym.h"
 #include "viewer-core/RemoteViewerCore.h"
+#include "avilog/AVIGenerator.h"
+#include "client-config-lib/ViewerConfig.h"
 
 class DesktopWindow : public PaintWindow,
                       protected RfbKeySymListener
@@ -157,6 +159,7 @@ protected:
 
   bool m_ctrlDown;
   bool m_altDown;
+  CAVIGenerator *m_AviGen;
 
   RemoteViewerCore *m_viewerCore;
   ConnectionConfig *m_conConf;

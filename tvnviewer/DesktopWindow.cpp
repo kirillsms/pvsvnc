@@ -40,7 +40,8 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
   m_previousMousePos(-1, -1),
   m_previousMouseState(0),
   m_isBackgroundDirty(false),
-  m_isFullScreen(false)
+  m_AviGen(NULL),
+  m_isFullScreen(true)
 {
   m_rfbKeySym = std::auto_ptr<RfbKeySym>(new RfbKeySym(this, m_logWriter));
 }
@@ -454,6 +455,7 @@ void DesktopWindow::calcClientArea() {
 
     getClientRect(&rc);
     m_clientArea.fromWindowsRect(&rc);
+	m_framebuffer;
     m_scManager.setWindow(&m_clientArea);
   }
 }
@@ -486,6 +488,8 @@ bool DesktopWindow::onSize(WPARAM wParam, LPARAM lParam)
 
 bool DesktopWindow::onDestroy()
 {
+	m_AviGen->ReleaseEngine();
+	m_AviGen=NULL;
   return true;
 }
 
@@ -550,6 +554,7 @@ void DesktopWindow::setNewFramebuffer(const FrameBuffer *framebuffer)
 void DesktopWindow::repaint(const Rect *repaintRect)
 {
   Rect rect;
+
   m_scManager.getSourceRect(&rect);
   Rect paint = repaintRect;
   paint.intersection(&rect);
@@ -575,7 +580,39 @@ void DesktopWindow::repaint(const Rect *repaintRect)
   if (wnd.bottom < rect.bottom) {
     ++wnd.bottom;
   }
-  wnd.intersection(&rect);
+  Rect intersection = wnd.intersection(&rect);
+  if(!m_AviGen)
+  {     
+	    BITMAPINFOHEADER  bmiHeader;
+		ZeroMemory(&bmiHeader,sizeof(bmiHeader));
+		bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		bmiHeader.biBitCount = m_framebuffer.getBitsPerPixel();
+		bmiHeader.biWidth = m_framebuffer.getDimension().width;
+		bmiHeader.biHeight = m_framebuffer.getDimension().height;
+		bmiHeader.biSizeImage = m_framebuffer.getBufferSize();
+		bmiHeader.biPlanes = 1;
+		bmiHeader.biCompression = BI_PNG;
+		
+        SYSTEMTIME lt;    
+		GetLocalTime(&lt);
+		TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
+		_sntprintf(str, sizeof str, _T("%02d_%02d_%02d_%02d_%02d"), lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+		_tcscat(str,_T("_vnc.avi"));
+		m_AviGen = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,5);
+		HRESULT hr;
+		hr=m_AviGen->InitEngine();
+		if (FAILED(hr))
+		{
+			m_AviGen->ReleaseEngine(); 
+			delete m_AviGen;
+			m_AviGen=NULL;
+		}
+		
+  }
+  if(m_AviGen)m_AviGen->AddFrame((BYTE*)m_framebuffer.getBuffer());
+	  
+  
+  
   redraw(&wnd.toWindowsRect());
 }
 

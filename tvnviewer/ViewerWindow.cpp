@@ -73,7 +73,7 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
 
   m_dsktWnd.setClass(&windowClass);
   m_dsktWnd.createWindow(&subTitleName,
-                         WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD,
+	  WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD | WS_MAXIMIZE,
                          getHWnd());
 
   SetTimer(m_hWnd, TIMER_DESKTOP_STATE, TIMER_DESKTOP_STATE_DELAY, (TIMERPROC)NULL);
