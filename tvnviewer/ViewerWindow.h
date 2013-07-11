@@ -40,6 +40,7 @@
 #include "viewer-core/VncAuthentication.h"
 #include "win-system/SystemInformation.h"
 #include "win-system/WindowsApplication.h"
+#include "ChatDialog.h"
 
 class ViewerWindow : public BaseWindow,
                      public CoreEventsAdapter
@@ -137,6 +138,7 @@ protected:
   RemoteViewerCore *m_viewerCore;
   FileTransferCapability *m_fileTransfer;
   FileTransferMainDialog *m_ftDialog;
+  ChatDialog *m_chatDialog;
   DesktopWindow m_dsktWnd;
   StringStorage m_strToolTip;
   ToolBar m_toolbar;
@@ -184,6 +186,7 @@ private:
   void doSize();
   void doCommand(int iCommand);
   void showFileTransferDialog();
+  void showChatDialog();
   void showWindow();
   void enableUserElements();
   bool viewerCoreSettings();

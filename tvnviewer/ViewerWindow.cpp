@@ -44,6 +44,7 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
   m_scale(100),
   m_isFullScr(false),
   m_ftDialog(0),
+  m_chatDialog(0),
   m_viewerCore(0),
   m_fileTransfer(0),
   m_conData(conData),
@@ -721,6 +722,9 @@ bool ViewerWindow::onCommand(WPARAM wParam, LPARAM lParam)
     case IDS_TB_CONFIGURATION:
       dialogConfiguration();
       return true;
+	case IDS_TB_CHAT:
+		showChatDialog();
+	  return true;
   }
   return false;
 }
@@ -745,6 +749,18 @@ void ViewerWindow::showFileTransferDialog()
     HWND dialogWnd = m_ftDialog->getControl()->getWindow();
     m_application->addModelessDialog(dialogWnd);
   }
+}
+
+void ViewerWindow::showChatDialog()
+{
+	if (!m_chatDialog) {
+		m_chatDialog = new ChatDialog();
+      
+    }
+    m_chatDialog->show();
+    HWND dialogWnd = m_chatDialog->getControl()->getWindow();
+    m_application->addModelessDialog(dialogWnd);
+
 }
 
 void ViewerWindow::applyScreenChanges(bool isFullScreen)
@@ -1029,7 +1045,7 @@ Rect ViewerWindow::calculateDefaultSize()
   Rect viewerRect = m_dsktWnd.getViewerGeometry();
   int serverWidth = viewerRect.getWidth();
   int serverHeight = viewerRect.getHeight();
-
+/*
   if (serverWidth < widthDesktop && serverHeight < heightDesktop) {
     int borderWidth, borderHeight;
     getBorderSize(&borderWidth, &borderHeight);
@@ -1042,7 +1058,7 @@ Rect ViewerWindow::calculateDefaultSize()
     defaultRect.setWidth(totalWidth);
     defaultRect.move((widthDesktop - totalWidth) / 2,
                      (heightDesktop - totalHeight) / 2);
-  }
+  }*/
   return defaultRect;
 }
 
