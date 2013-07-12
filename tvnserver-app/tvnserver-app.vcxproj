@@ -299,6 +299,7 @@
     <ClCompile Include="DesktopServerCommandLine.cpp" />
     <ClCompile Include="ExtraRfbServers.cpp" />
     <ClCompile Include="NamingDefs.cpp" />
+    <ClCompile Include="OutgoingRepeaterRfbConnectionThread.cpp" />
     <ClCompile Include="OutgoingRfbConnectionThread.cpp" />
     <ClCompile Include="QueryConnectionApplication.cpp" />
     <ClCompile Include="QueryConnectionCommandLine.cpp" />
@@ -330,6 +331,7 @@
     <ClInclude Include="DesktopServerCommandLine.h" />
     <ClInclude Include="ExtraRfbServers.h" />
     <ClInclude Include="NamingDefs.h" />
+    <ClInclude Include="OutgoingRepeaterRfbConnectionThread.h" />
     <ClInclude Include="OutgoingRfbConnectionThread.h" />
     <ClInclude Include="QueryConnectionApplication.h" />
     <ClInclude Include="QueryConnectionCommandLine.h" />

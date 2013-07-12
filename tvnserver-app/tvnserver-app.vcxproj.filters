@@ -98,6 +98,9 @@
     <ClCompile Include="CrashHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OutgoingRepeaterRfbConnectionThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdditionalActionApplication.h">
@@ -185,6 +188,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrashHook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OutgoingRepeaterRfbConnectionThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

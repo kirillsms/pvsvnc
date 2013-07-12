@@ -28,9 +28,8 @@
 #include "SocketIPv4.h"
 
 #include "thread/AutoLock.h"
-#include <Winsock2.h>
+
 #include <crtdbg.h>
-#include <Mstcpip.h>
 
 SocketIPv4::SocketIPv4()
 : m_localAddr(NULL), m_peerAddr(NULL), m_isBound(false)
@@ -40,27 +39,6 @@ SocketIPv4::SocketIPv4()
 
   if (m_socket == INVALID_SOCKET) {
     throw SocketException();
-  }
-  if(!setsockopt(m_socket,SOL_SOCKET,SO_KEEPALIVE,(const char *)&one,sizeof(one)))
-  {
-  DWORD bytes_returned = 0;
-			tcp_keepalive keepalive_requested;
-			tcp_keepalive keepalive_returned;
-			ZeroMemory(&keepalive_requested, sizeof(keepalive_requested));
-			ZeroMemory(&keepalive_returned, sizeof(keepalive_returned));
-
-			keepalive_requested.onoff = 1;
-			keepalive_requested.keepalivetime = 2000;
-			keepalive_requested.keepaliveinterval = 1000;
-			// 10 probes always used by default in Vista+; not changeable. 
-
-			if (0 != WSAIoctl(m_socket, SIO_KEEPALIVE_VALS, 
-					&keepalive_requested, sizeof(keepalive_requested), 
-					&keepalive_returned, sizeof(keepalive_returned), 
-					&bytes_returned, NULL, NULL))
-			{
-				throw SocketException();
-			}
   }
 }
 

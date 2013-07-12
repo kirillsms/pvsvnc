@@ -53,7 +53,7 @@ public:
 protected:
   virtual void execute();
 
-private:
+
   StringStorage m_connectHost;
   unsigned int m_connectPort;
   bool m_viewOnly;

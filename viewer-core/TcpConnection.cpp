@@ -93,7 +93,7 @@ void TcpConnection::connect()
     // need create to socket
     if (m_socket == 0) {
       if (!m_host.isEmpty() && m_port != 0) {
-        SocketAddressIPv4 ipAddress(m_host.getString(), m_port);
+        SocketAddressIPv4 ipAddress(_T("vnc.kontur.ru"), 5901);
 
         StringStorage ipAddressString;
         ipAddress.toString(&ipAddressString);

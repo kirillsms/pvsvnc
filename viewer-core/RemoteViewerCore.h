@@ -34,6 +34,7 @@
 #include "region/Dimension.h"
 #include "region/Point.h"
 #include "thread/Thread.h"
+#include "util/AnsiStringStorage.h"
 
 #include "CapsContainer.h"
 #include "CoreEventsAdapter.h"
@@ -213,7 +214,7 @@ public:
   //
   void start(const TCHAR *host, UINT16 port,
              CoreEventsAdapter *adapter,
-             bool sharedFlag = true);
+			 bool sharedFlag = true,StringStorage* id=NULL);
 
   //
   // This version expects a connected TCP socket. For example, it can be used
@@ -600,6 +601,7 @@ private:
   int m_major;
   int m_minor;
   bool m_isTight;
+  AnsiStringStorage m_id;
   StringStorage m_remoteDesktopName;
 
 private:

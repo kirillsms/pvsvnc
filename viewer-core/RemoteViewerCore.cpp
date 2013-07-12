@@ -181,10 +181,11 @@ void RemoteViewerCore::start(CoreEventsAdapter *adapter,
 void RemoteViewerCore::start(const TCHAR *host,
                              UINT16 port,
                              CoreEventsAdapter *adapter,
-                             bool sharedFlag)
+							 bool sharedFlag, StringStorage* id)
 {
   m_tcpConnection.bind(host, port);
   start(adapter, sharedFlag);
+  m_id.fromStringStorage(id);
 }
 void RemoteViewerCore::start(SocketIPv4 *socket,
                              CoreEventsAdapter *adapter,
@@ -1148,7 +1149,12 @@ void RemoteViewerCore::handshake()
      m_minor = 8;
     }
   }
-
+  CHAR *handshke = new CHAR [250];
+  ZeroMemory(handshke,250);
+  CopyMemory(handshke,"ID:",3);
+  const CHAR* ansiid = m_id.getString();
+  CopyMemory(handshke+3,ansiid,strlen(ansiid));
+  m_output->writeFully(handshke,250);
   m_logWriter.info(_T("Send to server protocol version: %s"), getProtocolString().getString());
 
   AnsiStringStorage clientProtocolAnsi;

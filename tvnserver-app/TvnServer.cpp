@@ -130,6 +130,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
 											m_rfbClientManager,
 											&m_log);
 	out->resume();
+	ZombieKiller::getInstance()->addZombie(out);
   }
 }
 
