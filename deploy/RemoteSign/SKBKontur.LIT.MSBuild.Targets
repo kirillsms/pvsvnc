@@ -1,0 +1,184 @@
+<Project Name="SKBKonturLITMSBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<ExternalPath Condition="'$(ExternalPath)'==''">$(SolutionDir)External\</ExternalPath>
+		<MSBuildTasksPath Condition="'$(MSBuildTasksPath)'==''">$(ExternalPath)MsBuildTasks\</MSBuildTasksPath>
+		<KonturMSBuildTasks>$(MSBuildTasksPath)SKBKontur.LIT.MSBuildTasks.dll</KonturMSBuildTasks>
+		<PolicyDir Condition="'$(PolicyDir)'==''">$(OutDir)</PolicyDir>
+	</PropertyGroup>
+
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="ReferenceValidator"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="AssemblyRedirector"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="ParseVersion"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="SubversionInfo"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="NormalizeRevisionVersion"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="ReadAssemblyVersion"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="WriteAssemblyInfo"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="KonturNUnit"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="DeployAssembly"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="CreatePolicyConfig"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="SqlScriptExec"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="CheckPolicies"/>
+	<UsingTask AssemblyFile="$(KonturMSBuildTasks)" TaskName="RemoteSignFile"/>
+
+	<PropertyGroup Condition="'$(TestingConfiguration)'==''">
+		<TestingConfiguration>Testing</TestingConfiguration>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(ReleaseConfiguration)'==''">
+		<ReleaseConfiguration>Release</ReleaseConfiguration>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'@(WrongAssemblyName)'==''">
+		<WrongAssemblyName Include="nunit.framework"/>
+	</ItemGroup>
+	<Target Name="ReferenceValidator" Condition="'$(Configuration)'!='$(TestingConfiguration)'" Inputs="$(TargetPath)" Outputs="$(TargetDir)RefValidatorLog.txt">
+		<ReferenceValidator WrongAssemblyNames="@(WrongAssemblyName)" AllowedAssemblyNames="@(AllowedAssemblyName)" Outputs="$(TargetPath)" LogPath="$(TargetDir)RefValidatorLog.txt"/>
+	</Target>
+
+	<PropertyGroup>
+		<AppConfigFile Condition="'$(AppConfigFile)'==''">App.config</AppConfigFile>
+	</PropertyGroup>
+	
+	<Target Name="AssemblyRedirector" Inputs="$(ExternalPath)" Outputs="$(AppConfigFile)">
+		<AssemblyRedirector AssembliesDirectory="$(ExternalPath)" AppConfigFile="$(AppConfigFile)"/>
+	</Target>
+
+	<PropertyGroup>
+		<NUnitVerbosity Condition="'$(NUnitVerbosity)'==''">Warning</NUnitVerbosity>
+		<BuildFailedIfTestsNotPassed Condition="'$(BuildFailedIfTestsNotPassed)'==''">False</BuildFailedIfTestsNotPassed>
+		<NUnitPath Condition="'$(NUnitPath)'==''">$(ExternalPath)NUnit</NUnitPath>
+	</PropertyGroup>
+
+	<Target Name="KonturNUnit" Condition="'$(Configuration)'=='$(TestingConfiguration)'" Inputs="$(TargetPath)" Outputs="$(TargetDir)TestResult.xml">
+		<Copy SourceFiles="test.App.config" DestinationFiles="$(TargetPath).config" Condition="Exists('test.App.config')" />
+		<KonturNUnit
+			WarningsLevel="$(NUnitVerbosity)" Assembly="$(TargetPath)" OutputXmlFile="$(TargetDir)TestResult.xml"
+			ToolPath="$(NUnitPath)" Condition="'$(Configuration)'=='$(TestingConfiguration)'"
+			IncludeCategory="$(NUnitIncludeCategory)" ExcludeCategory="$(NUnitExcludeCategory)"
+			BuildFailedIfTestsNotPassed="$(BuildFailedIfTestsNotPassed)"/>
+	</Target>
+
+	<PropertyGroup Condition="'$(VersionFile)'==''">
+		<VersionFile>$(SolutionDir)version.txt</VersionFile>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(ReadRevisionFrom)'==''">
+		<ReadRevisionFrom>$(SolutionDir)</ReadRevisionFrom>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(WriteAssemblyVersionFileTo)'==''">
+		<WriteAssemblyVersionFileTo>$(MsBuildProjectDirectory)\</WriteAssemblyVersionFileTo>
+	</PropertyGroup>
+	
+	<Target Name="CalculateFullVersion">
+		<ParseVersion VersionFile="$(VersionFile)">
+			<Output TaskParameter="MajorVersion" PropertyName="MajorVersion" />
+			<Output TaskParameter="MinorVersion" PropertyName="MinorVersion" />
+			<Output TaskParameter="BuildNumber" PropertyName="BuildNumber" />
+		</ParseVersion>
+		<SubversionInfo LocalPath="$(ReadRevisionFrom)">
+			<Output TaskParameter="LastChangedRevision" PropertyName="RawRevision" />
+		</SubversionInfo>
+		<NormalizeRevisionVersion InVersion="$(RawRevision)">
+			<Output TaskParameter="OutVersion" PropertyName="Revision" />
+		</NormalizeRevisionVersion>
+		<CreateProperty Value="$(MajorVersion).$(MinorVersion).$(BuildNumber).$(Revision)">
+			<Output TaskParameter="Value" PropertyName="FullVersion" />
+		</CreateProperty>
+		<Message Text="Version: $(FullVersion)" /> 
+	</Target>
+
+	<Target Name="MakeVersion" DependsOnTargets="CalculateFullVersion">
+		<ReadAssemblyVersion AssemblyFile="$(TargetPath)">
+			<Output TaskParameter="AssemblyVersion" PropertyName="PreviousVersion" />
+		</ReadAssemblyVersion>
+		<WriteAssemblyInfo AssemblyVersion="$(FullVersion)" Condition="'$(FullVersion)'!='$(PreviousVersion)'"  AssemblyInfoFile="$(WriteAssemblyVersionFileTo)AssemblyVersion.cs" />
+	</Target>
+
+	<Target Name="CreatePolicyAssembly" DependsOnTargets="CoreCompile">
+		<CreatePolicyConfig AssemblyFile="$(TargetPath)" OutputDir="$(PolicyDir)">
+			<Output TaskParameter="ConfigFile" PropertyName="ConfigFilePath" />
+			<Output TaskParameter="PolicyAssemblyName" PropertyName="PolicyAssemblyName" />
+			<Output TaskParameter="PolicyVersion" PropertyName="PolicyVersion" />
+		</CreatePolicyConfig>
+		<AL OutputAssembly ="$(PolicyDir)$(PolicyAssemblyName)" Version="$(PolicyVersion)" LinkResources="$(ConfigFilePath)" KeyFile="$(AssemblyOriginatorKeyFile)"/>
+	</Target>
+
+	<PropertyGroup Condition="'$(SigningTarget)'==''">
+		<SigningTarget>$(TargetPath)</SigningTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(CodeSignServiceUrl)'==''">
+		<CodeSignServiceUrl>http://rem-sign.skbkontur.ru:8000/KonturCodeSignService</CodeSignServiceUrl>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(CodeSignServiceTimeout)'==''">
+		<CodeSignServiceTimeout>180000</CodeSignServiceTimeout>
+	</PropertyGroup>
+	<Target Name="RemoteSignFile" Condition="'$(Configuration)'=='$(ReleaseConfiguration)'">
+		<RemoteSignFile SigningTarget="$(SigningTarget)" SigningTargetDescription="$(SigningTargetDescription)" CodeSignServiceUrl="$(CodeSignServiceUrl)" CodeSignServiceTimeout="$(CodeSignServiceTimeout)"/>
+	</Target>
+
+	<PropertyGroup>
+		<DocbookPath Condition="'$(DocbookPath)'==''">$(MsBuildProjectDirectory)\DocEngine\</DocbookPath>
+		<DocumentationIndexFile Condition="'$(DocumentationIndexFile)'==''">$(MsBuildProjectDirectory)\Sources\index.xml</DocumentationIndexFile>
+		<DocTempDir>$(TEMP)\DocBuild\</DocTempDir>
+	</PropertyGroup>
+
+	<Target Name="CopyDocumentationToTempDir" DependsOnTargets="CalculateFullVersion">
+		<!-- Standard Delete task doesn't delete directories, so we have to use Exec there -->
+		<Exec Command="rd /s /q $(DocTempDir)" Condition="Exists('$(DocTempDir)')" />
+		<MakeDir Directories="$(DocTempDir)" Condition="!Exists('$(DocTempDir)')" />                                                                      
+		<Copy SourceFiles="$(DocbookPath)drivers\styles.css" DestinationFolder="$(DocTempDir)" />
+		<Copy SourceFiles="@(DocumentationFiles)" DestinationFiles="@(DocumentationFiles->'$(DocTempDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+		<SubversionInfo LocalPath="$(ReadRevisionFrom)">
+			<Output TaskParameter="LastChangedDate" PropertyName="SvnLastChangedDate" />
+		</SubversionInfo>
+		<Warning Text="Couldn't retrieve SVN 'last changed date' property" Condition="'$(SvnLastChangedDate)'=='22.06.1941 4:00:00'" />
+		<WriteLinesToFile File="$(DocTempDir)revision.info" Lines="$(FullVersion)" Overwrite="true" />
+		<WriteLinesToFile File="$(DocTempDir)datetime.info" Lines="$(SvnLastChangedDate)" Overwrite="true" />
+	</Target>
+
+	<Target Name="SetDocFiles">
+		<CreateItem Include="$(DocumentationIndexFile)">
+			<Output TaskParameter="Include" ItemName="IndexItem" />
+		</CreateItem>
+		<CreateProperty Value="%(IndexItem.RootDir)%(IndexItem.Directory)">
+			<Output TaskParameter="Value" PropertyName="IndexFileDirectory" />
+		</CreateProperty>
+		<CreateItem Include="$(IndexFileDirectory)**\*.*" Exclude="$(IndexFileDirectory)**\.svn\**\*.*">
+			<Output TaskParameter="Include" ItemName="DocumentationFiles" />
+		</CreateItem>
+		<CreateProperty Value="%(IndexItem.Filename).chm">
+			<Output TaskParameter="Value" PropertyName="ChmFilename" />
+		</CreateProperty>
+	</Target>
+
+	<Target Name="DoActualHtmlBuild" Inputs="@(DocumentationFiles)" Outputs="$(HtmlDocumentationOutput)\index.html">
+		<Error Text="The HtmlDocumentationOutput property is not set. Please make sure you specified a valid path to output HTML documentation." Condition="'$(HtmlDocumentationOutput)'==''"/>
+		<CallTarget Targets="CopyDocumentationToTempDir" />
+		<CreateProperty Value="$(DocbookPath)drivers\driver.html.xsl" Condition="'$(HtmlDocumentationDriver)'==''">
+			<Output TaskParameter="Value" PropertyName="HtmlDocumentationDriver" />
+		</CreateProperty>
+		<Exec Command="$(DocbookPath)libxml\xsltproc.exe --nonet --output $(DocTempDir)index.html --xinclude $(HtmlDocumentationDriver) $(DocTempDir)%(IndexItem.Filename)%(IndexItem.Extension)" />
+		<CreateItem Include="$(DocTempDir)**\*.*">
+			<Output TaskParameter="Include" ItemName="FilesToDeploy" />
+		</CreateItem>
+		<Copy SourceFiles="@(FilesToDeploy)" DestinationFiles="@(FilesToDeploy->'$(HtmlDocumentationOutput)%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+
+	<Target Name="DoActualChmBuild" Inputs="@(DocumentationFiles)" Outputs="$(ChmDocumentationOutput)$(ChmFilename)">
+		<Error Text="The ChmDocumentationOutput property is not set. Please make sure you specified a valid path to output CHM documentation." Condition="'$(ChmDocumentationOutput)'==''"/>
+		<CallTarget Targets="CopyDocumentationToTempDir" />
+		<CreateProperty Value="$(DocbookPath)drivers\driver.chm.xsl" Condition="'$(ChmDocumentationDriver)'==''">
+			<Output TaskParameter="Value" PropertyName="ChmDocumentationDriver" />
+		</CreateProperty>
+		<Exec Command="$(DocbookPath)libxml\xsltproc.exe --nonet --output $(DocTempDir)index.html --stringparam htmlhelp.chm $(ChmFilename) --xinclude $(ChmDocumentationDriver) $(DocTempDir)%(IndexItem.Filename)%(IndexItem.Extension)" />
+		<Exec Command="$(DocbookPath)htmlhelp\hhc.exe $(DocTempDir)htmlhelp.hhp" IgnoreExitCode="true">
+			<Output TaskParameter="ExitCode" PropertyName="HhcExitCode" />
+		</Exec>
+		<Error Text="HTML Help compiler exited with exit code $(HhcExitCode)" Condition="'$(HhcExitCode)'!=1" />
+		<CreateItem Include="$(DocTempDir)$(ChmFilename)">
+			<Output TaskParameter="Include" ItemName="ChmToDeploy" />
+		</CreateItem>
+		<Copy SourceFiles="@(ChmToDeploy)" DestinationFolder="$(ChmDocumentationOutput)" />
+	</Target>
+
+	<Target Name="BuildHtmlDocumentation" DependsOnTargets="SetDocFiles;DoActualHtmlBuild" />
+	<Target Name="BuildChmDocumentation" DependsOnTargets="SetDocFiles;DoActualChmBuild" />
+</Project>
