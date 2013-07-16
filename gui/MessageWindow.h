@@ -45,7 +45,7 @@ public:
 
 protected:
   // Function must return true value if the message has been processed.
-  virtual bool wndProc(UINT message, WPARAM wParam, LPARAM lParam) { return true; }
+  virtual bool wndProc(UINT /*message*/, WPARAM /*wParam*/, LPARAM /*lParam*/) { return true; }
 
   HWND m_hwnd;
   WindowMessageHandler *m_messageHandler;

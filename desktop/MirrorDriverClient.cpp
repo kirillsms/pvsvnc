@@ -399,9 +399,7 @@ void MirrorDriverClient::disconnect()
   }
 }
 
-bool MirrorDriverClient::processMessage(UINT message,
-                                        WPARAM wParam,
-                                        LPARAM lParam)
+bool MirrorDriverClient::processMessage(UINT message, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
   if (message == WM_DISPLAYCHANGE) {
     m_isDisplayChanged = true;

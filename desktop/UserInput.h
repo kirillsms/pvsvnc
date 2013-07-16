@@ -41,7 +41,7 @@ public:
 
   // FIXME: It's no good idea to place this function to here.
   // Because it uses only for the UserInputClient class.
-  virtual void sendInit(BlockingGate *gate) {}
+  virtual void sendInit(BlockingGate * /*gate*/) {}
 
   // Client to server user inputs
   virtual void setNewClipboard(const StringStorage *newClipboard) = 0;

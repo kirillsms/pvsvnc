@@ -51,7 +51,7 @@ UpdateHandlerClient::~UpdateHandlerClient()
 {
 }
 
-void UpdateHandlerClient::onRequest(UINT8 reqCode, BlockingGate *backGate)
+void UpdateHandlerClient::onRequest(UINT8 reqCode, BlockingGate * /*backGate*/)
 {
   switch (reqCode) {
   case UPDATE_DETECTED:
@@ -186,7 +186,7 @@ void UpdateHandlerClient::setExcludedRegion(const Region *excludedRegion)
   }
 }
 
-bool UpdateHandlerClient::checkForUpdates(Region *region)
+bool UpdateHandlerClient::checkForUpdates(Region * /*region*/)
 {
   return false;
 }

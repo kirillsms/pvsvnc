@@ -86,7 +86,7 @@ SecurityIdentifier *SecurityIdentifier::getProcessOwner(HANDLE processHandle)
       CloseHandle(procToken);
       throw;
     }
-    CloseHandle(procToken);
+    //CloseHandle(procToken);
   } else {
     throw SystemException();
   }

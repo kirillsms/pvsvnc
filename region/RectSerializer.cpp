@@ -39,7 +39,7 @@ Rect RectSerializer::toRect(const StringStorage *strIn)
 {
   int width, height, x, y;
   TCHAR c;
-  if (_stscanf(strIn->getString(),
+  if (_stscanf_s(strIn->getString(),
                _T("%dx%d+%d+%d%c"), &width, &height, &x, &y, &c) != 4 ||
       width < 0 || height < 0) {
     StringStorage errMess;

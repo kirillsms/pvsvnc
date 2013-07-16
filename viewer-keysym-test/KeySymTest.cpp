@@ -40,14 +40,14 @@ KeySymTest::KeySymTest(const TCHAR *fileFrom, const TCHAR *fileTo)
   m_log(0)
 {
   m_rfbKeySym = new RfbKeySym(this, &m_log);
-  m_fFrom = _tfopen(m_fromFileName.getString(), _T("rt,ccs=UNICODE"));
-  if (m_fFrom == 0) {
+  errno_t errFrom = _tfopen_s(&m_fFrom, m_fromFileName.getString(), _T("rt,ccs=UNICODE"));
+  if (errFrom || !m_fFrom) {
     StringStorage errMess;
     errMess.format(_T("Cannot open the %s file"), m_fromFileName.getString());
     throw Exception(errMess.getString());
   }
-  m_fTo = _tfopen(m_toFileName.getString(), _T("wt,ccs=UNICODE"));
-  if (m_fTo == 0) {
+  errno_t errTo = _tfopen_s(&m_fTo, m_toFileName.getString(), _T("wt,ccs=UNICODE"));
+  if (errTo || !m_fTo) {
     StringStorage errMess;
     errMess.format(_T("Cannot open the %s file"), m_toFileName.getString());
     throw Exception(errMess.getString());
@@ -86,7 +86,7 @@ int KeySymTest::run()
         changeKbdLayout((HKL)hkbdLayout);
         Sleep(500);
       } else {
-        unsigned int virtKeyInt, downInt;
+        unsigned int virtKeyInt, downInt = 0xFF;
         bool validWord = StringParser::parseUInt(word1.getString(), &virtKeyInt);
         validWord = validWord &&
                     StringParser::parseUInt(word2.getString(), &downInt);

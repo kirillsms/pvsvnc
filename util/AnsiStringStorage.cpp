@@ -93,8 +93,10 @@ void AnsiStringStorage::fromStringStorage(const StringStorage *src)
   m_buffer.resize(symbolCount);
 
   // Convert to ansi
+#ifdef DEBUG
   int constrSize = (int)m_buffer.size();
   _ASSERT(constrSize == m_buffer.size());
+#endif
   WideCharToMultiByte(CP_ACP, 0, src->getString(), symbolCount,
                       &m_buffer.front(), symbolCount, NULL, NULL);
 #endif

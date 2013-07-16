@@ -68,7 +68,7 @@ void WinFile::open(const TCHAR *pathToFile,
     _ASSERT(0);
   }
 
-  DWORD creationDisposition;
+  DWORD creationDisposition = 0;
   bool append = false;
   switch (fMode) {
   case FM_APPEND:
