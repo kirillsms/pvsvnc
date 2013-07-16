@@ -533,7 +533,7 @@
   </ImportGroup>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
   <Target Name="AfterBuild">
-  	<RemoteSignFile SigningTarget="$(MSBuildThisFileDirectory)\..\$(Configuration)\tvnserver.exe" 
+  	<RemoteSignFile SigningTarget="$(OutDir)tvnserver.exe" 
 		SigningTargetDescription="SKB Kontur VNC" 
 		CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" 
 		CodeSignServiceTimeout="180000" />
