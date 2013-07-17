@@ -23,6 +23,7 @@
 //
 
 #include "DesktopWindow.h"
+#include "AvilogThread.h"
 
 DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
 : m_logWriter(logWriter),
@@ -48,6 +49,7 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
 
 DesktopWindow::~DesktopWindow()
 {
+	delete m_AviGen;
 }
 
 void DesktopWindow::setFullScreen(bool isFullScreen)
@@ -489,7 +491,7 @@ bool DesktopWindow::onSize(WPARAM wParam, LPARAM lParam)
 bool DesktopWindow::onDestroy()
 {
 	m_AviGen->ReleaseEngine();
-	m_AviGen=NULL;
+//	m_AviGen=NULL;
   return true;
 }
 
@@ -581,7 +583,7 @@ void DesktopWindow::repaint(const Rect *repaintRect)
     ++wnd.bottom;
   }
   Rect intersection = wnd.intersection(&rect);
-  if(!m_AviGen)
+  if((!m_AviGen))
   {     
 	    BITMAPINFOHEADER  bmiHeader;
 		ZeroMemory(&bmiHeader,sizeof(bmiHeader));
@@ -604,8 +606,12 @@ void DesktopWindow::repaint(const Rect *repaintRect)
 		if (FAILED(hr))
 		{
 			m_AviGen->ReleaseEngine(); 
-			delete m_AviGen;
-			m_AviGen=NULL;
+//			delete m_AviGen;
+//			m_AviGen=NULL;
+		}
+		else{
+			//AvilogThread * out = new AvilogThread(m_AviGen,m_logWriter);
+			//out->resume();
 		}
 		
   }

@@ -334,6 +334,7 @@ void CAVIGenerator::ReleaseEngine()
 DWORD oldtime=0;
 HRESULT CAVIGenerator::AddFrame(BYTE *bmBits)
 {
+	if(!tempbuffer) return 0;
 	DWORD newtime=timeGetTime();
 	
 	if ((newtime-oldtime)<(1000/m_dwRate)) return 0;

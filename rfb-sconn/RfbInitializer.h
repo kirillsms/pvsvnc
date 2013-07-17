@@ -55,6 +55,7 @@ public:
   bool getViewOnlyAuth() const { return m_viewOnlyAuth; }
 
   bool getTightEnabledFlag() const { return m_tightEnabled; }
+  const TCHAR* getUserName();
 
 protected:
   void initVersion();
@@ -92,6 +93,7 @@ protected:
   bool m_viewOnlyAuth;
   bool m_tightEnabled;
   bool m_authAllowed;
+  StringStorage m_username;
 
   ClientAuthListener *m_extAuthListener;
   RfbClient *m_client;

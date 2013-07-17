@@ -26,6 +26,7 @@
 #include "thread/ZombieKiller.h"
 #include "QueryConnectionApplication.h"
 #include "server-config-lib/Configurator.h"
+#include "TvnServer.h"
 
 RfbClientManager::RfbClientManager(const TCHAR *serverName,
                                    NewConnectionEvents *newConnectionEvents,
@@ -35,6 +36,7 @@ RfbClientManager::RfbClientManager(const TCHAR *serverName,
   m_desktop(0),
   m_newConnectionEvents(newConnectionEvents),
   m_log(log),
+  m_ansiId(""),
   m_desktopFactory(desktopFactory)
 {
   m_log->info(_T("Starting rfb client manager"));
@@ -50,6 +52,9 @@ RfbClientManager::~RfbClientManager()
 
 void RfbClientManager::onClientTerminate()
 {
+  TvnServer * srv = TvnServer::getInstance();
+  srv->setRepeaterStatus(new StringStorage(_T(":Reconnect")));
+  srv->startRepeaterOutgoingConnection();
   validateClientList();
 }
 
@@ -63,7 +68,7 @@ Desktop *RfbClientManager::onClientAuth(RfbClient *client)
   m_newConnectionEvents->onSuccAuth(&ip);
 
   AutoLock al(&m_clientListLocker);
-
+  
   // Checking if this client is allowed to connect, depending on its "shared"
   // flag and the server's configuration.
   ServerConfig *servConf = Configurator::getInstance()->getServerConfig();
@@ -366,11 +371,14 @@ void RfbClientManager::refreshBan()
 
 void RfbClientManager::addNewConnection(SocketIPv4 *socket,
                                         ViewPortState *constViewPort,
-                                        bool viewOnly, bool isOutgoing)
+                                        bool viewOnly, bool isOutgoing, char * id)
 {
   AutoLock al(&m_clientListLocker);
 
+  m_ansiId.setString(id);
+
   _ASSERT(constViewPort != 0);
+  TvnServer::getInstance()->setRepeaterStatus(new StringStorage(_T(":Ready")));
   m_nonAuthClientList.push_back(new RfbClient(m_newConnectionEvents,
                                               socket, this, this, viewOnly,
                                               isOutgoing,
@@ -411,4 +419,12 @@ void RfbClientManager::setDynViewPort(const ViewPortState *dynViewPort)
        iter != m_nonAuthClientList.end(); iter++) {
     (*iter)->changeDynViewPort(dynViewPort);
   }
+}
+
+const TCHAR* RfbClientManager::getId()
+{
+	StringStorage newStr;
+	m_ansiId.toStringStorage(&newStr);
+	return newStr.getString();
+	
 }

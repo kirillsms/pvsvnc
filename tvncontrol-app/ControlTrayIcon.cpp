@@ -77,7 +77,7 @@ ControlTrayIcon::ControlTrayIcon(ControlProxy *serverControl,
 
   // Default icon state.
   setNotConnectedState();
-
+  onShowConnectionStatusClick();
   // Update status.
   syncStatusWithServer();
 
@@ -182,6 +182,9 @@ void ControlTrayIcon::onRightButtonUp()
     break;
   case ID_CLOSE_CONTROL_INTERFACE:
     onCloseControlInterfaceMenuItemClick();
+    break;
+  case ID_SHOWCONNECTIONSTATUS:
+    onShowConnectionStatusClick();
     break;
   }
 }
@@ -321,6 +324,13 @@ void ControlTrayIcon::onCloseControlInterfaceMenuItemClick()
   m_appControl->shutdown();
 }
 
+void ControlTrayIcon::onShowConnectionStatusClick()
+{
+	m_connectionStatusDialog.show();
+
+	ControlApplication::addModelessDialog(m_connectionStatusDialog.getControl()->getWindow());
+}
+
 void ControlTrayIcon::syncStatusWithServer()
 {
   try {
@@ -337,7 +347,10 @@ void ControlTrayIcon::syncStatusWithServer()
     } else {
       setIcon(m_iconDisabled);
     }
-
+	m_connectionStatusDialog.refreshClientsList(&clients );
+	StringStorage title(info.m_repeater);
+	title.appendString(info.m_repeaterStatus.getString());
+	m_connectionStatusDialog.setTitle(title.getString());
     setText(info.m_statusText.getString());
 
     // Cleanup.

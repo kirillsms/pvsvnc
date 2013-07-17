@@ -57,6 +57,12 @@
 
 #include <algorithm>
 
+#define SECURITY_WIN32
+
+//#define SECURITY_MAC
+
+#include <security.h>
+
 RemoteViewerCore::RemoteViewerCore(Logger *logger)
 : m_logWriter(logger),
   m_tcpConnection(&m_logWriter),
@@ -1182,6 +1188,13 @@ void RemoteViewerCore::clientAndServerInit()
     m_logWriter.info(_T("Setting share flag is off..."));
   }
   m_output->writeUInt8(m_sharedFlag);
+  TCHAR *name = new TCHAR[1024];
+  ULONG nameSize;
+  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay,name,&nameSize);
+  nameSize=sizeof(TCHAR)*nameSize+2;
+  m_output->writeUInt16(nameSize);
+  m_output->writeFully(name,nameSize);
+  delete[] name;
   m_output->flush();
   m_logWriter.debug(_T("Shared flag is set"));
 

@@ -163,6 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>

@@ -24,7 +24,7 @@
 
 #include "ControlClient.h"
 #include "TvnServer.h"
-#include "OutgoingRfbConnectionThread.h"
+#include "OutgoingRepeaterRfbConnectionThread.h"
 #include "ConnectToTcpDispatcherThread.h"
 
 #include "tvncontrol-app/ControlProto.h"
@@ -328,6 +328,8 @@ void ControlClient::getServerInfoMsgRcvd()
   m_gate->writeUInt8(info.m_acceptFlag ? 1 : 0);
   m_gate->writeUInt8(info.m_serviceFlag ? 1 : 0);
   m_gate->writeUTF8(status.getString());
+  m_gate->writeUTF8(info.m_repeater.getString());
+  m_gate->writeUTF8(info.m_repeaterStatus.getString());
 }
 
 void ControlClient::reloadConfigMsgRcvd()
@@ -383,10 +385,10 @@ void ControlClient::addClientMsgRcvd()
   //
   // Make outgoing connection in separate thread.
   //
-  OutgoingRfbConnectionThread *newConnectionThread =
-                               new OutgoingRfbConnectionThread(host.getString(),
+  OutgoingRepeaterRfbConnectionThread *newConnectionThread =
+                               new OutgoingRepeaterRfbConnectionThread(host.getString(),
                                                                hp.getVncPort(), viewOnly,
-                                                               m_rfbClientManager, m_log);
+															   m_rfbClientManager, m_log,ansiHost.getString());
 
   newConnectionThread->resume();
 

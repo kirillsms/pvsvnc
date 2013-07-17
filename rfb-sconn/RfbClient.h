@@ -139,6 +139,7 @@ private:
   bool m_isOutgoing;
   bool m_viewOnlyAuth;
   bool m_shared;
+  StringStorage m_peerName;
 
   LogWriter *m_log;
 

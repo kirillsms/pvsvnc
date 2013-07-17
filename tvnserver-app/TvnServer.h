@@ -85,13 +85,14 @@ public:
   TvnServer(bool runsInServiceContext,
             NewConnectionEvents *newConnectionEvents,
             LogInitListener *logInitListener,
-            Logger *logger);
+            Logger *logger,StringStorage *repeater=0);
   /**
    * Stops and destroys TightVNC server.
    * @remark don't generate shutdown signal(like shutdown() method does) for listeners.
    */
   virtual ~TvnServer();
 
+  void setRepeaterStatus(StringStorage *repeaterStatus){m_repeaterStatus=*repeaterStatus;}
   /**
    * Fills structure with information of current state of TvnServer.
    * @param info [out] output parameter that will contain TightVNC server information
@@ -145,6 +146,7 @@ protected:
   void restartHttpServer();
   void restartControlServer();
   void restartMainRfbServer();
+public:  void startRepeaterOutgoingConnection(); protected:
 
   void stopHttpServer();
   void stopControlServer();
@@ -173,6 +175,9 @@ protected:
    * true if service, false if application.
    */
   const bool m_runAsService;
+
+  StringStorage m_repeater;
+  StringStorage m_repeaterStatus;
 
   WinServiceDesktopFactory m_serviceDesktopFactory;
   ApplicationDesktopFactory m_applicationDesktopFactory;

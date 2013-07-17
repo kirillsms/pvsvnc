@@ -25,7 +25,10 @@
 #include "ServerCommandLine.h"
 #include "util/CommandLine.h"
 
+const TCHAR ServerCommandLine::REPEATER[] = _T("-id");
+
 ServerCommandLine::ServerCommandLine()
+: m_repeater()
 {
 }
 
@@ -42,6 +45,7 @@ bool ServerCommandLine::parse(const CommandLineArgs *cmdArgs)
     { _T("/help"), NO_ARG },
     { _T("/h"), NO_ARG },
     { _T("/?"), NO_ARG },
+	{ REPEATER, NEEDS_ARG},
     { _T("-run"), NO_ARG }
   };
 
@@ -51,6 +55,10 @@ bool ServerCommandLine::parse(const CommandLineArgs *cmdArgs)
   if (showHelp() && optionSpecified(_T("-run"))) {
     return false;
   }
+  if(hasRepeaterFlag()){
+    optionSpecified(REPEATER, &m_repeater);
+  }
+
 
   return true;
 }
@@ -60,4 +68,9 @@ bool ServerCommandLine::showHelp()
   return optionSpecified(_T("-help")) || optionSpecified(_T("-h")) ||
          optionSpecified(_T("-?")) || optionSpecified(_T("/help")) ||
          optionSpecified(_T("/h")) || optionSpecified(_T("/?"));
+}
+
+bool ServerCommandLine::hasRepeaterFlag()
+{
+  return optionSpecified(REPEATER);
 }

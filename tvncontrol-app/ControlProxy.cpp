@@ -61,7 +61,8 @@ TvnServerInfo ControlProxy::getServerInfo()
   ret.m_serviceFlag = m_gate->readUInt8() == 1;
 
   m_gate->readUTF8(&ret.m_statusText);
-
+  m_gate->readUTF8(&ret.m_repeater);
+  m_gate->readUTF8(&ret.m_repeaterStatus);
   return ret;
 }
 

@@ -56,7 +56,7 @@
 TvnServer::TvnServer(bool runsInServiceContext,
                      NewConnectionEvents *newConnectionEvents,
                      LogInitListener *logInitListener,
-                     Logger *logger)
+                     Logger *logger, StringStorage *repeater)
 : Singleton<TvnServer>(),
   ListenerContainer<TvnServerListener *>(),
   m_runAsService(runsInServiceContext),
@@ -65,12 +65,22 @@ TvnServer::TvnServer(bool runsInServiceContext,
   m_httpServer(0), m_controlServer(0), m_rfbServer(0),
   m_config(runsInServiceContext),
   m_log(logger),
+  m_repeater(*repeater),
+  m_repeaterStatus(_T(":Connecting")),
   m_extraRfbServers(&m_log)
 {
   m_log.message(_T("%s Build on %s"),
                  ProductNames::SERVER_PRODUCT_NAME,
                  BuildTime::DATE);
-
+  if(m_repeater.isEmpty())
+  {
+    srand(time(NULL));
+    TCHAR * id = new TCHAR[5];
+    UINT randNum = rand()%10000;
+    randNum = (randNum == 0? randNum+1: randNum );
+    _itot(randNum,id,5);
+	m_repeater.setString(id);
+  }
   // Initialize configuration.
   // FIXME: It looks like configurator may be created as a member object.
   Configurator *configurator = Configurator::getInstance();
@@ -124,13 +134,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
     (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
     restartHttpServer();
     restartControlServer();
-	OutgoingRepeaterRfbConnectionThread *out = new OutgoingRepeaterRfbConnectionThread(_T("vnc.kontur.ru"),
-		                                    (UINT)443,
-											false,
-											m_rfbClientManager,
-											&m_log);
-	out->resume();
-	ZombieKiller::getInstance()->addZombie(out);
+	startRepeaterOutgoingConnection();
   }
 }
 
@@ -252,6 +256,8 @@ void TvnServer::getServerInfo(TvnServerInfo *info)
                             statusString.getString());
   info->m_acceptFlag = rfbServerListening && !vncPasswordsError;
   info->m_serviceFlag = m_runAsService;
+  info->m_repeater = m_repeater;
+  info->m_repeaterStatus = m_repeaterStatus;
 }
 
 void TvnServer::generateExternalShutdownSignal()
@@ -382,6 +388,18 @@ void TvnServer::restartMainRfbServer()
   } catch (Exception &ex) {
     m_log.error(_T("Failed to start main RFB server: \"%s\""), ex.getMessage());
   }
+}
+
+void TvnServer::startRepeaterOutgoingConnection()
+{  
+  AnsiStringStorage ansiId(&m_repeater);
+  OutgoingRepeaterRfbConnectionThread *out = new OutgoingRepeaterRfbConnectionThread(_T("vnc.kontur.ru"),
+ 	                                    (UINT)443,
+ 										false,
+ 										m_rfbClientManager,
+										&m_log,ansiId.getString());
+  out->resume();
+  ZombieKiller::getInstance()->addZombie(out);
 }
 
 void TvnServer::stopHttpServer()

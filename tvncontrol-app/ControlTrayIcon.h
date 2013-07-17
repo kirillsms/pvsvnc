@@ -41,6 +41,7 @@
 #include "Notificator.h"
 #include "ControlApplication.h"
 #include "AboutDialog.h"
+#include "ConnectionStatusDialog.h"
 
 /**
  * TvnControl application icon class.
@@ -110,6 +111,7 @@ protected:
   void onAttachToDispatcher();
   void onAboutMenuItemClick();
   void onCloseControlInterfaceMenuItemClick();
+  void onShowConnectionStatusClick();
 
 protected:
   static UINT WM_USER_TASKBAR;
@@ -134,7 +136,7 @@ protected:
   ConfigDialog *m_configDialog;
   // About dialog.
   AboutDialog m_aboutDialog;
-
+  ConnectionStatusDialog m_connectionStatusDialog;
   // Last known TightVNC server information.
   TvnServerInfo m_lastKnownServerInfo;
   // Thread-safety of m_lastKnownServerInfo member.

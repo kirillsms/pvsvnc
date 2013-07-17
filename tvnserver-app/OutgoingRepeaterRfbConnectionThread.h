@@ -7,13 +7,13 @@ class OutgoingRepeaterRfbConnectionThread :
 {
 public:
 	OutgoingRepeaterRfbConnectionThread(const TCHAR *connectHost, unsigned int connectPort,
-                              bool viewOnly, RfbClientManager *clientManager, LogWriter *log);
+                              bool viewOnly, RfbClientManager *clientManager, LogWriter *log, const CHAR *id);
     virtual ~OutgoingRepeaterRfbConnectionThread();
-	const CHAR *c_id;
+	CHAR *c_id;
 
 protected:
 	virtual void execute();
-	VOID generateId();
+	VOID generateId(const CHAR *id);
 
 private:
 	CHAR m_repeaterId[REPEATERSIZE];

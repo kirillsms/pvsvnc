@@ -62,6 +62,7 @@ int TvnServerApplication::run()
     if (!parser.parse(&cmdArgs) || parser.showHelp()) {
       throw Exception(_T("Wrong command line argument"));
     }
+ 	m_repeater=parser.m_repeater;
   } catch (...) {
     TvnServerHelp::showUsage();
     return 0;
@@ -83,7 +84,7 @@ int TvnServerApplication::run()
 
   // Start TightVNC server and TightVNC control application.
   try {
-    m_tvnServer = new TvnServer(false, m_newConnectionEvents, this, &m_fileLogger);
+    m_tvnServer = new TvnServer(false, m_newConnectionEvents, this, &m_fileLogger, &m_repeater);
     m_tvnServer->addListener(this);
     m_tvnControlRunner = new WsConfigRunner(&m_fileLogger);
 

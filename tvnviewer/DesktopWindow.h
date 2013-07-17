@@ -90,7 +90,8 @@ protected:
   // Overrides RfbKeySymListener::onRfbKeySymEvent().
   //
   void onRfbKeySymEvent(unsigned int rfbKeySym, bool down);
-
+  //AnonymousPipe *forFrame;
+  bool * frameRead;
   //
   // Inherited from BaseWindow.
   //

@@ -258,6 +258,7 @@
   <ItemGroup>
     <ClCompile Include="AboutDialog.cpp" />
     <ClCompile Include="ConnectCommand.cpp" />
+    <ClCompile Include="ConnectionStatusDialog.cpp" />
     <ClCompile Include="ConnectStringParser.cpp" />
     <ClCompile Include="ControlApplication.cpp" />
     <ClCompile Include="ControlAuth.cpp" />
@@ -297,6 +298,7 @@
   <ItemGroup>
     <ClInclude Include="AboutDialog.h" />
     <ClInclude Include="ConnectCommand.h" />
+    <ClInclude Include="ConnectionStatusDialog.h" />
     <ClInclude Include="ConnectStringParser.h" />
     <ClInclude Include="ControlApplication.h" />
     <ClInclude Include="ControlAuth.h" />

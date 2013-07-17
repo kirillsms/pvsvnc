@@ -26,6 +26,8 @@
 #define __RFBCLIENTMANAGER_H__
 
 #include "util/ListenerContainer.h"
+#include "util/AnsiStringStorage.h"
+#include "util/StringStorage.h"
 #include "rfb-sconn/RfbClient.h"
 #include "thread/AutoLock.h"
 #include "thread/Thread.h"
@@ -81,6 +83,8 @@ public:
   // FIXME: This method needed only for control server.
   void getClientsInfo(RfbClientInfoList *list);
 
+  const TCHAR* getId();
+
   // Disconnects all connected clients.
   virtual void disconnectAllClients();
   virtual void disconnectNonAuthClients();
@@ -92,7 +96,7 @@ public:
 
   // FIXME: Place comment for this method here.
   void addNewConnection(SocketIPv4 *socket, ViewPortState *constViewPort,
-                        bool viewOnly, bool isOutgoing);
+                        bool viewOnly, bool isOutgoing, char* id=0);
 
 protected:
   // Listen functions
@@ -125,6 +129,8 @@ private:
   void updateIpInBan(const StringStorage *ip, bool success);
   // Removes deprecated bans from the ban list.
   void refreshBan();
+
+  AnsiStringStorage m_ansiId;
 
   ClientList m_nonAuthClientList;
   ClientList m_clientList;

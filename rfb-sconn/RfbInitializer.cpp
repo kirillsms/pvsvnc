@@ -46,6 +46,7 @@ RfbInitializer::RfbInitializer(Channel *stream,
   m_extAuthListener(extAuthListener),
   m_client(client),
   m_authAllowed(authAllowed),
+  m_username(),
   m_viewOnlyAuth(false)
 {
   m_output = new DataOutputStream(stream);
@@ -275,6 +276,10 @@ void RfbInitializer::initAuthenticate()
 void RfbInitializer::readClientInit()
 {
   m_shared = m_input->readUInt8() != 0;
+  TCHAR *username = new TCHAR[1024];
+  UINT16 usernameSize = m_input->readUInt16();
+  m_input->readFully(username,usernameSize);
+  m_username.setString(username);
 }
 
 void RfbInitializer::sendServerInit(const Dimension *dim,
@@ -346,6 +351,12 @@ unsigned int RfbInitializer::getProtocolMinorVersion(const char str[12])
   unsigned int minorVersion =
     (str[8] - '0') * 100 + (str[9] - '0') * 10 + (str[10] - '0');
   return minorVersion;
+}
+
+const TCHAR *RfbInitializer::getUserName()
+{
+
+	return m_username.getString();
 }
 
 void RfbInitializer::checkForBan()

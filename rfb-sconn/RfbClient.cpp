@@ -89,7 +89,7 @@ bool RfbClient::isOutgoing() const
 void RfbClient::getPeerHost(StringStorage *host)
 {
   SocketAddressIPv4 addr;
-
+  host->setString(m_peerName.getString()); return;
   if (m_socket->getPeerAddr(&addr)) {
     addr.toString(host);
   } else {
@@ -197,6 +197,8 @@ void RfbClient::execute()
       m_log->debug(_T("Initial view-only state = %d"), (int)m_viewOnly);
       m_log->debug(_T("Authenticated with view-only password = %d"), (int)m_viewOnlyAuth);
       m_viewOnly = m_viewOnly || m_viewOnlyAuth;
+
+	  m_peerName.setString(rfbInitializer.getUserName());
 
       // Let RfbClientManager handle new authenticated connection.
       m_desktop = m_extAuthListener->onClientAuth(this);
