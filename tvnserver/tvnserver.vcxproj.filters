@@ -52,4 +52,8 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="CommonControls.manifest" />
+    <Manifest Include="Compatibility.manifest" />
+  </ItemGroup>
 </Project>

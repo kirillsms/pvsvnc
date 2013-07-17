@@ -195,9 +195,9 @@ HRESULT CAVIGenerator::InitEngine()
 	FILE *file;
 	int size;
 	/* Read options from file */
-      file = _tfopen(mypath, _T("rb"));
-      if (file == NULL) {
-        delete_needed=true;
+      errno_t err = _tfopen_s(&file, mypath, _T("rb"));
+      if (err || !file) {
+        delete_needed = true;
       }
 	  else
 	  {
@@ -277,8 +277,8 @@ HRESULT CAVIGenerator::InitEngine()
 			FILE *file;
 			int size;
 			/* Save options to file*/
-			file = _tfopen(mypath, _T("wb"));
-			if (file != NULL) {
+			errno_t err = _tfopen_s(&file, mypath, _T("wb"));
+			if (err || !file) {
 				/* write AVICOMPRESSOPTIONS struct */
 				size = fwrite(&opts, sizeof(AVICOMPRESSOPTIONS), 1, file);
 				/* write AVICOMPRESSOPTIONS.cbFormat */

@@ -44,23 +44,23 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -298,7 +298,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Manifest>
-      <AdditionalManifestFiles>DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>CommonControls.manifest;Compatibility.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">
@@ -330,7 +331,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <Manifest>
-      <AdditionalManifestFiles>DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>CommonControls.manifest;Compatibility.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">
@@ -361,7 +363,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Manifest>
-      <AdditionalManifestFiles>DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>CommonControls.manifest;Compatibility.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">
@@ -528,14 +531,15 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="CommonControls.manifest" />
+    <Manifest Include="Compatibility.manifest" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
   <Target Name="AfterBuild">
-  	<RemoteSignFile SigningTarget="$(OutDir)tvnserver.exe" 
-		SigningTargetDescription="SKB Kontur VNC" 
-		CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" 
-		CodeSignServiceTimeout="180000" />
+    <RemoteSignFile SigningTarget="$(OutDir)tvnserver.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
   </Target>
 </Project>
