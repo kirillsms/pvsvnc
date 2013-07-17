@@ -30,7 +30,7 @@ bool StringParser::parseInt(const TCHAR *str, int *out)
 {
   int value = 0;
   TCHAR c;
-  if(_stscanf(str, _T("%d%c"), &value, &c) != 1) {
+  if(_stscanf_s(str, _T("%d%c"), &value, &c) != 1) {
     return false;
   }
   if (out != NULL) {
@@ -70,7 +70,7 @@ bool StringParser::parseUInt64(const TCHAR *str, UINT64 *out)
 {
   UINT64 value = 0;
   TCHAR c;
-  if(_stscanf(str, _T("%llu%c"), &value, &c) != 1) {
+  if(_stscanf_s(str, _T("%llu%c"), &value, &c) != 1) {
     return false;
   }
   if (out != NULL) {

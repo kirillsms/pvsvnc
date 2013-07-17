@@ -96,7 +96,7 @@ public:
 
   // FIXME: It's no good idea to place this function to here.
   // Because it uses only for the UpdateHandlerClient class.
-  virtual void sendInit(BlockingGate *gate) {}
+  virtual void sendInit(BlockingGate * /*gate*/) {}
 
 protected:
   virtual bool updateExternalFrameBuffer(FrameBuffer *dstFb, FrameBuffer *srcFb,

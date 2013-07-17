@@ -60,7 +60,8 @@ DesktopServerApplication::DesktopServerApplication(HINSTANCE appInstance,
   cmdLineParser.parse(cmdArgs);
 
   // Keep session id
-  DWORD baseSessionId = WTS::getActiveConsoleSessionId(&m_log);
+  // DWORD baseSessionId =
+  WTS::getActiveConsoleSessionId(&m_log);
   Configurator::getInstance()->addListener(this);
 
   try {
@@ -163,7 +164,7 @@ void DesktopServerApplication::onAnObjectEvent()
   WindowsApplication::shutdown();
 }
 
-void DesktopServerApplication::onConfigReload(ServerConfig *serverConfig)
+void DesktopServerApplication::onConfigReload(ServerConfig * /*serverConfig*/)
 {
 }
 
