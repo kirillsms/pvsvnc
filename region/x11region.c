@@ -358,7 +358,7 @@ void miRegionInit(RegionPtr pReg, BoxPtr rect, int size)
     else
     {
 	pReg->extents = miEmptyBox;
-	if ((size > 1) && (pReg->data = xallocData(size)))
+	if ((size > 1) && ((pReg->data = xallocData(size)) != 0))
 	{
 	    pReg->data->size = size;
 	    pReg->data->numRects = 0;
@@ -603,7 +603,7 @@ miAppendNonO (
 #define	AppendRegions(newReg, r, rEnd)					\
 {									\
     int newRects;							\
-    if ((newRects = rEnd - r)) {					\
+    if (((newRects = rEnd - r) != 0)) {					\
 	RECTALLOC(newReg, newRects);					\
 	memmove((char *)REGION_TOP(newReg),(char *)r, 			\
               newRects * sizeof(BoxRec));				\
@@ -2050,7 +2050,7 @@ void miTranslateRegion(register RegionPtr pReg, register int x, register int y)
     pReg->extents.y2 = y2 = pReg->extents.y2 + y;
     if (((x1 - MINSHORT)|(y1 - MINSHORT)|(MAXSHORT - x2)|(MAXSHORT - y2)) >= 0)
     {
-	if (pReg->data && (nbox = pReg->data->numRects))
+	if (pReg->data && ((nbox = pReg->data->numRects) != 0))
 	{
 	    for (pbox = REGION_BOXPTR(pReg); nbox--; pbox++)
 	    {
@@ -2078,7 +2078,7 @@ void miTranslateRegion(register RegionPtr pReg, register int x, register int y)
 	pReg->extents.y1 = MINSHORT;
     else if (y2 > MAXSHORT)
 	pReg->extents.y2 = MAXSHORT;
-    if (pReg->data && (nbox = pReg->data->numRects))
+    if (pReg->data && ((nbox = pReg->data->numRects) != 0))
     {
 	register BoxPtr pboxout;
 

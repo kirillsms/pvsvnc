@@ -158,7 +158,7 @@ void MirrorDriverClient::extractDeviceInfo(TCHAR *driverName)
 
   m_deviceNumber = 0;
   BOOL result;
-  while (result = EnumDisplayDevices(0, m_deviceNumber, &m_deviceInfo, 0)) {
+  while ( (result = EnumDisplayDevices(0, m_deviceNumber, &m_deviceInfo, 0)) != 0) {
     m_log->debug(_T("Found: %s"), m_deviceInfo.DeviceString);
     m_log->debug(_T("RegKey: %s"), m_deviceInfo.DeviceKey);
     StringStorage deviceString(m_deviceInfo.DeviceString);
