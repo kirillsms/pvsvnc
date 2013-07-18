@@ -851,7 +851,7 @@ miRegionOp(
     if (oldData)
 	xfree(oldData);
 
-    if (!(numRects = newReg->data->numRects))
+    if (((numRects = newReg->data->numRects) == 0 ))
     {
 	xfreeData(newReg);
 	newReg->data = &miEmptyData;
