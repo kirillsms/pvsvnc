@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Project DefaultTargets="Default" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<ExtensionTasksPath>$(MSBuildThisFileDirectory)\MSBuildExtensionPack\</ExtensionTasksPath>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	   <Servers Include="help1" />
+	   <Servers Include="vm-help2" />
+	</ItemGroup>
+
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
+
+ 	<Target Name="Default">
+				
+	    <MSBuild Projects="$(MSBuildProjectFile)"
+				Properties="Server=%(Servers.Identity)"
+				Targets="Single" />
+						
+	</Target>
+	
+	
+	<!-- Single server targets -->
+  
+  	<Target Name="Single">
+  
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\bin\Release\tvnserver.exe" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="true" 
+		      DestinationFolder="\\$(Server)\c$\inetpub\teamcity\help\user\Content\Components" />
+			  
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\bin\Release\tvnviewer.exe" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="true" 
+		      DestinationFolder="\\$(Server)\c$\inetpub\teamcity\help\user\Content\Components" />
+
+		  
+  </Target>
+  
+</Project>
