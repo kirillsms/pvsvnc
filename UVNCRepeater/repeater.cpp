@@ -1953,18 +1953,6 @@ static void dropRootPrivileges()
             fatal("dropRootPrivileges(): setuid() failed\n");    
         }
                                 
-        //We should now be mere mortal, check effective uid to be sure
-        if (geteuid() == 0) {
-            //Still root, was this intended ? 
-            if (strcmp("root", runAsUser) == 0) {
-                //Intentionally root, complain about this security violation
-                debug(LEVEL_1, "dropRootPrivileges(): you seem to WANT TO run as user root, this IS VERY DANGEROUS !\n");
-            }
-            else
-                fatal("dropRootPrivileges(): dropping privileges failed\n");
-        }
-        else
-            debug(LEVEL_1, "dropRootPrivileges(): privileges successfully dropped, now running as user %s\n", runAsUser);
     }
     else
         fatal("dropRootPrivileges(): getpwnam() failed\n");    
