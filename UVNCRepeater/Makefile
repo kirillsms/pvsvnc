@@ -2,7 +2,6 @@ CFLAGS=-Wall
 OBJDIR=/etc/uvnc
 repeater: repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
 	g++ $(CFLAGS) -o repeater repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
-	gcc $(CFLAGS) -o start-stop-daemon start-stop-daemon.c
 repeater.o: repeater.cpp
 	g++ $(CFLAGS) -c repeater.cpp
 
@@ -25,11 +24,10 @@ repeaterevents.o: repeaterevents.cpp
 	g++ $(CFLAGS) -c repeaterevents.cpp
 
 clean:
-	rm -f *.o repeater start-stop-daemon
+	rm -f *.o repeater 
 
 install:
 	cp -R repeater /usr/sbin/uvncrepeatersvc
-	cp -R start-stop-daemon /usr/sbin/start-stop-daemon
 	cp -R uvncrepeater /etc/init.d/uvncrepeater
 	@if test ! -d ${OBJDIR}; then \
                 mkdir /etc/uvnc; \
