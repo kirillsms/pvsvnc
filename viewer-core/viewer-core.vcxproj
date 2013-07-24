@@ -238,6 +238,7 @@
     <ClCompile Include="DecoderOfRectangle.cpp" />
     <ClCompile Include="FbUpdateNotifier.cpp" />
     <ClCompile Include="FileTransferCapability.cpp" />
+    <ClCompile Include="KonturRemoteViewerCore.cpp" />
     <ClCompile Include="LastRectDecoder.cpp" />
     <ClCompile Include="PseudoDecoder.cpp" />
     <ClCompile Include="RawDecoder.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="DecoderOfRectangle.h" />
     <ClInclude Include="FbUpdateNotifier.h" />
     <ClInclude Include="FileTransferCapability.h" />
+    <ClInclude Include="KonturRemoteViewerCore.h" />
     <ClInclude Include="LastRectDecoder.h" />
     <ClInclude Include="PseudoDecoder.h" />
     <ClInclude Include="RawDecoder.h" />

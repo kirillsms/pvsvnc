@@ -123,6 +123,9 @@
     <ClCompile Include="VncAuthenticationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KonturRemoteViewerCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthHandler.h">
@@ -228,6 +231,9 @@
       <Filter>Decoders</Filter>
     </ClInclude>
     <ClInclude Include="VncAuthenticationHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturRemoteViewerCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

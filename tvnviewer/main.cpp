@@ -29,6 +29,7 @@
 #include "ConnectionListener.h"
 #include "ViewerCmdLine.h"
 #include "util/ResourceLoader.h"
+#include "KonturTvnViewer.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
                        LPTSTR lpCmdLine, int nCmdShow)
@@ -61,7 +62,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
   int result = 0;
   try {
     cmd.parse();
-    TvnViewer tvnViewer(hInstance,
+    KonturTvnViewer tvnViewer(hInstance,
                         ApplicationNames::WINDOW_CLASS_NAME,
                         WindowNames::TVN_WINDOW_CLASS_NAME);
     if (isListening) {
@@ -70,7 +71,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
     } else if (!condata.isEmpty()) {
       tvnViewer.newConnection(&condata, &conConf);
     } else {
-      tvnViewer.showLoginDialog();
+      tvnViewer.showKonturLoginDialog();
     }
     result = tvnViewer.run();
   } catch (const CommandLineFormatException &exception) {

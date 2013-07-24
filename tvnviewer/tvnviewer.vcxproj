@@ -318,6 +318,10 @@
     <ClCompile Include="FileTransferMainDialog.cpp" />
     <ClCompile Include="FsWarningDialog.cpp" />
     <ClCompile Include="HelpDialog.cpp" />
+    <ClCompile Include="KonturConnectionData.cpp" />
+    <ClCompile Include="KonturLoginDialog.cpp" />
+    <ClCompile Include="KonturTvnViewer.cpp" />
+    <ClCompile Include="KonturViewerInstance.cpp" />
     <ClCompile Include="LoginDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NamingDefs.cpp" />
@@ -350,6 +354,10 @@
     <ClInclude Include="FsWarningDialog.h" />
     <ClInclude Include="HelpDialog.h" />
     <ClInclude Include="KeyMap.h" />
+    <ClInclude Include="KonturConnectionData.h" />
+    <ClInclude Include="KonturLoginDialog.h" />
+    <ClInclude Include="KonturTvnViewer.h" />
+    <ClInclude Include="KonturViewerInstance.h" />
     <ClInclude Include="LoginDialog.h" />
     <ClInclude Include="NamingDefs.h" />
     <ClInclude Include="NewFolderDialog.h" />
@@ -433,6 +441,11 @@
     <ProjectReference Include="..\avilog\avilogv11.vcxproj">
       <Project>{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\konturvnc48.bmp" />
+    <Image Include="res\tightvnc.bmp" />
+    <Image Include="res\tightvnc48.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

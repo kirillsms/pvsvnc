@@ -529,7 +529,7 @@ private:
   //
   void registerDecoderHandler(const UINT32 code, Decoder *decoder, int priority);
 
-  LogWriter m_logWriter;
+protected:  LogWriter m_logWriter;
 
   // m_tcpConnection depends on m_logWriter and must be defined after it.
   // See also: C++ standard 12.6.2 - Initializing bases and members.

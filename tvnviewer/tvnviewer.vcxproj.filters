@@ -102,6 +102,18 @@
     <ClCompile Include="AvilogThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KonturConnectionData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KonturLoginDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KonturTvnViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KonturViewerInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthenticationDialog.h">
@@ -194,6 +206,18 @@
     <ClInclude Include="AvilogThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="KonturConnectionData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturLoginDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturTvnViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturViewerInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\appicon.ico">
@@ -225,5 +249,16 @@
     <ResourceCompile Include="tvnviewer.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\konturvnc48.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\tightvnc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\tightvnc48.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
