@@ -1191,8 +1191,17 @@ void RemoteViewerCore::clientAndServerInit()
   TCHAR name[1024];
   ULONG nameSize;
   GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize);
+  StringStorage fullName(name);
+  StringStorage nameParts[5];
+  size_t namePartsCount;
+  if (fullName.split(_T(" "), nameParts, &namePartsCount) && (3 == namePartsCount)) {
+	  StringStorage nameSurname;
+	  nameSurname.format(_T("%s %s (СКБ Контур)"), nameParts[1].getString(), nameParts[0].getString());
+	  fullName = nameSurname;
+	  nameSize = nameSurname.getLength();
+  }
   m_output->writeUInt16(nameSize);
-  m_output->writeUTF8(name);
+  m_output->writeUTF8(fullName.getString());
   m_output->flush();
   m_logWriter.debug(_T("Shared flag is set"));
 
