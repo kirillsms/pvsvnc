@@ -49,18 +49,16 @@ void ConnectionStatusDialog::initControls()
 
 void ConnectionStatusDialog::refreshClientsList(std::list<RfbClientInfo *> *clients)
 {
-	StringStorage buffer,currentText;
+	StringStorage buffer, currentText;
 
-	
 	for (std::list<RfbClientInfo *>::iterator it = clients->begin(); it != clients->end(); it++) {
 		buffer.appendString((*it)->m_peerAddr.getString());
 		buffer.appendChar(_T('\n'));
-		//buffer.appendString((*it)->m_id))
     }
 	m_clientList.getText(&currentText);
-	if(!currentText.isEqualTo(&buffer))	m_clientList.setText(buffer.getString());
-	//m_clientList
-
+	if(!currentText.isEqualTo(&buffer))	{
+		m_clientList.setText(buffer.getString());
+	}
 }
 
 void ConnectionStatusDialog::setTitle(const TCHAR* title)

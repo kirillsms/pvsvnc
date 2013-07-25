@@ -532,7 +532,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="CommonControls.manifest" />
+    <Manifest Include="CommonControls.manifest">
+      <SubType>Designer</SubType>
+    </Manifest>
     <Manifest Include="Compatibility.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

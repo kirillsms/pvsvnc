@@ -1188,13 +1188,11 @@ void RemoteViewerCore::clientAndServerInit()
     m_logWriter.info(_T("Setting share flag is off..."));
   }
   m_output->writeUInt8(m_sharedFlag);
-  TCHAR *name = new TCHAR[1024];
+  TCHAR name[1024];
   ULONG nameSize;
-  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay,name,&nameSize);
-  nameSize=sizeof(TCHAR)*nameSize+2;
+  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize);
   m_output->writeUInt16(nameSize);
-  m_output->writeFully(name,nameSize);
-  delete[] name;
+  m_output->writeUTF8(name);
   m_output->flush();
   m_logWriter.debug(_T("Shared flag is set"));
 
