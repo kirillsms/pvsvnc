@@ -27,6 +27,8 @@
 
 #include <list>
 #include "network/socket/SocketIPv4.h"
+#include "network/socket/SocketStream.h"
+
 #include "win-system/WindowsEvent.h"
 #include "thread/Thread.h"
 #include "network/RfbOutputGate.h"
@@ -96,7 +98,7 @@ protected:
   virtual void execute();
   virtual void onTerminate();
 
-private:
+protected:
   // Calling this function makes the client manager enter (and leave) the
   // mutex associated with the client list, so it will have to wait until
   // other threads stop working with our object (such operations should be
@@ -147,6 +149,11 @@ private:
   unsigned int m_id;
 
   NewConnectionEvents *m_newConnectionEvents;
+
+  void *m_rfbInitializer;
+  SocketStream *m_sockStream;
+  RfbOutputGate *m_output;
+  RfbInputGate *m_input;
 };
 
 #endif // __RFBCLIENT_H__

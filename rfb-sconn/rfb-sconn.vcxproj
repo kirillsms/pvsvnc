@@ -267,6 +267,8 @@
     <ClCompile Include="HextileEncoder.cpp" />
     <ClCompile Include="JpegCompressor.cpp" />
     <ClCompile Include="JpegEncoder.cpp" />
+    <ClCompile Include="KonturRfbClient.cpp" />
+    <ClCompile Include="KonturRfbInitializer.cpp" />
     <ClCompile Include="RfbClient.cpp" />
     <ClCompile Include="RfbCodeRegistrator.cpp" />
     <ClCompile Include="RfbDispatcher.cpp" />
@@ -291,6 +293,8 @@
     <ClInclude Include="HextileTile.h" />
     <ClInclude Include="JpegCompressor.h" />
     <ClInclude Include="JpegEncoder.h" />
+    <ClInclude Include="KonturRfbClient.h" />
+    <ClInclude Include="KonturRfbInitializer.h" />
     <ClInclude Include="RfbClient.h" />
     <ClInclude Include="RfbCodeRegistrator.h" />
     <ClInclude Include="RfbDispatcher.h" />

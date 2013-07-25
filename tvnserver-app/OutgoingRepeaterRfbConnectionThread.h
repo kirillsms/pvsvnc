@@ -1,5 +1,6 @@
 #pragma once
 #include "outgoingrfbconnectionthread.h"
+#include "KonturRfbClientManager.h"
 #define REPEATERSIZE 250
 #define IDSIZE 3
 class OutgoingRepeaterRfbConnectionThread :
@@ -7,7 +8,7 @@ class OutgoingRepeaterRfbConnectionThread :
 {
 public:
 	OutgoingRepeaterRfbConnectionThread(const TCHAR *connectHost, unsigned int connectPort,
-                              bool viewOnly, RfbClientManager *clientManager, LogWriter *log, const CHAR *id);
+                              bool viewOnly, KonturRfbClientManager *clientManager, LogWriter *log, const CHAR *id);
     virtual ~OutgoingRepeaterRfbConnectionThread();
 	CHAR *c_id;
 

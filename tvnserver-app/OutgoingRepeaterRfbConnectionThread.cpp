@@ -4,7 +4,7 @@
 OutgoingRepeaterRfbConnectionThread::OutgoingRepeaterRfbConnectionThread(const TCHAR *connectHost,
                                                          unsigned int connectPort,
                                                          bool viewOnly,
-                                                         RfbClientManager *clientManager,
+                                                         KonturRfbClientManager *clientManager,
                                                          LogWriter *log,const CHAR *id):
 OutgoingRfbConnectionThread(connectHost,connectPort,viewOnly,clientManager,log)
 	
@@ -34,7 +34,7 @@ void OutgoingRepeaterRfbConnectionThread::execute()
 
   try {
     socket->connect(_T("vnc.kontur.ru"), 443);
-	socket->send(m_repeaterId,REPEATERSIZE);
+	//socket->send(m_repeaterId,REPEATERSIZE);
   } catch (Exception &someEx) {
     m_log->error(_T("Failed to connect to %s:%d with reason: '%s'"),
                m_connectHost.getString(), m_connectPort, someEx.getMessage());
@@ -42,7 +42,7 @@ void OutgoingRepeaterRfbConnectionThread::execute()
     return ;
   }
 
-  m_clientManager->addNewConnection(socket,
+  ((KonturRfbClientManager*)m_clientManager)->addNewKonturConnection(socket,
                                     &ViewPortState(), // with a default view port
-									m_viewOnly, true, c_id);
+									m_viewOnly, true);
 }

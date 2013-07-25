@@ -117,7 +117,7 @@ protected:
 
   void waitUntilAllClientAreBeenDestroyed();
 
-private:
+protected:
   void validateClientList();
 
   // Checks the ip to ban.

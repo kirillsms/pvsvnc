@@ -52,9 +52,6 @@ RfbClientManager::~RfbClientManager()
 
 void RfbClientManager::onClientTerminate()
 {
-  TvnServer * srv = TvnServer::getInstance();
-  srv->setRepeaterStatus(new StringStorage(_T(":Reconnect")));
-  srv->startRepeaterOutgoingConnection();
   validateClientList();
 }
 

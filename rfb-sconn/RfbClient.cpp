@@ -28,6 +28,7 @@
 #include "ft-server-lib/FileTransferRequestHandler.h"
 #include "network/socket/SocketStream.h"
 #include "RfbInitializer.h"
+#include "KonturRfbInitializer.h"
 #include "ClientAuthListener.h"
 #include "server-config-lib/Configurator.h"
 
@@ -180,7 +181,7 @@ void RfbClient::execute()
 
   FileTransferRequestHandler *fileTransfer = 0;
 
-  RfbInitializer rfbInitializer(&sockStream, m_extAuthListener, this,
+  KonturRfbInitializer rfbInitializer(&sockStream, m_extAuthListener, this,
                                 !m_isOutgoing);
 
   try {

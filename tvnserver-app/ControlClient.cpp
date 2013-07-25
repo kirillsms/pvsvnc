@@ -385,14 +385,14 @@ void ControlClient::addClientMsgRcvd()
   //
   // Make outgoing connection in separate thread.
   //
-  OutgoingRepeaterRfbConnectionThread *newConnectionThread =
+ /* OutgoingRepeaterRfbConnectionThread *newConnectionThread =
                                new OutgoingRepeaterRfbConnectionThread(host.getString(),
                                                                hp.getVncPort(), viewOnly,
 															   m_rfbClientManager, m_log,ansiHost.getString());
 
   newConnectionThread->resume();
 
-  ZombieKiller::getInstance()->addZombie(newConnectionThread);
+  ZombieKiller::getInstance()->addZombie(newConnectionThread);*/
 }
 
 void ControlClient::connectToTcpDispatcher()

@@ -58,7 +58,7 @@ public:
   const TCHAR* getUserName();
 
 protected:
-  void initVersion();
+  virtual void initVersion();
   // @throw Exception if loopback isn't allowed.
   void checkForLoopback();
   void initAuthenticate();

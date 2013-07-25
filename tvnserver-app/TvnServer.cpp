@@ -117,7 +117,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
 
    // Instanize zombie killer singleton.
    // FIXME: may be need to do it in another place or use "lazy" initialization.
-  m_rfbClientManager = new RfbClientManager(0, newConnectionEvents, &m_log, desktopFactory);
+  m_rfbClientManager = new KonturRfbClientManager(0, newConnectionEvents, &m_log, desktopFactory);
 
   m_rfbClientManager->addListener(this);
 

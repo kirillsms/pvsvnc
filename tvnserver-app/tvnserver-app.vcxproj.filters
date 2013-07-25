@@ -101,6 +101,9 @@
     <ClCompile Include="OutgoingRepeaterRfbConnectionThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KonturRfbClientManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdditionalActionApplication.h">
@@ -191,6 +194,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OutgoingRepeaterRfbConnectionThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturRfbClientManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -300,6 +300,7 @@
     <ClCompile Include="DesktopServerApplication.cpp" />
     <ClCompile Include="DesktopServerCommandLine.cpp" />
     <ClCompile Include="ExtraRfbServers.cpp" />
+    <ClCompile Include="KonturRfbClientManager.cpp" />
     <ClCompile Include="NamingDefs.cpp" />
     <ClCompile Include="OutgoingRepeaterRfbConnectionThread.cpp" />
     <ClCompile Include="OutgoingRfbConnectionThread.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="DesktopServerApplication.h" />
     <ClInclude Include="DesktopServerCommandLine.h" />
     <ClInclude Include="ExtraRfbServers.h" />
+    <ClInclude Include="KonturRfbClientManager.h" />
     <ClInclude Include="NamingDefs.h" />
     <ClInclude Include="OutgoingRepeaterRfbConnectionThread.h" />
     <ClInclude Include="OutgoingRfbConnectionThread.h" />

@@ -62,6 +62,12 @@
     <ClCompile Include="ZrleEncoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KonturRfbClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KonturRfbInitializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthException.h">
@@ -131,6 +137,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ZrleEncoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturRfbClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KonturRfbInitializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

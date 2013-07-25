@@ -48,7 +48,7 @@
 
 #include "tvncontrol-app/TvnServerInfo.h"
 #include "LogInitListener.h"
-
+#include "KonturRfbClientManager.h"
 /**
  * TightVNC server singleton that includes serveral components:
  *   1) Zombie killer singleton.
@@ -185,7 +185,7 @@ protected:
    * Rfb client manager (for all rfb servers), used by rfb servers
    * rfb clients, control server and control clients.
    */
-  RfbClientManager *m_rfbClientManager;
+  KonturRfbClientManager *m_rfbClientManager;
   /**
    * Control server.
    */
