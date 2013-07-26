@@ -53,7 +53,7 @@ ControlTrayIcon::ControlTrayIcon(ControlProxy *serverControl,
   m_serverControl(serverControl), m_notificator(notificator),
   m_appControl(appControl),
   m_inWindowProc(false),
-  m_termination(false)
+  m_termination(false), m_connectionStatusDialog(this)
 {
   ResourceLoader *resLoader = ResourceLoader::getInstance();
 

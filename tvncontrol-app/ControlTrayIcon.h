@@ -154,6 +154,7 @@ protected:
 
   WindowsEvent m_endEvent;
   bool m_termination;
+  friend ConnectionStatusDialog;
 };
 
 #endif

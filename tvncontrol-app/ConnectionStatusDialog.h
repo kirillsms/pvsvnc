@@ -5,11 +5,13 @@
 #include <list>
 #include "RfbClientInfo.h"
 
+class ControlTrayIcon;
+
 class ConnectionStatusDialog : public BaseDialog
 
 {
 public:
-	ConnectionStatusDialog(void);
+	ConnectionStatusDialog(ControlTrayIcon *);
 	virtual ~ConnectionStatusDialog(void);
 	virtual BOOL onInitDialog();
 	void refreshClientsList(std::list<RfbClientInfo *> *clients);
@@ -26,6 +28,7 @@ private:
 
 protected:
 	TextBox m_clientList; 
+	ControlTrayIcon *m_tray;
 
 };
 

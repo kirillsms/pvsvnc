@@ -8,9 +8,11 @@
 #include "gui/Control.h"
 
 #include "tvnserver/BuildTime.h"
+#include "ControlTrayIcon.h"
 
-ConnectionStatusDialog::ConnectionStatusDialog(void)
-	:BaseDialog(IDD_SHOWCONNECTIONSTATUS)
+
+ConnectionStatusDialog::ConnectionStatusDialog(ControlTrayIcon * tray)
+	:BaseDialog(IDD_SHOWCONNECTIONSTATUS), m_tray(tray)
 {
 }
 
@@ -32,7 +34,7 @@ BOOL ConnectionStatusDialog::onCommand(UINT controlID, UINT notificationID)
 
 void ConnectionStatusDialog::onCloseButtonClick()
 {
-  kill(IDCANCEL);
+	m_tray->onShutdownServerMenuItemClick();
 }
 
 BOOL ConnectionStatusDialog::onInitDialog()
