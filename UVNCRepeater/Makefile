@@ -1,4 +1,4 @@
-CFLAGS=-Wall
+CFLAGS=-Wall -ggdb
 OBJDIR=/etc/uvnc
 repeater: repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
 	g++ $(CFLAGS) -o repeater repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
