@@ -3,31 +3,27 @@
 
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(Logger *logger)
+	:RemoteViewerCore(logger)
 {}
 
-
 KonturRemoteViewerCore::KonturRemoteViewerCore(RfbInputGate *input, RfbOutputGate *output,
-                   CoreEventsAdapter *adapter,
-                   Logger *logger,
-                   bool sharedFlag)
+                   CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
+				   :RemoteViewerCore(input, output, adapter, logger, sharedFlag)
 {}
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(const TCHAR *host, UINT16 port,
-                   CoreEventsAdapter *adapter,
-                   Logger *logger,
-                   bool sharedFlag)
+                   CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
+				   :RemoteViewerCore(host, port, adapter, logger, sharedFlag)
 {}
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(SocketIPv4 *socket,
-                   CoreEventsAdapter *adapter,
-                   Logger *logger,
-                   bool sharedFlag)
+                   CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
+				   :RemoteViewerCore(socket, adapter, logger, sharedFlag)
 {}
 
-KonturRemoteViewerCore::~KonturRemoteViewerCore(void)
+KonturRemoteViewerCore::~KonturRemoteViewerCore()
 {
 }
-
 
 void KonturRemoteViewerCore::setID(const StringStorage *id)
 {
@@ -47,7 +43,6 @@ void KonturRemoteViewerCore::handshake()
   char serverProtocol[13];
   char repeaterHandshake[250];
   serverProtocol[12] = 0;
-
 
   m_input->readFully(serverProtocol, 12);
   memset(&repeaterHandshake,0,250);

@@ -1203,6 +1203,7 @@ void RemoteViewerCore::clientAndServerInit()
   m_output->writeUInt16(nameSize);
   m_output->writeUTF8(fullName.getString());
   m_output->flush();
+  m_logWriter.info(_T("UserName: %s => %s"), name, fullName.getString());
   m_logWriter.debug(_T("Shared flag is set"));
 
   UINT16 width = m_input->readUInt16();
