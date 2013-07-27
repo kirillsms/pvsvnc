@@ -1,7 +1,7 @@
 CFLAGS=-Wall -ggdb
 OBJDIR=/etc/uvnc
-repeater: repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
-	g++ $(CFLAGS) -o repeater repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o repeaterevents.o
+repeater: repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o 
+	g++ $(CFLAGS) -o repeater repeater.o repeaterproc.o openbsd_stringfuncs.o iniparser.o readini.o repeaterutil.o 
 repeater.o: repeater.cpp
 	g++ $(CFLAGS) -c repeater.cpp
 
@@ -19,9 +19,6 @@ readini.o: readini.cpp
 
 repeaterutil.o: repeaterutil.cpp
 	g++ $(CFLAGS) -c repeaterutil.cpp
-
-repeaterevents.o: repeaterevents.cpp
-	g++ $(CFLAGS) -c repeaterevents.cpp
 
 clean:
 	rm -f *.o repeater 

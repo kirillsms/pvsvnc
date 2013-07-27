@@ -65,9 +65,6 @@ int idList[ID_LIST_SIZE] = {
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-//if running as root, by default change to this user after all listen ports have been bound
-char runAsUser[MY_TMP_BUF_LEN] = "uvncrep";
-
 //if we have several ip addresses, we can choose one to listen on
 //by default, listen on all addresses
 char ownIpAddress[MY_TMP_BUF_LEN] = "0.0.0.0";
@@ -110,14 +107,6 @@ int maxSessions = MAX_SESSIONS_DEFAULT;
 //Logging level
 int loggingLevel = DEFAULT_LOGGING_LEVEL;
 
-//Use event interface ?
-bool useEventInterface = false;
-
-//EventListener hostname/ip address and port/http usage
-char eventListenerHost[MY_TMP_BUF_LEN] = "localhost";
-int eventListenerPort = 2002;
-bool useHttpForEventListener = false;
- 
 bool readIniFile(char *iniFilePathAndName)
 {
     dictionary *dict;
@@ -143,8 +132,6 @@ bool readIniFile(char *iniFilePathAndName)
         
         strlcpy(ownIpAddress, iniparser_getstring(dict, "general:ownipaddress", "0.0.0.0"), MY_TMP_BUF_LEN);
         
-        strlcpy(runAsUser, iniparser_getstring(dict, "general:runasuser", "uvncrep"), MY_TMP_BUF_LEN);
-                
         loggingLevel = iniparser_getint(dict, "general:logginglevel", DEFAULT_LOGGING_LEVEL);     
         if (loggingLevel > LEVEL_3)
             loggingLevel = DEFAULT_LOGGING_LEVEL;
@@ -152,7 +139,6 @@ bool readIniFile(char *iniFilePathAndName)
             loggingLevel = DEFAULT_LOGGING_LEVEL;
 
         
-        //Mode 1 settings
         //Mode 1 settings
         allowedMode1ServerPort = iniparser_getint(dict, "mode1:allowedmode1serverport", 0);        
         requireListedServer = iniparser_getint(dict, "mode1:requirelistedserver", 0);        
@@ -179,7 +165,6 @@ bool readIniFile(char *iniFilePathAndName)
         
         
         //Mode 2 settings
-        //Mode 2 settings
         requireListedId = iniparser_getint(dict, "mode2:requirelistedid", 0);        
         if (requireListedId == 1) {
             for(ii = 0; ii < ID_LIST_SIZE; ii++) {
@@ -188,17 +173,6 @@ bool readIniFile(char *iniFilePathAndName)
             }
         }
        
-        //Event interface settings
-        //Event interface settings
-        useEventInterface = (bool) iniparser_getboolean(dict, "eventinterface:useeventinterface", 0);     
-
-        strlcpy(eventListenerHost, iniparser_getstring(dict, 
-            "eventinterface:eventlistenerhost", "localhost"), MY_TMP_BUF_LEN);
-
-        eventListenerPort = iniparser_getint(dict, "eventinterface:eventlistenerport", 2002);     
-        
-        useHttpForEventListener = (bool) iniparser_getboolean(dict,"eventinterface:usehttp", 0);     
-        
         iniparser_free(dict);
         return true;           
     }
