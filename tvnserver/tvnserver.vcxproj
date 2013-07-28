@@ -164,6 +164,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>CommonControls.manifest;Compatibility.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
