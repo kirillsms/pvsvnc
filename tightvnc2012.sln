@@ -72,8 +72,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "viewer-core", "viewer-core\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "log-writer", "log-writer\log-writer.vcxproj", "{F9A69A98-B750-4242-B6AF-DE87E4201216}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup-helper", "setup-helper\setup-helper.vcxproj", "{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avilog", "avilog\avilogv11.vcxproj", "{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}"
 EndProject
 Global
@@ -632,22 +630,6 @@ Global
 		{F9A69A98-B750-4242-B6AF-DE87E4201216}.ReleaseNoUnicode|Win32.Build.0 = ReleaseNoUnicode|Win32
 		{F9A69A98-B750-4242-B6AF-DE87E4201216}.ReleaseNoUnicode|x64.ActiveCfg = ReleaseNoUnicode|x64
 		{F9A69A98-B750-4242-B6AF-DE87E4201216}.ReleaseNoUnicode|x64.Build.0 = ReleaseNoUnicode|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Debug|Win32.Build.0 = Debug|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Debug|x64.ActiveCfg = Debug|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Debug|x64.Build.0 = Debug|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.DebugNoUnicode|Win32.ActiveCfg = DebugNoUnicode|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.DebugNoUnicode|Win32.Build.0 = DebugNoUnicode|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.DebugNoUnicode|x64.ActiveCfg = DebugNoUnicode|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.DebugNoUnicode|x64.Build.0 = DebugNoUnicode|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Release|Win32.ActiveCfg = Release|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Release|Win32.Build.0 = Release|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Release|x64.ActiveCfg = Release|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.Release|x64.Build.0 = Release|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.ReleaseNoUnicode|Win32.ActiveCfg = ReleaseNoUnicode|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.ReleaseNoUnicode|Win32.Build.0 = ReleaseNoUnicode|Win32
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.ReleaseNoUnicode|x64.ActiveCfg = ReleaseNoUnicode|x64
-		{A4EEC45B-21D0-4FBE-82F7-DF30ED746487}.ReleaseNoUnicode|x64.Build.0 = ReleaseNoUnicode|x64
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.Debug|Win32.ActiveCfg = Debug|Win32
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.Debug|Win32.Build.0 = Debug|Win32
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.Debug|x64.ActiveCfg = Debug|x64
