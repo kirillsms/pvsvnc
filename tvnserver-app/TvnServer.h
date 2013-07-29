@@ -141,12 +141,10 @@ public:
   virtual void afterLastClientDisconnect();
 
 protected:
-  void restartHttpServer();
   void restartControlServer();
   void restartMainRfbServer();
 public:  void startRepeaterOutgoingConnection(); protected:
 
-  void stopHttpServer();
   void stopControlServer();
   void stopMainRfbServer();
 
