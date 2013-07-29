@@ -146,7 +146,7 @@
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>Wtsapi32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -187,7 +187,7 @@
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>Wtsapi32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
