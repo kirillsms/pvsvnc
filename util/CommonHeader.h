@@ -39,7 +39,9 @@
 
 #ifdef WIN32
 #include "winhdr.h"
+#define LIBJPEG_TURBO
 #endif // WIN32
+
 
 #include "StringStorage.h"
 #include "StringTable.h"

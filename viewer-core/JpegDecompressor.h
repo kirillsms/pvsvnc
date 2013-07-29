@@ -30,9 +30,19 @@
 #include "region/Rect.h"
 
 // More help of jpeg-lib in /usr/share/doc/jpeg-8c-r1/example.c.bz2
-extern "C" {
-  #include <libjpeg/jpeglib.h>
-}
+
+// For Windows platforms only.
+// For using libjpeg for encoding go to Property Pages of tvnserver -> Linker -> Input -> Additional Dependencies
+// and delete "$(SolutionDir)libjpeg-turbo\jpeg-static.lib" and "$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib"
+// (without quotes) from the end of all configurations.
+// For Visual Studio 2008 add libjpeg project to the dependencies of tvnserver.
+// Also you need to delete LIBJPEG_TURBO directive from the CommonHeader.h file.
+
+#ifdef LIBJPEG_TURBO
+#include "libjpeg-turbo/jpeglib.h"
+#else
+#include "libjpeg/jpeglib.h"
+#endif
 
 class JpegDecompressor
 {

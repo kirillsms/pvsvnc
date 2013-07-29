@@ -147,7 +147,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Secur32.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Secur32.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies);$(SolutionDir)libjpeg-turbo\jpeg-static.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -191,7 +191,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies);$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27amd64%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>NotSet</SubSystem>
@@ -408,9 +408,6 @@
     </ProjectReference>
     <ProjectReference Include="..\io-lib\io-lib.vcxproj">
       <Project>{bbbc0986-6499-483d-a608-905d6930c55a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\libjpeg\libjpeg.vcxproj">
-      <Project>{4793826b-b077-4d75-a36c-66c9724c08f4}</Project>
     </ProjectReference>
     <ProjectReference Include="..\log-writer\log-writer.vcxproj">
       <Project>{f9a69a98-b750-4242-b6af-de87e4201216}</Project>
