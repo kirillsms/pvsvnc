@@ -487,7 +487,7 @@ void ZrleEncoder::copyPixels(const Rect *rect,
   const int rectWidth = rect->getWidth();
   const PIXEL_T *src = static_cast<const PIXEL_T *>(fb->getBufferPtr(rect->left, rect->top));
   const int fbStride = fb->getDimension().width;
-  const int bytesPerRow = rect->getWidth() * m_bytesPerPixel;
+  const size_t bytesPerRow = rect->getWidth() * m_bytesPerPixel;
 
   for (int y = 0; y < rectHeight; y++) {
     memcpy(dst, src, bytesPerRow);

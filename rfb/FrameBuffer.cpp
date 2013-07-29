@@ -71,7 +71,7 @@ void FrameBuffer::setColor(UINT8 red, UINT8 green, UINT8 blue)
 
   UINT8 *endPixPtr = (UINT8 *)m_buffer + getBufferSize();
   UINT8 *pixPtr = (UINT8 *)m_buffer;
-  for (; pixPtr < endPixPtr; pixPtr += pixelSize) {
+  for (; pixPtr <= endPixPtr - pixelSize; pixPtr += pixelSize) {
     memcpy(pixPtr, &color, pixelSize);
   }
 }

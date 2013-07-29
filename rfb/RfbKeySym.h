@@ -49,6 +49,9 @@ public:
 
   void sendCtrlAltDel();
 
+  // Set function for m_winKeyIgnore.
+  void setWinKeyIgnore(bool winIgnore);
+
 private:
   void clearKeyState();
 
@@ -96,6 +99,9 @@ private:
   bool m_allowProcessCharEvent;
 
   LogWriter *m_log;
+
+  // Flag for ignoring win key.
+  bool m_winKeyIgnore;
 };
 
 #endif // __RFBKEYSYM_H__

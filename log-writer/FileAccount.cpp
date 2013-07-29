@@ -169,11 +169,11 @@ void FileAccount::format(unsigned int processId,
   resultLine.removeChars(badCharacters, sizeof(badCharacters) / sizeof(TCHAR));
 
   const TCHAR endLine[] = { 13, 10, 0 };
-  resultLine.appendString(endLine);
 
   // Writing string without null-termination symbol.
   if (m_file != 0) {
     m_file->write(resultLine.getString(), resultLine.getSize() - sizeof(TCHAR));
+	m_file->write(endLine, sizeof(endLine));
   }
 }
 

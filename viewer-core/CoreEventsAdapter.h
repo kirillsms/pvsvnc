@@ -80,6 +80,8 @@ public:
   // RemoteViewerCore has been disconnected by calling stop()
   // or connection with server is disconnected.
   //
+  // FIXME: now, onDisconnect not called after onError().
+  // FIXME: change documentation or call onDisconnect() after onError().
   virtual void onDisconnect(const StringStorage *message);
 
   //

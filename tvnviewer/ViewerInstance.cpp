@@ -71,6 +71,7 @@ ViewerInstance::~ViewerInstance()
 
   if (m_socket != 0) {
     delete m_socket;
+	m_socket = NULL;
   }
 }
 

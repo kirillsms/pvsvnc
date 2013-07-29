@@ -33,7 +33,8 @@ RfbKeySym::RfbKeySym(RfbKeySymListener *extKeySymListener, LogWriter *log)
   m_allowProcessCharEvent(false),
   m_leftMetaIsPressed(false),
   m_rightMetaIsPressed(false),
-  m_log(log)
+  m_log(log),
+  m_winKeyIgnore(true)
 {
   clearKeyState();
 }
@@ -59,9 +60,12 @@ void RfbKeySym::processKeyEvent(unsigned short virtKey,
 {
   m_log->debug(_T("processKeyEvent() function called: virtKey = %#4.4x, addKeyData")
              _T(" = %#x"), (unsigned int)virtKey, addKeyData);
-  if (virtKey == VK_LWIN || virtKey == VK_RWIN) { // Ignoring the Win key
-    m_log->debug(_T("Ignoring the Win key event"));
-    return;
+  // Ignoring win key (when fullscreen mode is off).
+  if (m_winKeyIgnore) {
+    if (virtKey == VK_LWIN || virtKey == VK_RWIN) { // Ignoring the Win key
+      m_log->debug(_T("Ignoring the Win key event"));
+      return;
+    }
   }
 
   bool down = (addKeyData & 0x80000000) == 0;
@@ -232,6 +236,8 @@ void RfbKeySym::processFocusLoss()
   checkAndSendDiff(VK_SHIFT, 0);
   checkAndSendDiff(VK_RSHIFT, 0);
   checkAndSendDiff(VK_LSHIFT, 0);
+  checkAndSendDiff(VK_LWIN, 0);
+  checkAndSendDiff(VK_RWIN, 0);
 }
 
 void RfbKeySym::sendCtrlAltDel()
@@ -254,6 +260,11 @@ void RfbKeySym::sendCtrlAltDel()
   restoreModifier(VK_LSHIFT);
   restoreModifier(VK_LWIN);
   restoreModifier(VK_RWIN);
+}
+
+void RfbKeySym::setWinKeyIgnore(bool winKeyIgnore)
+{
+  m_winKeyIgnore = winKeyIgnore;
 }
 
 void RfbKeySym::releaseModifiers()

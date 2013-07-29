@@ -85,7 +85,7 @@ public:
   }
 
   // Return true this Rect fully contain the inner Rect, otherwise return false.
-  inline bool isFullyContainRect(Rect *inner) {
+  inline bool isFullyContainRect(const Rect *inner) {
     if (inner->left < left || inner->top < top ||
         inner->right > right || inner->bottom > bottom) {
       return false;

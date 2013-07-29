@@ -260,13 +260,10 @@ size_t StringStorage::findLast(const TCHAR c)
 
 void StringStorage::removeChars(const TCHAR badCharacters[], size_t count)
 {
-  // FIXME: Adapt code to std::vector.
-  BufferType newBuffer(getLength() + 1);
-
   size_t j = 0;
   size_t length = getLength();
 
-  for (size_t i = 0; i < getLength(); i++) {
+  for (size_t i = 0; i < length; i++) {
     TCHAR each = m_buffer[i];
     bool badCharacter = false;
     for (size_t k = 0; k < count; k++) {
@@ -276,12 +273,12 @@ void StringStorage::removeChars(const TCHAR badCharacters[], size_t count)
       }
     }
     if (!badCharacter) {
-      newBuffer[j++] = each;
+      m_buffer[j++] = each;
     }
   }
 
-  newBuffer[j] = _T('\0');
-  setString(&newBuffer.front());
+  m_buffer[j] = _T('\0');
+  m_buffer.resize(j + 1);
 }
 
 void StringStorage::remove(size_t startIndex, size_t count)
