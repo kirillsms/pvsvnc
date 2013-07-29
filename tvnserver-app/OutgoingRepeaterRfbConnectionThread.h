@@ -1,6 +1,7 @@
 #pragma once
 #include "outgoingrfbconnectionthread.h"
 #include "KonturRfbClientManager.h"
+
 #define REPEATERSIZE 250
 #define IDSIZE 3
 class OutgoingRepeaterRfbConnectionThread :

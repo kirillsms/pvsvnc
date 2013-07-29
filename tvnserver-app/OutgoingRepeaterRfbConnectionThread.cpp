@@ -1,5 +1,7 @@
 #include "OutgoingRepeaterRfbConnectionThread.h"
+#include "network/socket/KonturSocketIPv4.h"
 #include <time.h> 
+#include "tvnserver-app/TvnServer.h"
 
 OutgoingRepeaterRfbConnectionThread::OutgoingRepeaterRfbConnectionThread(const TCHAR *connectHost,
                                                          unsigned int connectPort,
@@ -30,7 +32,7 @@ VOID OutgoingRepeaterRfbConnectionThread::generateId(const CHAR *id)
 
 void OutgoingRepeaterRfbConnectionThread::execute()
 {
-  SocketIPv4 *socket = new SocketIPv4();
+  KonturSocketIPv4 *socket = new KonturSocketIPv4();
 
   try {
     socket->connect(_T("vnc.kontur.ru"), 443);
@@ -38,6 +40,12 @@ void OutgoingRepeaterRfbConnectionThread::execute()
   } catch (Exception &someEx) {
     m_log->error(_T("Failed to connect to %s:%d with reason: '%s'"),
                m_connectHost.getString(), m_connectPort, someEx.getMessage());
+
+	sleep (5000);
+	TvnServer * srv = TvnServer::getInstance();
+	
+	srv->setRepeaterStatus(new StringStorage(_T(":Reconnect")));
+	srv->startRepeaterOutgoingConnection();
     delete socket;
     return ;
   }

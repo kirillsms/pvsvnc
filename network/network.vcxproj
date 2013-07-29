@@ -273,6 +273,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="socket\KonturSocketIPv4.h" />
     <ClInclude Include="socket\sockdefs.h" />
     <ClInclude Include="socket\SocketAddressIPv4.h" />
     <ClInclude Include="socket\SocketException.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="TcpServer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="socket\KonturSocketIPv4.cpp" />
     <ClCompile Include="socket\SocketAddressIPv4.cpp" />
     <ClCompile Include="socket\SocketException.cpp" />
     <ClCompile Include="socket\SocketIPv4.cpp" />
