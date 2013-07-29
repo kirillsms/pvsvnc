@@ -62,7 +62,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
   m_runAsService(runsInServiceContext),
   m_logInitListener(logInitListener),
   m_rfbClientManager(0),
-  m_httpServer(0), m_controlServer(0), m_rfbServer(0),
+  m_controlServer(0), m_rfbServer(0),
   m_config(runsInServiceContext),
   m_log(logger),
   m_repeater(*repeater),
@@ -132,7 +132,6 @@ TvnServer::TvnServer(bool runsInServiceContext,
 
     restartMainRfbServer();
     (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
-    restartHttpServer();
     restartControlServer();
 	startRepeaterOutgoingConnection();
   }
@@ -143,7 +142,6 @@ TvnServer::~TvnServer()
   Configurator::getInstance()->removeListener(this);
 
   stopControlServer();
-  stopHttpServer();
   m_extraRfbServers.shutDown();
   stopMainRfbServer();
 
@@ -197,20 +195,6 @@ void TvnServer::onConfigReload(ServerConfig *serverConfig)
     (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
   }
 
-  // Start/stop/restart HTTP server if needed.
-  {
-    // FIXME: Protect only primitive operations.
-    AutoLock l(&m_mutex);
-
-    bool toggleHttp =
-      m_srvConfig->isAcceptingHttpConnections() != (m_httpServer != 0);
-    bool changePort = m_httpServer != 0 &&
-      (m_srvConfig->getHttpPort() != (int)m_httpServer->getBindPort());
-
-    if (toggleHttp || changePort) {
-      restartHttpServer();
-    }
-  }
   changeLogProps();
 }
 
@@ -325,24 +309,6 @@ void TvnServer::afterLastClientDisconnect()
   delete process;
 }
 
-void TvnServer::restartHttpServer()
-{
-  // FIXME: Errors are critical here, they should not be ignored.
-
-  stopHttpServer();
-
-  if (m_srvConfig->isAcceptingHttpConnections()) {
-    m_log.message(_T("Starting HTTP server"));
-    try {
-      // FIXME: HTTP server should bind to localhost if only loopback
-      //        connections are allowed.
-      m_httpServer = new HttpServer(_T("0.0.0.0"), m_srvConfig->getHttpPort(), m_runAsService, &m_log);
-    } catch (Exception &ex) {
-      m_log.error(_T("Failed to start HTTP server: \"%s\""), ex.getMessage());
-    }
-  }
-}
-
 void TvnServer::restartControlServer()
 {
   // FIXME: Memory leaks.
@@ -400,21 +366,6 @@ void TvnServer::startRepeaterOutgoingConnection()
 										&m_log,ansiId.getString());
   out->resume();
   ZombieKiller::getInstance()->addZombie(out);
-}
-
-void TvnServer::stopHttpServer()
-{
-  m_log.message(_T("Stopping HTTP server"));
-
-  HttpServer *httpServer = 0;
-  {
-    AutoLock l(&m_mutex);
-    httpServer = m_httpServer;
-    m_httpServer = 0;
-  }
-  if (httpServer != 0) {
-    delete httpServer;
-  }
 }
 
 void TvnServer::stopControlServer()

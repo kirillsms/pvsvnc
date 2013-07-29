@@ -35,8 +35,6 @@
 #include "ControlServer.h"
 #include "TvnServerListener.h"
 
-#include "http-server-lib/HttpServer.h"
-
 #include "thread/ZombieKiller.h"
 #include "thread/LocalMutex.h"
 #include "log-writer/LogWriter.h"
@@ -190,10 +188,6 @@ protected:
    * Control server.
    */
   ControlServer *m_controlServer;
-  /**
-   * Builtin http server.
-   */
-  HttpServer *m_httpServer;
   /**
    * Main rfb server.
    */
