@@ -32,7 +32,6 @@
 #include "SharePrimaryCommand.h"
 #include "ShareDisplayCommand.h"
 #include "ShareWindowCommand.h"
-#include "ShareRectCommand.h"
 #include "ShareFullCommand.h"
 #include "ShareAppCommand.h"
 #include "ControlAuth.h"
@@ -201,9 +200,6 @@ int ControlApplication::run()
       StringStorage shareWindowName;
       cmdLineParser.getShareWindowName(&shareWindowName);
       command = new ShareWindowCommand(m_serverControl, &shareWindowName);
-    } else if (cmdLineParser.hasShareRect()) {
-      Rect shareRect = cmdLineParser.getShareRect();
-      command = new ShareRectCommand(m_serverControl, &shareRect);
     } else if (cmdLineParser.hasShareFull()) {
       command = new ShareFullCommand(m_serverControl);
     } else if (cmdLineParser.hasShareApp()) {

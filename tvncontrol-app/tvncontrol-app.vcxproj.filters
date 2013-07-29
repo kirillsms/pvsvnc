@@ -110,9 +110,6 @@
     <ClCompile Include="SharePrimaryCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShareRectCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ShareWindowCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -230,9 +227,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SharePrimaryCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShareRectCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShareWindowCommand.h">

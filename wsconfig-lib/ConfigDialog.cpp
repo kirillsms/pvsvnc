@@ -145,12 +145,6 @@ BOOL ConfigDialog::onInitDialog()
   m_serverConfigDialog.create();
   moveDialogToTabControl(&m_serverConfigDialog);
 
-  m_portMappingDialog.setParent(&m_ctrlThis);
-  m_portMappingDialog.setParentDialog(this);
-  m_portMappingDialog.create();
-  moveDialogToTabControl(&m_portMappingDialog);
-  m_portMappingDialog.hide();
-
   m_administrationConfigDialog.setParent(&m_ctrlThis);
   m_administrationConfigDialog.setParentDialog(this);
   m_administrationConfigDialog.create();
@@ -167,7 +161,6 @@ BOOL ConfigDialog::onInitDialog()
   moveDialogToTabControl(&m_videoRegionsConfigDialog);
 
   m_tabControl.addTab(&m_serverConfigDialog, StringTable::getString(IDS_SERVER_TAB_CAPTION));
-  m_tabControl.addTab(&m_portMappingDialog, StringTable::getString(IDS_EXTRA_PORTS_TAB_CAPTION));
   m_tabControl.addTab(&m_ipAccessControlDialog, StringTable::getString(IDS_ACCESS_CONTROL_TAB_CAPTION));
   m_tabControl.addTab(&m_videoRegionsConfigDialog, StringTable::getString(IDS_VIDEO_WINDOWS_TAB_CAPTION));
   m_tabControl.addTab(&m_administrationConfigDialog, StringTable::getString(IDS_ADMINISTRATION_TAB_CAPTION));

@@ -43,7 +43,6 @@ const TCHAR ControlCommandLine::DISCONNECT_ALL[] = _T("-disconnectall");
 const TCHAR ControlCommandLine::CONNECT[] = _T("-connect");
 const TCHAR ControlCommandLine::SHUTDOWN[] = _T("-shutdown");
 const TCHAR ControlCommandLine::SHARE_PRIMARY[] = _T("-shareprimary");
-const TCHAR ControlCommandLine::SHARE_RECT[] = _T("-sharerect");
 const TCHAR ControlCommandLine::SHARE_DISPLAY[] = _T("-sharedisplay");
 const TCHAR ControlCommandLine::SHARE_WINDOW[] = _T("-sharewindow");
 const TCHAR ControlCommandLine::SHARE_FULL[] = _T("-sharefull");
@@ -78,7 +77,6 @@ void ControlCommandLine::parse(const CommandLineArgs *cmdArgs)
     { SET_CONTROL_PASSWORD, NEEDS_ARG },
     { CHECK_SERVICE_PASSWORDS, NO_ARG },
     { SHARE_PRIMARY, NO_ARG },
-    { SHARE_RECT, NEEDS_ARG },
     { SHARE_DISPLAY, NEEDS_ARG },
     { SHARE_WINDOW, NEEDS_ARG },
     { SHARE_FULL, NO_ARG },
@@ -106,12 +104,6 @@ void ControlCommandLine::parse(const CommandLineArgs *cmdArgs)
   bool hasPassFile = hasPasswordFile();
   if (hasPassFile) {
     optionSpecified(PASSWORD_FILE, &m_passwordFile);
-  }
-
-  if (hasShareRect()) {
-    StringStorage strRect;
-    optionSpecified(SHARE_RECT, &strRect);
-    parseRectCoordinates(&strRect);
   }
 
   if (hasShareDisplay()) {
@@ -240,11 +232,6 @@ bool ControlCommandLine::hasSharePrimaryFlag()
   return optionSpecified(SHARE_PRIMARY);
 }
 
-bool ControlCommandLine::hasShareRect()
-{
-  return optionSpecified(SHARE_RECT);
-}
-
 bool ControlCommandLine::hasShareDisplay()
 {
   return optionSpecified(SHARE_DISPLAY);
@@ -275,11 +262,6 @@ void ControlCommandLine::getShareWindowName(StringStorage *out)
   *out = m_windowHeaderName;
 }
 
-Rect ControlCommandLine::getShareRect()
-{
-  return m_shareRect;
-}
-
 unsigned int ControlCommandLine::getSharedAppProcessId()
 {
   return m_sharedAppProcessId;
@@ -305,12 +287,7 @@ bool ControlCommandLine::isCommandSpecified()
   return hasKillAllFlag() || hasReloadFlag() || hasSetControlPasswordFlag() ||
          hasSetVncPasswordFlag() || hasConnectFlag() || hasShutdownFlag() ||
          hasSharePrimaryFlag() || hasShareDisplay() || hasShareWindow() ||
-         hasShareRect() || hasShareFull() || hasShareApp();
-}
-
-void ControlCommandLine::parseRectCoordinates(const StringStorage *strCoord)
-{
-  m_shareRect = RectSerializer::toRect(strCoord);
+         hasShareFull() || hasShareApp();
 }
 
 void ControlCommandLine::parseDisplayNumber(const StringStorage *strDispNumber)

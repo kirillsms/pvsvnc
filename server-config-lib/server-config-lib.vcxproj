@@ -262,9 +262,6 @@
     <ClCompile Include="Configurator.cpp" />
     <ClCompile Include="IpAccessControl.cpp" />
     <ClCompile Include="IpAccessRule.cpp" />
-    <ClCompile Include="PortMapping.cpp" />
-    <ClCompile Include="PortMappingContainer.cpp" />
-    <ClCompile Include="PortMappingRect.cpp" />
     <ClCompile Include="RegistrySecurityAttributes.cpp" />
     <ClCompile Include="ServerConfig.cpp" />
   </ItemGroup>
@@ -274,9 +271,6 @@
     <ClInclude Include="DesktopConfig.h" />
     <ClInclude Include="IpAccessControl.h" />
     <ClInclude Include="IpAccessRule.h" />
-    <ClInclude Include="PortMapping.h" />
-    <ClInclude Include="PortMappingContainer.h" />
-    <ClInclude Include="PortMappingRect.h" />
     <ClInclude Include="RegistrySecurityAttributes.h" />
     <ClInclude Include="ServerConfig.h" />
   </ItemGroup>

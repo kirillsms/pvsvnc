@@ -27,7 +27,6 @@
 
 #include "config-lib/SettingsManager.h"
 
-#include "PortMappingContainer.h"
 #include "IpAccessControl.h"
 #include "ServerConfig.h"
 #include "ConfigReloadListener.h"
@@ -71,9 +70,6 @@ private:
   //
   // Serialize and deserialize methods
   //
-
-  bool savePortMappingContainer(SettingsManager *sm);
-  bool loadPortMappingContainer(SettingsManager *sm, PortMappingContainer *portMapping);
 
   bool saveIpAccessControlContainer(SettingsManager *sm);
   bool loadIpAccessControlContainer(SettingsManager *sm,

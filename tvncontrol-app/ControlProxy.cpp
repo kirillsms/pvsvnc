@@ -152,19 +152,6 @@ void ControlProxy::shareDisplay(unsigned char displayNumber)
   msg->send();
 }
 
-void ControlProxy::shareRect(const Rect *shareRect)
-{
-  AutoLock l(m_gate);
-  ControlMessage *msg = createMessage(ControlProto::SHARE_RECT_MSG_ID);
-
-  msg->writeInt32(shareRect->left);
-  msg->writeInt32(shareRect->top);
-  msg->writeInt32(shareRect->right);
-  msg->writeInt32(shareRect->bottom);
-
-  msg->send();
-}
-
 void ControlProxy::shareWindow(const StringStorage *shareWindowName)
 {
   AutoLock l(m_gate);

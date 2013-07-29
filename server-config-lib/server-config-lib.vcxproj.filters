@@ -23,15 +23,6 @@
     <ClCompile Include="IpAccessRule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PortMapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PortMappingContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PortMappingRect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RegistrySecurityAttributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,15 +44,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IpAccessRule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PortMapping.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PortMappingContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PortMappingRect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RegistrySecurityAttributes.h">

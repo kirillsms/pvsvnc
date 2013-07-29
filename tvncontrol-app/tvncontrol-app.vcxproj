@@ -287,7 +287,6 @@
     <ClCompile Include="ShareDisplayCommand.cpp" />
     <ClCompile Include="ShareFullCommand.cpp" />
     <ClCompile Include="SharePrimaryCommand.cpp" />
-    <ClCompile Include="ShareRectCommand.cpp" />
     <ClCompile Include="ShareWindowCommand.cpp" />
     <ClCompile Include="ShutdownCommand.cpp" />
     <ClCompile Include="SocketIPv4Transport.cpp" />
@@ -328,7 +327,6 @@
     <ClInclude Include="ShareDisplayCommand.h" />
     <ClInclude Include="ShareFullCommand.h" />
     <ClInclude Include="SharePrimaryCommand.h" />
-    <ClInclude Include="ShareRectCommand.h" />
     <ClInclude Include="ShareWindowCommand.h" />
     <ClInclude Include="ShutdownCommand.h" />
     <ClInclude Include="SocketIPv4Transport.h" />

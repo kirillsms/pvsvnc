@@ -26,16 +26,10 @@
     <ClCompile Include="EditIpAccessRuleDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditPortMappingDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IpAccessControlDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PasswordControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PortMappingDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ServerConfigDialog.cpp">
@@ -67,16 +61,10 @@
     <ClInclude Include="EditIpAccessRuleDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditPortMappingDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IpAccessControlDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PasswordControl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PortMappingDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ServerConfigDialog.h">

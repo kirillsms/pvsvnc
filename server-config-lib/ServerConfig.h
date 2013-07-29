@@ -27,7 +27,6 @@
 
 #include "util/StringVector.h"
 #include "util/Exception.h"
-#include "PortMappingContainer.h"
 #include "IpAccessControl.h"
 #include "thread/AutoLock.h"
 #include "thread/LocalMutex.h"
@@ -222,14 +221,6 @@ public:
   void setDefaultActionToAccept(bool accept);
 
   //
-  // Port mapping config
-  //
-
-  // Remark: not-thread safe method, use lock / unlock methods of this class
-  // to lock and unlock server configuration.
-  PortMappingContainer *getPortMappingContainer();
-
-  //
   // Ip access control config
   //
 
@@ -362,12 +353,6 @@ protected:
   //
 
   unsigned int m_queryTimeout;
-
-  //
-  // Port mapping config
-  //
-
-  PortMappingContainer m_portMappings;
 
   //
   // Ip access control config

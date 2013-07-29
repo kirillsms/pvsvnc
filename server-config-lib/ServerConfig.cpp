@@ -87,7 +87,6 @@ void ServerConfig::serialize(DataOutputStream *output)
   output->writeInt8(m_defaultActionAccept ? 1 : 0);
   output->writeUInt32(m_queryTimeout);
 
-  m_portMappings.serialize(output);
 
   m_accessControlContainer.serialize(output);
 
@@ -142,8 +141,6 @@ void ServerConfig::deserialize(DataInputStream *input)
   m_localInputPriorityTimeout = input->readUInt32();
   m_defaultActionAccept = input->readInt8() == 1;
   m_queryTimeout = input->readUInt32();
-
-  m_portMappings.deserialize(input);
 
   m_accessControlContainer.deserialize(input);
 
@@ -625,11 +622,6 @@ void ServerConfig::setDefaultActionToAccept(bool accept)
 {
   AutoLock lock(&m_objectCS);
   m_defaultActionAccept = accept;
-}
-
-PortMappingContainer *ServerConfig::getPortMappingContainer()
-{
-  return &m_portMappings;
 }
 
 //

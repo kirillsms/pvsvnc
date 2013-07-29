@@ -52,7 +52,6 @@ const UINT32 ControlClient::REQUIRES_AUTH[] = { ControlProto::ADD_CLIENT_MSG_ID,
                                                 ControlProto::SHARE_PRIMARY_MSG_ID,
                                                 ControlProto::SHARE_DISPLAY_MSG_ID,
                                                 ControlProto::SHARE_WINDOW_MSG_ID,
-                                                ControlProto::SHARE_RECT_MSG_ID,
                                                 ControlProto::SHARE_APP_MSG_ID,
                                                 ControlProto::SHARE_FULL_MSG_ID,
                                                 ControlProto::CONNECT_TO_TCPDISP_MSG_ID };
@@ -201,10 +200,6 @@ void ControlClient::execute()
         case ControlProto::SHARE_WINDOW_MSG_ID:
           m_log->message(_T("Share window message recieved"));
           shareWindowIdMsgRcvd();
-          break;
-        case ControlProto::SHARE_RECT_MSG_ID:
-          m_log->message(_T("Share rect message recieved"));
-          shareRectIdMsgRcvd();
           break;
         case ControlProto::SHARE_FULL_MSG_ID:
           m_log->message(_T("Share full message recieved"));
@@ -504,20 +499,6 @@ void ControlClient::shareWindowIdMsgRcvd()
 
   ViewPortState dynViewPort;
   dynViewPort.setWindowName(&windowName);
-  m_rfbClientManager->setDynViewPort(&dynViewPort);
-}
-
-void ControlClient::shareRectIdMsgRcvd()
-{
-  Rect shareRect;
-  shareRect.left = m_gate->readInt32();
-  shareRect.top = m_gate->readInt32();
-  shareRect.right = m_gate->readInt32();
-  shareRect.bottom = m_gate->readInt32();
-  m_gate->writeUInt32(ControlProto::REPLY_OK);
-
-  ViewPortState dynViewPort;
-  dynViewPort.setArbitraryRect(&shareRect);
   m_rfbClientManager->setDynViewPort(&dynViewPort);
 }
 
