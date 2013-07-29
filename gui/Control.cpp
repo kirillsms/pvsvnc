@@ -80,14 +80,6 @@ void Control::setUnsignedInt(unsigned int value)
   setText(text.getString());
 }
 
-//
-// FIXME: Stub
-//
-
-void Control::setTextVerticalAlignment(VerticalAlignment align)
-{
-}
-
 void Control::setFocus()
 {
   ::SetFocus(m_hwnd);

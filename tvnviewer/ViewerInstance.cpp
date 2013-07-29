@@ -96,9 +96,8 @@ void ViewerInstance::stop()
 
 void ViewerInstance::start()
 {
-  Logger *logger = ViewerConfig::getInstance()->getLogger();
-  m_viewerWnd.setRemoteViewerCore(&m_viewerCore);
 
+  m_viewerWnd.setRemoteViewerCore(&m_viewerCore);
 
   m_viewerWnd.setFileTransfer(&m_fileTransfer);
 
@@ -112,7 +111,7 @@ void ViewerInstance::start()
   } else {
     StringStorage strHost;
     m_condata.getReducedHost(&strHost);
-    UINT16 portVal = m_condata.getPort();
+    
     m_viewerCore.start(_T("vnc.kontur.ru"), 5901,
                        &m_viewerWnd, m_conConf.getSharedFlag(),&strHost);
   }

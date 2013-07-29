@@ -173,7 +173,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>dxgi.lib;d3d11.lib;</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -212,7 +212,7 @@
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>dxgi.lib;d3d11.lib;</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
