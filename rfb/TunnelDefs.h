@@ -1,4 +1,4 @@
-// Copyright (C) 2010,2011,2012 GlavSoft LLC.
+// Copyright (C) 2013 GlavSoft LLC.
 // All rights reserved.
 //
 //-------------------------------------------------------------------------
@@ -22,29 +22,17 @@
 //-------------------------------------------------------------------------
 //
 
-#ifndef __PARENTWATCHER_H__
-#define __PARENTWATCHER_H__
+#ifndef __TUNNELDEFS_H__
+#define __TUNNELDEFS_H__
 
-#include "win-system/ParentProcess.h"
-#include "ParentEventsListener.h"
-#include "win-system/WindowsEvent.h"
-#include "util/CommonHeader.h"
-#include "thread/Thread.h"
-#include <Tlhelp32.h>
+#include "util/inttypes.h"
 
-class ParentWatcher : private Thread
+class TunnelDefs
 {
 public:
-  ParentWatcher(ParentEventsListener *parentEventListener);
-  virtual ~ParentWatcher();
-
+  static const UINT32 NOTUNNEL = 0;
+  static const char *const SIG_NONE;
 private:
-  virtual void execute();
-  virtual void onTerminate();
-
-  ParentEventsListener *m_parentEventListener;
-  ParentProcess m_parentProcess;
-  WindowsEvent m_timer;
 };
 
-#endif // __PARENTWATCHER_H__
+#endif // __TUNNELDEFS_H__

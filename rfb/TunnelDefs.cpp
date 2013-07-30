@@ -1,4 +1,4 @@
-// Copyright (C) 2010,2011,2012 GlavSoft LLC.
+// Copyright (C) 2013 GlavSoft LLC.
 // All rights reserved.
 //
 //-------------------------------------------------------------------------
@@ -22,34 +22,6 @@
 //-------------------------------------------------------------------------
 //
 
-#ifndef __HOOKLOADERAPPLICATION_H__
-#define __HOOKLOADERAPPLICATION_H__
+#include "TunnelDefs.h"
 
-#include "win-system/LocalWindowsApplication.h"
-#include "ParentWatcher.h"
-
-class HookLoaderApplication : public WindowsApplication,
-                              private ParentEventsListener
-{
-public:
-  HookLoaderApplication(HINSTANCE appInstance,
-                        const TCHAR *windowClassName,
-                        const TCHAR *commandLine);
-  virtual ~HookLoaderApplication();
-
-private:
-  virtual void onParentTerminate();
-
-  virtual void registerWindowClass(WNDCLASS *wndClass);
-  virtual int processMessages();
-
-  static LRESULT CALLBACK hookLoaderWndProc(HWND hWnd, UINT msg,
-                                            WPARAM wparam,
-                                            LPARAM lparam);
-
-  StringStorage m_commandLine;
-
-  ParentWatcher *m_parentWatcher;
-};
-
-#endif // __HOOKLOADERAPPLICATION_H__
+const char *const TunnelDefs::SIG_NONE = "NOTUNNEL";
