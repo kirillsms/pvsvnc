@@ -500,9 +500,10 @@ private:
   //
   // Update properties (Dimension and PixelfFormat) of m_frameBuffer.
   //
-  void setFbProperties(const Dimension *fbDimension,
+protected:
+  virtual void setFbProperties(const Dimension *fbDimension,
                        const PixelFormat *fbPixelFormat);
-
+private:
   //
   // If m_isNewPixelFormat flag is set to true, then pixel format of the frame buffer
   // will be updated to m_viewerPixelFormat.

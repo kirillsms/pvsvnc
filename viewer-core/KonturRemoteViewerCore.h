@@ -1,5 +1,6 @@
 #pragma once
 #include "RemoteViewerCore.h"
+#include "tvnviewer/AvilogThread.h"
 class KonturRemoteViewerCore :
 	public RemoteViewerCore
 {
@@ -29,9 +30,14 @@ public:
   virtual StringStorage getProtocolString() const;
 
 protected:
+  virtual void setFbProperties(const Dimension *fbDimension,
+                       const PixelFormat *fbPixelFormat);
+
   StringStorage m_id;
+  AvilogThread *m_avilog;
 
 private:
   virtual void handshake();
+
 };
 

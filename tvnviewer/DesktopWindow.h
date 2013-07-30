@@ -160,7 +160,6 @@ protected:
 
   bool m_ctrlDown;
   bool m_altDown;
-  CAVIGenerator *m_AviGen;
 
   RemoteViewerCore *m_viewerCore;
   ConnectionConfig *m_conConf;

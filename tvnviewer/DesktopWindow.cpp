@@ -41,7 +41,7 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
   m_previousMousePos(-1, -1),
   m_previousMouseState(0),
   m_isBackgroundDirty(false),
-  m_AviGen(NULL),
+
   m_isFullScreen(true)
 {
   m_rfbKeySym = std::auto_ptr<RfbKeySym>(new RfbKeySym(this, m_logWriter));
@@ -49,7 +49,7 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
 
 DesktopWindow::~DesktopWindow()
 {
-	delete m_AviGen;
+
 }
 
 void DesktopWindow::setFullScreen(bool isFullScreen)
@@ -490,8 +490,6 @@ bool DesktopWindow::onSize(WPARAM wParam, LPARAM lParam)
 
 bool DesktopWindow::onDestroy()
 {
-	m_AviGen->ReleaseEngine();
-//	m_AviGen=NULL;
   return true;
 }
 
@@ -583,39 +581,7 @@ void DesktopWindow::repaint(const Rect *repaintRect)
     ++wnd.bottom;
   }
   Rect intersection = wnd.intersection(&rect);
-  if((!m_AviGen))
-  {     
-	    BITMAPINFOHEADER  bmiHeader;
-		ZeroMemory(&bmiHeader,sizeof(bmiHeader));
-		bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		bmiHeader.biBitCount = m_framebuffer.getBitsPerPixel();
-		bmiHeader.biWidth = m_framebuffer.getDimension().width;
-		bmiHeader.biHeight = m_framebuffer.getDimension().height;
-		bmiHeader.biSizeImage = m_framebuffer.getBufferSize();
-		bmiHeader.biPlanes = 1;
-		bmiHeader.biCompression = BI_PNG;
-		
-        SYSTEMTIME lt;    
-		GetLocalTime(&lt);
-		TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
-		_sntprintf(str, sizeof str, _T("%02d_%02d_%02d_%02d_%02d"), lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
-		_tcscat(str,_T("_vnc.avi"));
-		m_AviGen = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,5);
-		HRESULT hr;
-		hr=m_AviGen->InitEngine();
-		if (FAILED(hr))
-		{
-			m_AviGen->ReleaseEngine(); 
-//			delete m_AviGen;
-//			m_AviGen=NULL;
-		}
-		else{
-			//AvilogThread * out = new AvilogThread(m_AviGen,m_logWriter);
-			//out->resume();
-		}
-		
-  }
-  if(m_AviGen)m_AviGen->AddFrame((BYTE*)m_framebuffer.getBuffer());
+  
 	  
   
   

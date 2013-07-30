@@ -18,7 +18,7 @@ static char THIS_FILE[]=__FILE__;
 
 CAVIGenerator::CAVIGenerator()
 :  m_dwRate(30),
-m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
+m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 {
 	memset(&m_bih,0,sizeof(BITMAPINFOHEADER));
 }
@@ -35,7 +35,7 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
 
 CAVIGenerator::CAVIGenerator(LPCTSTR sFileName,LPCTSTR sPath, LPBITMAPINFOHEADER lpbih, DWORD dwRate)
 : m_dwRate(dwRate),
-m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
+m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 {
 		_tcscpy_s(m_sFile,sPath);
 		_tcscpy_s(mypath,sPath);
@@ -67,9 +67,9 @@ void CAVIGenerator::SetBitmapHeader(LPBITMAPINFOHEADER lpbih)
 	// corrected thanks to Lori Gardi
 	memcpy(&m_bih,lpbih, sizeof(BITMAPINFOHEADER));
 	//m_bih.biHeight=-m_bih.biHeight;
-	m_bih.biCompression=BI_RGB;
+	//m_bih.biCompression=BI_RGB;
 	tempbuffer= new unsigned char[m_bih.biSizeImage];
-	m_bih.biSizeImage=0;
+	//m_bih.biSizeImage=0;
 }
 
 #ifdef _AVIGENERATOR_USE_MFC
@@ -278,7 +278,7 @@ HRESULT CAVIGenerator::InitEngine()
 			int size;
 			/* Save options to file*/
 			errno_t err = _tfopen_s(&file, mypath, _T("wb"));
-			if (err || !file) {
+			if (!err && file) {
 				/* write AVICOMPRESSOPTIONS struct */
 				size = fwrite(&opts, sizeof(AVICOMPRESSOPTIONS), 1, file);
 				/* write AVICOMPRESSOPTIONS.cbFormat */
@@ -328,16 +328,21 @@ void CAVIGenerator::ReleaseEngine()
 
 	// Close engine
 	AVIFileExit();
-	if (tempbuffer) delete []tempbuffer;
-	tempbuffer=NULL;
+	released = true;
+	
 }
-DWORD oldtime=0;
+DWORD oldtime=timeGetTime();
 HRESULT CAVIGenerator::AddFrame(BYTE *bmBits)
 {
-	if(!tempbuffer) return 0;
+	if(released) return 0;
 	DWORD newtime=timeGetTime();
 	
-	if ((newtime-oldtime)<(1000/m_dwRate)) return 0;
+	INT delta = (1000/m_dwRate)-(newtime-oldtime);
+	if (delta>0) {
+		Sleep(delta);
+		return 0;
+
+	}
 	oldtime=newtime;
 	HRESULT hr;
 	int width=m_bih.biWidth*m_bih.biBitCount/8;

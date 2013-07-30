@@ -123,6 +123,7 @@ protected:
 	//! name of output file
 	TCHAR m_sFile[1024];
 	TCHAR mypath[1024];
+	BOOL released;
 	//! Frame rate 
 	DWORD m_dwRate;	
 	//! structure contains information for a single stream
