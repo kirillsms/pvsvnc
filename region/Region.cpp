@@ -73,9 +73,14 @@ Region & Region::operator=(const Region &src)
 
 void Region::addRect(const Rect *rect)
 {
-  if (!rect->isEmpty()) {
-    Region temp(rect);
-    add(&temp);
+if (!rect->isEmpty()) {
+  Rect *tmp;
+tmp = (Rect *)rect;
+if(rect->right>32767){  
+tmp->right = 32767;
+}
+Region temp(tmp);
+add(&temp);
   }
 }
 
