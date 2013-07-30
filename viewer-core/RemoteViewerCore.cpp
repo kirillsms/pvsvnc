@@ -26,6 +26,7 @@
 
 #include "ft-common/FTMessage.h"
 #include "rfb/AuthDefs.h"
+#include "rfb/TunnelDefs.h"
 #include "rfb/MsgDefs.h"
 #include "rfb/EncodingDefs.h"
 #include "rfb/VendorDefs.h"
@@ -669,8 +670,20 @@ void RemoteViewerCore::initTunnelling()
   m_logWriter.detail(_T("Initialization of tight-tunneling..."));
   UINT32 tunnelCount = m_input->readUInt32();
   if (tunnelCount > 0) {
-    m_logWriter.error(_T("Viewer not support tunneling in tight-authentication"));
-    throw Exception(_T("Viewer not support tunneling in tight-authentication"));
+    bool hasNoTunnel = false;
+    for (UINT32 i = 0; i < tunnelCount; i++) {
+      RfbCapabilityInfo cap = readCapability();
+      if (cap.code == TunnelDefs::NOTUNNEL) {
+        hasNoTunnel = true;
+      }
+    }
+    if (hasNoTunnel) {
+      m_output->writeUInt32(TunnelDefs::NOTUNNEL);
+      m_output->flush();
+    } else {
+      m_logWriter.error(_T("Viewer support only default tunneling tight-authentication"));
+      throw Exception(_T("Viewer support only default tunneling tight-authentication"));
+    }
   }
   m_logWriter.debug(_T("Tunneling is init"));
 }
