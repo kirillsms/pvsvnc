@@ -448,8 +448,23 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <PropertyGroup>
+     <ExtensionTasksPath>$(MSBuildThisFileDirectory)\..\deploy\MSBuildExtensionPack\</ExtensionTasksPath>
+     <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
+     <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_VCS_NUMBER)</Version>
+     <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
+  </PropertyGroup>
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
+  <Target Name="BeforeBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnviewer.rc" DestinationFiles="$(MSBuildThisFileDirectory)tvnviewer.rc.orig" />
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" TextEncoding="UCS-2" RegexPattern="\{0\}"
+                     Replacement="$(Version)"
+                     Files="$(MSBuildThisFileDirectory)tvnviewer.rc" />
+                                                       
+  </Target>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
   <Target Name="AfterBuild">
     <RemoteSignFile SigningTarget="$(OutDir)tvnviewer.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnviewer.rc.orig" DestinationFiles="$(MSBuildThisFileDirectory)tvnviewer.rc" />
   </Target>
 </Project>
