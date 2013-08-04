@@ -34,7 +34,7 @@
 			  
 		<WriteLinesToFile
             File="\\$(Server)\c$\inetpub\teamcity\help\user\user\Scripts\Source\vncversion.js"
-            Lines="window.VNCVersion = "2.7.11.$(BUILD_NUMBER)";"
+            Lines="window.VNCVersion = &quot;2.7.11.$(BUILD_NUMBER)&quot;;"
             Overwrite="true"
             Encoding="Unicode"/>
 		  
