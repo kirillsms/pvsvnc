@@ -451,7 +451,7 @@
   <PropertyGroup>
      <ExtensionTasksPath>$(MSBuildThisFileDirectory)\..\deploy\MSBuildExtensionPack\</ExtensionTasksPath>
      <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
-     <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_VCS_NUMBER)</Version>
+     <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</Version>
      <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
   </PropertyGroup>
   <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
