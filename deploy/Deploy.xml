@@ -31,7 +31,12 @@
 			  
 		<Copy SourceFiles="$(MSBuildThisFileDirectory)\..\bin\Release\tvnviewer.exe" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="true" 
 		      DestinationFolder="\\$(Server)\c$\inetpub\teamcity\help\user\Content\Components" />
-
+			  
+		<WriteLinesToFile
+            File="\\$(Server)\c$\inetpub\teamcity\help\user\user\Scripts\Source\vncversion.js"
+            Lines="window.VNCVersion = "2.7.11.$(BUILD_NUMBER)";"
+            Overwrite="true"
+            Encoding="Unicode"/>
 		  
   </Target>
   
