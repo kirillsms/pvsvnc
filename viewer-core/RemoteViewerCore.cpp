@@ -1213,7 +1213,7 @@ void RemoteViewerCore::clientAndServerInit()
 	  fullName = nameSurname;
 	  nameSize = nameSurname.getLength();
   }
-  m_output->writeUInt16(nameSize);
+  m_output->writeUInt32(nameSize);
   m_output->writeUTF8(fullName.getString());
   m_output->flush();
   m_logWriter.info(_T("UserName: %s => %s"), name, fullName.getString());

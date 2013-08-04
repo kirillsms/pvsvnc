@@ -55,8 +55,8 @@ void AvilogThread::UpdateAvilog(const FrameBuffer *buffer)
 			SYSTEMTIME lt;    
 			GetLocalTime(&lt);
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
-			_sntprintf(str, sizeof str, _T("%02d_%02d_%02d_%02d_%02d"), lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
-			_tcscat(str,_T("_vnc.avi"));
+			_sntprintf_s(str, sizeof str, _T("%02d_%02d_%02d_%02d_%02d"), lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+			_tcscat_s(str,_T("_vnc.avi"));
 			this->m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
 			HRESULT hr;
 			hr=m_avilog->InitEngine();
