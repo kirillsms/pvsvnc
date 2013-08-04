@@ -464,7 +464,7 @@
   </Target>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
   <Target Name="AfterBuild">
-    <RemoteSignFile SigningTarget="$(OutDir)tvnviewer.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
     <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnviewer.rc.orig" DestinationFiles="$(MSBuildThisFileDirectory)tvnviewer.rc" />
+    <RemoteSignFile SigningTarget="$(OutDir)tvnviewer.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
   </Target>
 </Project>
