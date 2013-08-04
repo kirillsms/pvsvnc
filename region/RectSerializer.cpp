@@ -35,17 +35,3 @@ void RectSerializer::toString(const Rect *rect, StringStorage *strOut)
                                     rect->top);
 }
 
-Rect RectSerializer::toRect(const StringStorage *strIn)
-{
-  int width, height, x, y;
-  TCHAR c;
-  if (_stscanf_s(strIn->getString(),
-               _T("%dx%d+%d+%d%c"), &width, &height, &x, &y, &c) != 4 ||
-      width < 0 || height < 0) {
-    StringStorage errMess;
-    errMess.format(_T("Invalid string format to convert it to a rectangle")
-                   _T(" (%s)."), strIn->getString());
-    throw Exception(errMess.getString());
-  }
-  return Rect(x, y, x + width, y + height);
-}

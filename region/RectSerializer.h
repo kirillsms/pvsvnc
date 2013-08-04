@@ -34,8 +34,6 @@ public:
   // Converts to string value.
   static void toString(const Rect *rect, StringStorage *strOut);
 
-  // Converts to Rect value.
-  static Rect toRect(const StringStorage *strIn);
 };
 
 #endif
