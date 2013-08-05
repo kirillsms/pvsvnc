@@ -33,10 +33,10 @@ KonturRfbClient::KonturRfbClient(NewConnectionEvents *newConnectionEvents, Socke
 KonturRfbClient::~KonturRfbClient(void)
 {
   
-  TvnServer * srv = TvnServer::getInstance();
+ /* TvnServer * srv = TvnServer::getInstance();
   sleep(2000);
   srv->setRepeaterStatus(new StringStorage(_T(":Reconnect")));
-  srv->startRepeaterOutgoingConnection();
+  srv->startRepeaterOutgoingConnection();*/
 
 }
 

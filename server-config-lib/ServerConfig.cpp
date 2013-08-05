@@ -29,11 +29,11 @@
 #include "file-lib/File.h"
 
 ServerConfig::ServerConfig()
-: m_rfbPort(5900), m_httpPort(5800),
+: m_rfbPort(5959), m_httpPort(5800),
   m_disconnectAction(DA_DO_NOTHING), m_logLevel(0), m_useControlAuth(false),
   m_controlAuthAlwaysChecking(false),
-  m_acceptRfbConnections(false), m_useAuthentication(false),
-  m_onlyLoopbackConnections(false), m_acceptHttpConnections(false),
+  m_acceptRfbConnections(true), m_useAuthentication(false),
+  m_onlyLoopbackConnections(true), m_acceptHttpConnections(false),
   m_enableAppletParamInUrl(true), m_enableFileTransfers(true),
   m_mirrorDriverAllowed(true),
   m_removeWallpaper(true), m_hasReadOnlyPassword(false),
@@ -41,7 +41,7 @@ ServerConfig::ServerConfig()
   m_disconnectClients(false), m_pollingInterval(1000), m_localInputPriorityTimeout(3),
   m_blockLocalInput(false), m_blockRemoteInput(false), m_localInputPriority(false),
   m_defaultActionAccept(false), m_queryTimeout(30),
-  m_allowLoopbackConnections(false),
+  m_allowLoopbackConnections(true),
   m_videoRecognitionInterval(3000), m_grabTransparentWindows(true),
   m_saveLogToAllUsersPath(false), m_hasControlPassword(false),
   m_showTrayIcon(true)

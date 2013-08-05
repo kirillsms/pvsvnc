@@ -34,7 +34,7 @@ void KonturRfbInitializer::initVersion()
   repeater.format(_T("ID:%s"), info.m_repeater.getString());
   AnsiStringStorage ansiRepeater(&repeater);
   memcpy(&repeaterHandshake,ansiRepeater.getString(),ansiRepeater.getLength());
-  m_output->writeFully(&repeaterHandshake,250);
+  //m_output->writeFully(&repeaterHandshake,250);
   srv->setRepeaterStatus(new StringStorage(_T(":Ready")));
 
   RfbInitializer::initVersion();

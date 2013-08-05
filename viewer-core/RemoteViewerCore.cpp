@@ -188,11 +188,10 @@ void RemoteViewerCore::start(CoreEventsAdapter *adapter,
 void RemoteViewerCore::start(const TCHAR *host,
                              UINT16 port,
                              CoreEventsAdapter *adapter,
-							 bool sharedFlag, StringStorage* id)
+                             bool sharedFlag)
 {
   m_tcpConnection.bind(host, port);
   start(adapter, sharedFlag);
-  m_id.fromStringStorage(id);
 }
 void RemoteViewerCore::start(SocketIPv4 *socket,
                              CoreEventsAdapter *adapter,
@@ -1168,12 +1167,12 @@ void RemoteViewerCore::handshake()
      m_minor = 8;
     }
   }
-  CHAR *handshke = new CHAR [250];
+  /*CHAR *handshke = new CHAR [250];
   ZeroMemory(handshke,250);
   CopyMemory(handshke,"ID:",3);
   const CHAR* ansiid = m_id.getString();
   CopyMemory(handshke+3,ansiid,strlen(ansiid));
-  m_output->writeFully(handshke,250);
+  m_output->writeFully(handshke,250);*/
   m_logWriter.info(_T("Send to server protocol version: %s"), getProtocolString().getString());
 
   AnsiStringStorage clientProtocolAnsi;
@@ -1213,8 +1212,8 @@ void RemoteViewerCore::clientAndServerInit()
 	  fullName = nameSurname;
 	  nameSize = nameSurname.getLength();
   }
-  m_output->writeUInt32(nameSize);
-  m_output->writeUTF8(fullName.getString());
+ /* m_output->writeUInt32(nameSize);
+  m_output->writeUTF8(fullName.getString());*/
   m_output->flush();
   m_logWriter.info(_T("UserName: %s => %s"), name, fullName.getString());
   m_logWriter.debug(_T("Shared flag is set"));

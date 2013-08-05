@@ -112,8 +112,8 @@ void ViewerInstance::start()
   } else {
     StringStorage strHost;
     m_condata.getReducedHost(&strHost);
-    
-    m_viewerCore.start(_T("vnc.kontur.ru"), 5901,
-                       &m_viewerWnd, m_conConf.getSharedFlag(),&strHost);
+    UINT16 portVal = m_condata.getPort();
+    m_viewerCore.start(strHost.getString(), portVal,
+                       &m_viewerWnd, m_conConf.getSharedFlag());
   }
 }

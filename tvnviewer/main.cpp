@@ -62,7 +62,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
   int result = 0;
   try {
     cmd.parse();
-    KonturTvnViewer tvnViewer(hInstance,
+    TvnViewer tvnViewer(hInstance,
                         ApplicationNames::WINDOW_CLASS_NAME,
                         WindowNames::TVN_WINDOW_CLASS_NAME);
     if (isListening) {
@@ -71,7 +71,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
     } else if (!condata.isEmpty()) {
       tvnViewer.newConnection(&condata, &conConf);
     } else {
-      tvnViewer.showKonturLoginDialog();
+      tvnViewer.showLoginDialog();
     }
     result = tvnViewer.run();
   } catch (const CommandLineFormatException &exception) {
