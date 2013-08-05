@@ -214,7 +214,7 @@ public:
   //
   void start(const TCHAR *host, UINT16 port,
              CoreEventsAdapter *adapter,
-			 bool sharedFlag = true,StringStorage* id=NULL);
+             bool sharedFlag = true);
 
   //
   // This version expects a connected TCP socket. For example, it can be used

@@ -38,14 +38,14 @@ void KonturViewerInstance::start()
   
 
   if (m_socket) {
-	if(!m_konturId.isEmpty()) 
+	/*if(!m_konturId.isEmpty()) 
 		m_viewerCore.setID(&m_konturId);
-
+		*/
     m_viewerCore.start(m_socket,
                        &m_viewerWnd, m_conConf.getSharedFlag());
   } else {
-	if(!m_konturId.isEmpty()) 
-		m_viewerCore.setID(&m_konturId);
+/*	if(!m_konturId.isEmpty()) 
+		m_viewerCore.setID(&m_konturId);*/
 
     StringStorage strHost;
     m_condata.getReducedHost(&strHost);

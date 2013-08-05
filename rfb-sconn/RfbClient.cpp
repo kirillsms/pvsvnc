@@ -181,7 +181,7 @@ void RfbClient::execute()
 
   FileTransferRequestHandler *fileTransfer = 0;
 
-  KonturRfbInitializer rfbInitializer(&sockStream, m_extAuthListener, this,
+  RfbInitializer rfbInitializer(&sockStream, m_extAuthListener, this,
                                 !m_isOutgoing);
 
   try {

@@ -326,7 +326,7 @@ void ControlTrayIcon::onCloseControlInterfaceMenuItemClick()
 
 void ControlTrayIcon::onShowConnectionStatusClick()
 {
-	m_connectionStatusDialog.show();
+	//m_connectionStatusDialog.show();
 
 	ControlApplication::addModelessDialog(m_connectionStatusDialog.getControl()->getWindow());
 }
@@ -347,10 +347,10 @@ void ControlTrayIcon::syncStatusWithServer()
     } else {
       setIcon(m_iconDisabled);
     }
-	m_connectionStatusDialog.refreshClientsList(&clients );
+	//m_connectionStatusDialog.refreshClientsList(&clients );
 	StringStorage title(info.m_repeater);
 	title.appendString(info.m_repeaterStatus.getString());
-	m_connectionStatusDialog.setTitle(title.getString());
+	//m_connectionStatusDialog.setTitle(title.getString());
     setText(info.m_statusText.getString());
 
     // Cleanup.
