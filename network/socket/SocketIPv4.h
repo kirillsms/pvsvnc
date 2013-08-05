@@ -33,7 +33,7 @@
 
 #include "io-lib/Channel.h"
 #include "io-lib/IOException.h"
-
+#include "win-system/WsaStartup.h"
 #include "thread/LocalMutex.h"
 
 /**
@@ -149,6 +149,9 @@ public:
   /* Socket options */
   void enableNaggleAlgorithm(bool enabled) throw(SocketException);
   void setExclusiveAddrUse() throw(SocketException);
+
+  private:
+  WsaStartup m_wsaStartup;
 
 protected:
   // Returns a SOCKET object with performed accept operation.

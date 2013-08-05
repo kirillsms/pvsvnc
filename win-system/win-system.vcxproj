@@ -338,6 +338,7 @@
     <ClCompile Include="WinStaLibrary.cpp" />
     <ClCompile Include="WinTimeMillis.cpp" />
     <ClCompile Include="Workstation.cpp" />
+    <ClCompile Include="WsaStartup.cpp" />
     <ClCompile Include="WTS.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +387,7 @@
     <ClInclude Include="WinStaLibrary.h" />
     <ClInclude Include="WinTimeMillis.h" />
     <ClInclude Include="Workstation.h" />
+    <ClInclude Include="WsaStartup.h" />
     <ClInclude Include="WTS.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

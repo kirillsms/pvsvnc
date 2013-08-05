@@ -32,6 +32,7 @@
 #include "SocketException.h"
 
 #include "sockdefs.h"
+#include "win-system/WsaStartup.h"
 
 // FIXME: Deprecated method, only for testing of old code.
 void getLocalIPAddrString(char *buffer, int buflen);
@@ -43,6 +44,9 @@ public:
   SocketAddressIPv4(struct sockaddr_in);
   SocketAddressIPv4(const TCHAR *host, unsigned short port);
 
+  SocketAddressIPv4(const SocketAddressIPv4 &socketAddressIPv4);
+  SocketAddressIPv4 &operator=(const SocketAddressIPv4 &socketAddressIPv4);
+
   socklen_t getAddrLen() const;
   struct sockaddr_in getSockAddr() const;
 
@@ -52,6 +56,7 @@ public:
   static SocketAddressIPv4 resolve(const TCHAR *host, unsigned short port) throw(SocketException);
 
 protected:
+  WsaStartup m_wsaStartup;
   unsigned short m_port;
   struct in_addr m_addr;
 
