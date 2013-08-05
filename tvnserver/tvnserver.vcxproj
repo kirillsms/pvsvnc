@@ -114,8 +114,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -409,6 +409,7 @@
   <ItemGroup>
     <ClInclude Include="BuildTime.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Version.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\connected.ico" />
@@ -534,22 +535,22 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <PropertyGroup>
-     <ExtensionTasksPath>$(MSBuildThisFileDirectory)\..\deploy\MSBuildExtensionPack\</ExtensionTasksPath>
-     <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
-     <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</Version>
-     <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
+    <DeployDir>$(MSBuildThisFileDirectory)..\deploy</DeployDir>
+    <ExtensionTasksPath>$(DeployDir)\MSBuildExtensionPack\</ExtensionTasksPath>
+    <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
+    <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</Version>
+    <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
   </PropertyGroup>
-  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
   <Target Name="BeforeBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnserver.rc" DestinationFiles="$(MSBuildThisFileDirectory)tvnserver.rc.orig" />
-    <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" TextEncoding="UCS-2" RegexPattern="\{0\}"
-                     Replacement="$(Version)"
-                     Files="$(MSBuildThisFileDirectory)tvnserver.rc" />
-
+    <Delete Files="$(MSBuildThisFileDirectory)Version.h.orig" Condition="Exists('$(MSBuildThisFileDirectory)Version.h.orig')" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Version.h" DestinationFiles="$(MSBuildThisFileDirectory)Version.h.orig" OverwriteReadOnlyFiles="true" />
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" TextEncoding="UCS-2" RegexPattern="12345" Replacement="$(Version)" Files="$(MSBuildThisFileDirectory)Version.h" />
   </Target>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
+  <UsingTask TaskName="RemoteSignFile" AssemblyFile="$(DeployDir)\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnserver.rc.orig" DestinationFiles="$(MSBuildThisFileDirectory)tvnserver.rc" />
-    <RemoteSignFile SigningTarget="$(OutDir)tvnserver.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Version.h.orig" DestinationFiles="$(MSBuildThisFileDirectory)Version.h" OverwriteReadOnlyFiles="true" />
+    <RemoteSignFile SigningTarget="$(TargetPath)" SigningTargetDescription="Программа дистанционной поддержки VNC СКБ Контур" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
+    <Delete Files="$(MSBuildThisFileDirectory)Version.h.orig" />
   </Target>
 </Project>

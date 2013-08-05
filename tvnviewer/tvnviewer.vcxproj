@@ -113,11 +113,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\$(Configuration)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -367,6 +367,7 @@
     <ClInclude Include="ResourceStrings.h" />
     <ClInclude Include="ScaleManager.h" />
     <ClInclude Include="TvnViewer.h" />
+    <ClInclude Include="Version.h" />
     <ClInclude Include="ViewerCmdLine.h" />
     <ClInclude Include="ViewerCollector.h" />
     <ClInclude Include="ViewerInstance.h" />
@@ -449,22 +450,22 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <PropertyGroup>
-     <ExtensionTasksPath>$(MSBuildThisFileDirectory)\..\deploy\MSBuildExtensionPack\</ExtensionTasksPath>
-     <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
-     <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</Version>
-     <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
+    <DeployDir>$(MSBuildThisFileDirectory)..\deploy</DeployDir>
+    <ExtensionTasksPath>$(DeployDir)\MSBuildExtensionPack\</ExtensionTasksPath>
+    <PrepareForBuildDependsOn>BeforeBuild;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
+    <Version Condition="'$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</Version>
+    <Version Condition="'$(BUILD_NUMBER)' == '' ">0</Version>
   </PropertyGroup>
-  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
   <Target Name="BeforeBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnviewer.rc" DestinationFiles="$(MSBuildThisFileDirectory)tvnviewer.rc.orig" />
-    <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" TextEncoding="UCS-2" RegexPattern="\{0\}"
-                     Replacement="$(Version)"
-                     Files="$(MSBuildThisFileDirectory)tvnviewer.rc" />
-                                                       
+    <Delete Files="$(MSBuildThisFileDirectory)Version.h.orig" Condition="Exists('$(MSBuildThisFileDirectory)Version.h.orig')" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Version.h" DestinationFiles="$(MSBuildThisFileDirectory)Version.h.orig" OverwriteReadOnlyFiles="true" />
+    <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" TextEncoding="UCS-2" RegexPattern="12345" Replacement="$(Version)" Files="$(MSBuildThisFileDirectory)Version.h" />
   </Target>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\..\deploy\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" TaskName="RemoteSignFile" />
+  <UsingTask TaskName="RemoteSignFile" AssemblyFile="$(DeployDir)\RemoteSign\SKBKontur.LIT.MSBuildTasks.dll" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)tvnviewer.rc.orig" DestinationFiles="$(MSBuildThisFileDirectory)tvnviewer.rc" />
-    <RemoteSignFile SigningTarget="$(OutDir)tvnviewer.exe" SigningTargetDescription="SKB Kontur VNC" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)Version.h.orig" DestinationFiles="$(MSBuildThisFileDirectory)Version.h" OverwriteReadOnlyFiles="true" />
+    <RemoteSignFile SigningTarget="$(TargetPath)" SigningTargetDescription="Программа дистанционной поддержки VNC СКБ Контур" CodeSignServiceUrl="http://rem-sign.skbkontur.ru:8000/KonturCodeSignService" CodeSignServiceTimeout="180000" />
+    <Delete Files="$(MSBuildThisFileDirectory)Version.h.orig" />
   </Target>
 </Project>
