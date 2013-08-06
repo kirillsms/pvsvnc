@@ -40,9 +40,9 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
   m_altDown(false),
   m_previousMousePos(-1, -1),
   m_previousMouseState(0),
-  m_isBackgroundDirty(false),
+  m_isBackgroundDirty(false)
 
-  m_isFullScreen(true)
+
 {
   m_rfbKeySym = std::auto_ptr<RfbKeySym>(new RfbKeySym(this, m_logWriter));
 }
@@ -50,12 +50,6 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
 DesktopWindow::~DesktopWindow()
 {
 
-}
-
-void DesktopWindow::setFullScreen(bool isFullScreen)
-{
-  m_isFullScreen = isFullScreen;
-  m_sbar.setVirtualScroll(m_isFullScreen);
 }
 
 void DesktopWindow::setConnected()

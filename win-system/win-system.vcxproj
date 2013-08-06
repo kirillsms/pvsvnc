@@ -334,6 +334,7 @@
     <ClCompile Include="WindowsDisplays.cpp" />
     <ClCompile Include="WindowsEvent.cpp" />
     <ClCompile Include="WinHandles.cpp" />
+    <ClCompile Include="WinHooks.cpp" />
     <ClCompile Include="WinProcessCommandLine.cpp" />
     <ClCompile Include="WinStaLibrary.cpp" />
     <ClCompile Include="WinTimeMillis.cpp" />
@@ -350,6 +351,7 @@
     <ClInclude Include="DibSection.h" />
     <ClInclude Include="DynamicLibrary.h" />
     <ClInclude Include="Environment.h" />
+    <ClInclude Include="HookEventListener.h" />
     <ClInclude Include="Impersonator.h" />
     <ClInclude Include="InputInjector.h" />
     <ClInclude Include="Keyboard.h" />
@@ -383,6 +385,7 @@
     <ClInclude Include="WindowsDisplays.h" />
     <ClInclude Include="WindowsEvent.h" />
     <ClInclude Include="WinHandles.h" />
+    <ClInclude Include="WinHooks.h" />
     <ClInclude Include="WinProcessCommandLine.h" />
     <ClInclude Include="WinStaLibrary.h" />
     <ClInclude Include="WinTimeMillis.h" />

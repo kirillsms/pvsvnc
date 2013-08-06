@@ -81,9 +81,9 @@ public:
   // this function sends to remote viewer core the combination
   // Ctrl + Alt + Del
   void sendCtrlAltDel();
-  // inform the class we in full-screen mode or not
-  // the difference is that in full-screen don't draw the scrollbars
-  void setFullScreen(bool isFullScreen);
+  // Set function for m_winKeyIgnore.
+  void setWinKeyIgnore(bool winKeyIgnore) { m_rfbKeySym->setWinKeyIgnore(winKeyIgnore); }
+
 
 protected:
   //
@@ -164,7 +164,6 @@ protected:
   RemoteViewerCore *m_viewerCore;
   ConnectionConfig *m_conConf;
   bool m_isBackgroundDirty;
-  bool m_isFullScreen;
 
 private:
   void doDraw(DeviceContext *dc);
