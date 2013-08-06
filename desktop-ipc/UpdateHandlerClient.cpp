@@ -51,7 +51,7 @@ UpdateHandlerClient::~UpdateHandlerClient()
 {
 }
 
-void UpdateHandlerClient::onRequest(UINT8 reqCode, BlockingGate * /*backGate*/)
+void UpdateHandlerClient::onRequest(UINT8 reqCode, BlockingGate *backGate)
 {
   switch (reqCode) {
   case UPDATE_DETECTED:
@@ -108,56 +108,57 @@ void UpdateHandlerClient::extract(UpdateContainer *updateContainer)
       // Equalizing this frame buffer by other side frame buffer.
       Rect fbRect = m_backupFrameBuffer.getDimension().getRect();
       readFrameBuffer(&m_backupFrameBuffer, &fbRect, m_forwGate);
-    } else {
-      // Get video region
-      readRegion(&updCont.videoRegion, m_forwGate);
-      // Get changed region
-      unsigned int countChangedRect = m_forwGate->readUInt32();
-      m_log->info(_T("UpdateHandlerClient: count changed rectangles = %u"), countChangedRect);
-      for (unsigned int i = 0; i < countChangedRect; i++) {
-        Rect r = readRect(m_forwGate);
-        updCont.changedRegion.addRect(&r);
-        readFrameBuffer(&m_backupFrameBuffer, &r, m_forwGate);
-      }
+    }
 
-      // Get "copyrect"
-      unsigned char hasCopyRect = m_forwGate->readUInt8();
-      if (hasCopyRect) {
-        m_log->info(_T("UpdateHandlerClient: has \"CopyRect\""));
-        updCont.copySrc = readPoint(m_forwGate);
-        Rect r = readRect(m_forwGate);
-        updCont.copiedRegion.addRect(&r);
-        readFrameBuffer(&m_backupFrameBuffer, &r, m_forwGate);
-      }
+    // Get video region
+    readRegion(&updCont.videoRegion, m_forwGate);
+    // Get changed region
+    unsigned int countChangedRect = m_forwGate->readUInt32();
+    m_log->info(_T("UpdateHandlerClient: count changed rectangles = %u"), countChangedRect);
+    for (unsigned int i = 0; i < countChangedRect; i++) {
+      Rect r = readRect(m_forwGate);
+      updCont.changedRegion.addRect(&r);
+      readFrameBuffer(&m_backupFrameBuffer, &r, m_forwGate);
+    }
 
-      // Get cursor position if it has been changed.
-      updCont.cursorPosChanged = m_forwGate->readUInt8() != 0;
-      if (updCont.cursorPosChanged) {
-        m_log->info(_T("UpdateHandlerClient: cursor pos changed"));
-      }
-      updCont.cursorPos = readPoint(m_forwGate);
+    // Get "copyrect"
+    unsigned char hasCopyRect = m_forwGate->readUInt8();
+    if (hasCopyRect) {
+      m_log->info(_T("UpdateHandlerClient: has \"CopyRect\""));
+      updCont.copySrc = readPoint(m_forwGate);
+      Rect r = readRect(m_forwGate);
+      updCont.copiedRegion.addRect(&r);
+      readFrameBuffer(&m_backupFrameBuffer, &r, m_forwGate);
+    }
 
-      // Get cursor shape if it has been changed.
-      updCont.cursorShapeChanged = m_forwGate->readUInt8() != 0;
-      if (updCont.cursorShapeChanged) {
-        m_log->info(_T("UpdateHandlerClient: cursor shape changed"));
-        PixelFormat newPf = m_backupFrameBuffer.getPixelFormat();
-        Dimension newDim = readDimension(m_forwGate);
-        Point newHotSpot = readPoint(m_forwGate);
+    // Get cursor position if it has been changed.
+    updCont.cursorPosChanged = m_forwGate->readUInt8() != 0;
+    if (updCont.cursorPosChanged) {
+      m_log->info(_T("UpdateHandlerClient: cursor pos changed"));
+    }
+    updCont.cursorPos = readPoint(m_forwGate);
 
-        m_cursorShape.setProperties(&newDim, &newPf);
-        m_cursorShape.setHotSpot(newHotSpot.x, newHotSpot.y);
+    // Get cursor shape if it has been changed.
+    updCont.cursorShapeChanged = m_forwGate->readUInt8() != 0;
+    if (updCont.cursorShapeChanged) {
+      m_log->info(_T("UpdateHandlerClient: cursor shape changed"));
+      PixelFormat newPf = m_backupFrameBuffer.getPixelFormat();
+      Dimension newDim = readDimension(m_forwGate);
+      Point newHotSpot = readPoint(m_forwGate);
 
-        // Get pixels
-        m_forwGate->readFully(m_cursorShape.getPixels()->getBuffer(),
-                              m_cursorShape.getPixelsSize());
-        // Get mask
-        if (m_cursorShape.getMaskSize()) {
-          m_forwGate->readFully((void *)m_cursorShape.getMask(),
-                                m_cursorShape.getMaskSize());
-        }
+      m_cursorShape.setProperties(&newDim, &newPf);
+      m_cursorShape.setHotSpot(newHotSpot.x, newHotSpot.y);
+
+      // Get pixels
+      m_forwGate->readFully(m_cursorShape.getPixels()->getBuffer(),
+                            m_cursorShape.getPixelsSize());
+      // Get mask
+      if (m_cursorShape.getMaskSize()) {
+        m_forwGate->readFully((void *)m_cursorShape.getMask(),
+                              m_cursorShape.getMaskSize());
       }
     }
+
   } catch (ReconnectException &) {
     m_log->info(_T("UpdateHandlerClient: ReconnectException catching in the extract function"));
   }
@@ -186,7 +187,7 @@ void UpdateHandlerClient::setExcludedRegion(const Region *excludedRegion)
   }
 }
 
-bool UpdateHandlerClient::checkForUpdates(Region * /*region*/)
+bool UpdateHandlerClient::checkForUpdates(Region *region)
 {
   return false;
 }

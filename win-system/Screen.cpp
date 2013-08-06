@@ -152,3 +152,10 @@ void Screen::fillScreenRect()
   m_virtDesktopRect.setWidth(GetSystemMetrics(SM_CXVIRTUALSCREEN));
   m_virtDesktopRect.setHeight(GetSystemMetrics(SM_CYVIRTUALSCREEN));
 }
+
+size_t Screen::getVisibleMonitorCount()
+{
+  int monitorCount = GetSystemMetrics(SM_CMONITORS);
+  // Why check for the result? Skip it.
+  return (size_t)monitorCount;
+}

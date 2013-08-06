@@ -45,6 +45,9 @@ WinAutoMapDxgiSurface::~WinAutoMapDxgiSurface()
 
 size_t WinAutoMapDxgiSurface::getStride() const
 {
+  if (m_mappedRect.Pitch < 0) {
+    throw Exception(_T("DXGI_MAPPED_RECT::Pitch is negative"));
+  }
   return (size_t)m_mappedRect.Pitch;
 }
 

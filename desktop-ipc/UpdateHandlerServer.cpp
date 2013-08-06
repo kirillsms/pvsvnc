@@ -110,51 +110,51 @@ void UpdateHandlerServer::extractReply(BlockingGate *backGate)
     Rect fbRect = fbDim.getRect();
     sendDimension(&fbDim, backGate);
     sendFrameBuffer(fb, &fbRect, backGate);
-  } else {
-    // Send video region
-    sendRegion(&updCont.videoRegion, backGate);
-    // Send changed region
-    std::vector<Rect> rects;
-    std::vector<Rect>::iterator iRect;
-    updCont.changedRegion.getRectVector(&rects);
-    unsigned int countChangedRect = (unsigned int)rects.size();
-    _ASSERT(countChangedRect == rects.size());
-    backGate->writeUInt32(countChangedRect);
+  }
 
-    for (iRect = rects.begin(); iRect < rects.end(); iRect++) {
-      Rect *rect = &(*iRect);
-      sendRect(rect, backGate);
-      sendFrameBuffer(fb, rect, backGate);
-    }
+  // Send video region
+  sendRegion(&updCont.videoRegion, backGate);
+  // Send changed region
+  std::vector<Rect> rects;
+  std::vector<Rect>::iterator iRect;
+  updCont.changedRegion.getRectVector(&rects);
+  unsigned int countChangedRect = (unsigned int)rects.size();
+  _ASSERT(countChangedRect == rects.size());
+  backGate->writeUInt32(countChangedRect);
 
-    // Send "copyrect"
-    bool hasCopyRect = !updCont.copiedRegion.isEmpty();
-    backGate->writeUInt8(hasCopyRect);
-    if (hasCopyRect) {
-      sendPoint(&updCont.copySrc, backGate);
-      updCont.copiedRegion.getRectVector(&rects);
-      iRect = rects.begin();
-      sendRect(&(*iRect), backGate);
-      sendFrameBuffer(fb, &(*iRect), backGate);
-    }
+  for (iRect = rects.begin(); iRect < rects.end(); iRect++) {
+    Rect *rect = &(*iRect);
+    sendRect(rect, backGate);
+    sendFrameBuffer(fb, rect, backGate);
+  }
 
-    // Send cursor position if it has been changed.
-    backGate->writeUInt8(updCont.cursorPosChanged);
-    sendPoint(&updCont.cursorPos, backGate);
+  // Send "copyrect"
+  bool hasCopyRect = !updCont.copiedRegion.isEmpty();
+  backGate->writeUInt8(hasCopyRect);
+  if (hasCopyRect) {
+    sendPoint(&updCont.copySrc, backGate);
+    updCont.copiedRegion.getRectVector(&rects);
+    iRect = rects.begin();
+    sendRect(&(*iRect), backGate);
+    sendFrameBuffer(fb, &(*iRect), backGate);
+  }
 
-    // Send cursor shape if it has been changed.
-    backGate->writeUInt8(updCont.cursorShapeChanged);
-    if (updCont.cursorShapeChanged) {
-      const CursorShape *curSh = m_updateHandler->getCursorShape();
-      sendDimension(&curSh->getDimension(), backGate);
-      sendPoint(&curSh->getHotSpot(), backGate);
+  // Send cursor position if it has been changed.
+  backGate->writeUInt8(updCont.cursorPosChanged);
+  sendPoint(&updCont.cursorPos, backGate);
 
-      // Send pixels
-      backGate->writeFully(curSh->getPixels()->getBuffer(), curSh->getPixelsSize());
-      // Send mask
-      if (curSh->getMaskSize()) {
-        backGate->writeFully((void *)curSh->getMask(), curSh->getMaskSize());
-      }
+  // Send cursor shape if it has been changed.
+  backGate->writeUInt8(updCont.cursorShapeChanged);
+  if (updCont.cursorShapeChanged) {
+    const CursorShape *curSh = m_updateHandler->getCursorShape();
+    sendDimension(&curSh->getDimension(), backGate);
+    sendPoint(&curSh->getHotSpot(), backGate);
+
+    // Send pixels
+    backGate->writeFully(curSh->getPixels()->getBuffer(), curSh->getPixelsSize());
+    // Send mask
+    if (curSh->getMaskSize()) {
+      backGate->writeFully((void *)curSh->getMask(), curSh->getMaskSize());
     }
   }
 }

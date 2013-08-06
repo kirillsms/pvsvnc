@@ -41,7 +41,6 @@ public:
   // The WinDxgiOutput *dxgiOutput passed object can be destroyed right after the constructor calling.
   // The WinD3D11Device *device passed object can be destroyed right after the constructor calling.
   Win8DeskDuplicationThread(FrameBuffer *targetFb,
-                            const std::vector<Rect> *deskCoordArray,
                             const Rect *targetRect,
                             Win8CursorShape *targetCurShape,
                             LONGLONG *cursorTimeStamp,
@@ -69,11 +68,6 @@ private:
   int m_threadNumber;
 
   FrameBuffer *m_targetFb;
-
-  const std::vector<Rect> m_deskCoordArray;
-  // shift for rect in framebuffer
-  int m_shiftWidth;
-  int m_shiftHeight;
 
   Rect m_targetRect;
   Win8CursorShape *m_targetCurShape;

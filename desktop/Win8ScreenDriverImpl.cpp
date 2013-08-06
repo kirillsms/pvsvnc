@@ -27,6 +27,7 @@
 #include "WinDxCriticalException.h"
 #include "WinDxRecoverableException.h"
 #include <crtdbg.h>
+#include "win-system/Screen.h"
 
 #include "WinDxgiOutput.h"
 #include "Win8DeskDuplicationThread.h"
@@ -49,11 +50,23 @@ Win8ScreenDriverImpl::Win8ScreenDriverImpl(LogWriter *log, UpdateKeeper *updateK
   resume();
   // Wait for DxInterface initialization
   m_initEvent.waitForEvent();
+
   if (m_hasCriticalError) {
     terminate();
     wait();
     throw Exception(_T("Win8ScreenDriverImpl can't be successfully initialized"));
   }
+
+  // Checking that builded dimension is equal to virtual desktop dimension.
+  Dimension buildedDim = getScreenBuffer()->getDimension();
+  Screen screen;
+  Dimension virtDimension = screen.getDesktopDimension();
+  if (!buildedDim.isEqualTo(&virtDimension)) {
+    terminate();
+    wait();
+    throw Exception(_T("The builded screen dimension doesn't match to virtual screen dimension"));
+  }
+
   // At this point the screen driver has valid screen properties.
 }
 
@@ -112,14 +125,22 @@ void Win8ScreenDriverImpl::initDxgi()
     // End of output list.
   }
 
+  // Check that all outputs for the virtual screen are found (in case two or more
+  // hardware graphic interfaces are used). It's better to avoid using buggy
+  // Desktop Duplication API here rather than getting the wrong framebuffer.
+  Screen screen;
+  if (screen.getVisibleMonitorCount() != dxgiOutputArray.size()) {
+    throw Exception(_T("Unable get all DXGI outputs for virtual screen"));
+  }
+
   PixelFormat pf = getDxPixelFormat();
   Rect virtDeskBoundRect = virtDeskRegion.getBounds();
   m_frameBuffer.setProperties(&virtDeskBoundRect, &pf);
   m_frameBuffer.setColor(0, 0, 0);
 
   for (size_t iDxgiOutput  = 0; iDxgiOutput < dxgiOutputArray.size(); iDxgiOutput++) {
+    deskCoordArray[iDxgiOutput].move(-virtDeskBoundRect.left, -virtDeskBoundRect.top);
     Thread *thread = new Win8DeskDuplicationThread(&m_frameBuffer,
-                                                   &deskCoordArray,
                                                    &deskCoordArray[iDxgiOutput],
                                                    &m_win8CursorShape,
                                                    &m_curTimeStamp,
