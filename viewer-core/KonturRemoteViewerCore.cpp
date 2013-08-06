@@ -3,31 +3,27 @@
 
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(Logger *logger)
-	:RemoteViewerCore(logger),m_avilog(0)
+	:RemoteViewerCore(logger),m_avilog(&m_frameBuffer)
 {}
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(RfbInputGate *input, RfbOutputGate *output,
                    CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
-				   :RemoteViewerCore(input, output, adapter, logger, sharedFlag),m_avilog(0)
+				   :RemoteViewerCore(input, output, adapter, logger, sharedFlag),m_avilog(&m_frameBuffer)
 {}
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(const TCHAR *host, UINT16 port,
                    CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
-				   :RemoteViewerCore(host, port, adapter, logger, sharedFlag),m_avilog(0)
+				   :RemoteViewerCore(host, port, adapter, logger, sharedFlag),m_avilog(&m_frameBuffer)
 {}
 
 KonturRemoteViewerCore::KonturRemoteViewerCore(SocketIPv4 *socket,
                    CoreEventsAdapter *adapter, Logger *logger, bool sharedFlag)
-				   :RemoteViewerCore(socket, adapter, logger, sharedFlag),m_avilog(0)
+				   :RemoteViewerCore(socket, adapter, logger, sharedFlag),m_avilog(&m_frameBuffer)
 {}
 
 KonturRemoteViewerCore::~KonturRemoteViewerCore()
 {
-	if(m_avilog)
-	{
-		m_avilog->terminate();
-		m_avilog->wait();
-	}
+	
 }
 
 void KonturRemoteViewerCore::setID(const StringStorage *id)
@@ -67,15 +63,14 @@ void KonturRemoteViewerCore::handshake()
 void KonturRemoteViewerCore::setFbProperties(const Dimension *fbDimension,
                        const PixelFormat *fbPixelFormat)
 {
+	AutoLock mutex(&m_avilog.m_mutex);
 	RemoteViewerCore::setFbProperties(fbDimension, fbPixelFormat);
-	if(!m_avilog)
+	
+	m_avilog.UpdateAvilog();
+	if(!m_avilog.isActive())
 	{
-		m_avilog = new AvilogThread(&m_frameBuffer);
-		m_avilog->resume();
+		m_avilog.resume();
 	}
-	else
-	{
-		m_avilog->UpdateAvilog(&m_frameBuffer);
-	}
+	
 
 }

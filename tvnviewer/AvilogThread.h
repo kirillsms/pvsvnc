@@ -3,6 +3,7 @@
 #include "avilog/AVIGenerator.h"
 #include "log-writer/LogWriter.h"
 #include "rfb/FrameBuffer.h"
+#include "thread/GlobalMutex.h"
 
 class AvilogThread :
 	public Thread
@@ -10,14 +11,16 @@ class AvilogThread :
 public:
 	AvilogThread(const FrameBuffer *);
 	~AvilogThread();
-	void UpdateAvilog(const FrameBuffer *);
+	void UpdateAvilog();
+	GlobalMutex m_mutex;
 protected:
 	virtual void execute();
 
+	const FrameBuffer * m_frame;
 	void *m_buffer;
-	void *m_tempbuffer;
+	BYTE *m_tempbuffer;
 	size_t m_bufferLen;
-
+	BITMAPINFOHEADER  bmiHeader;
 
 	CAVIGenerator *m_avilog;
 };

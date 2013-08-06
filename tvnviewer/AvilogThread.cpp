@@ -3,15 +3,17 @@
 
 
 AvilogThread::AvilogThread(const FrameBuffer *buff):
-	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0)
+	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex()
 {
-	UpdateAvilog(buff);
+	m_frame = buff;
+	ZeroMemory(&bmiHeader,sizeof(bmiHeader));
 }
 
 
 AvilogThread::~AvilogThread()
 {
-
+	this->terminate();
+	this->wait();
 }
 
 void AvilogThread::execute()
@@ -19,47 +21,20 @@ void AvilogThread::execute()
 	
 	while(!isTerminating())
 	{
-		
-		if(m_tempbuffer && m_avilog)
+		AutoLock mutex(&m_mutex);
+		if(!m_avilog)
 		{
-			memcpy(m_tempbuffer,m_buffer,m_bufferLen);
-			m_avilog->AddFrame((BYTE*)m_tempbuffer);
-		}
-	}
-	m_avilog->ReleaseEngine();
-}
-
-
-void AvilogThread::UpdateAvilog(const FrameBuffer *buffer)
-{
-		
-	    BITMAPINFOHEADER  bmiHeader;
-		ZeroMemory(&bmiHeader,sizeof(bmiHeader));
-		bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-		bmiHeader.biBitCount = buffer->getBitsPerPixel();
-		bmiHeader.biWidth = buffer->getDimension().width;
-		bmiHeader.biHeight = buffer->getDimension().height;
-		bmiHeader.biSizeImage = buffer->getBufferSize();
-		bmiHeader.biPlanes = 1;
-		bmiHeader.biCompression = BI_RGB;
-		
-		if(!m_avilog || 0 != memcmp(&bmiHeader, m_avilog->GetBitmapHeader(),sizeof(BITMAPINFOHEADER))){
-		    m_bufferLen = buffer->getBufferSize();
-			m_buffer = buffer->getBuffer();
-			if(m_tempbuffer){
-				delete[] m_tempbuffer;
-			}
-			m_tempbuffer = new BYTE[m_bufferLen];
-
-			
 			SYSTEMTIME lt;    
 			GetLocalTime(&lt);
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
-			_sntprintf_s(str, sizeof str, _T("%02d_%02d_%02d_%02d_%02d"), lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+			_sntprintf_s(str, sizeof str, _T("%04d-%02d-%02d_%02d-%02d-%02d"), lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
 			_tcscat_s(str,_T("_vnc.avi"));
-			this->m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
-			HRESULT hr;
-			hr=m_avilog->InitEngine();
+			
+			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
+			
+
+
+			HRESULT hr = m_avilog->InitEngine();
 			if (FAILED(hr))
 			{
 				m_avilog->ReleaseEngine(); 
@@ -67,7 +42,42 @@ void AvilogThread::UpdateAvilog(const FrameBuffer *buffer)
 				m_avilog=NULL;
 			}
 		}
-		
+		if(m_avilog)
+		{
+			CopyMemory(m_tempbuffer, m_frame->getBuffer(), bmiHeader.biSizeImage);
+			m_avilog->AddFrame(m_tempbuffer);
+		}
+		else
+		{
+			sleep(500);
+		}
+	}
+	m_avilog->ReleaseEngine();
+}
+
+
+void AvilogThread::UpdateAvilog()
+{
+	    
+		bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		bmiHeader.biBitCount = m_frame->getBitsPerPixel();
+		bmiHeader.biWidth = m_frame->getDimension().width;
+		bmiHeader.biHeight = m_frame->getDimension().height;
+		bmiHeader.biSizeImage = m_frame->getBufferSize();
+		bmiHeader.biPlanes = 1;
+		bmiHeader.biCompression = BI_RGB;
+
+		if(m_tempbuffer) 
+			delete[] m_tempbuffer;
+
+		m_tempbuffer = new BYTE[bmiHeader.biSizeImage];
+
+		if(m_avilog && m_avilog->GetBitmapHeader()->biSizeImage != bmiHeader.biSizeImage)
+		{	
+			m_avilog->ReleaseEngine(); 
+			delete m_avilog;
+			m_avilog=NULL;			
+		}
 }
 
 

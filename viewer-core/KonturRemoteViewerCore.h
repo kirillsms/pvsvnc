@@ -34,7 +34,7 @@ protected:
                        const PixelFormat *fbPixelFormat);
 
   StringStorage m_id;
-  AvilogThread *m_avilog;
+  AvilogThread m_avilog;
 
 private:
   virtual void handshake();
