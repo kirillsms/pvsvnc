@@ -68,17 +68,6 @@ void ScrollBar::disableVirtualScroll()
   }
 }
 
-void ScrollBar::setVirtualScroll(bool isVirtualScroll)
-{
-  bool stateVS = m_isVirtualScroll;
-  m_isVirtualScroll = isVirtualScroll;
-  if (stateVS) {
-    enableVirtualScroll();
-  } else {
-    disableVirtualScroll();
-  }
-}
-
 void ScrollBar::setWindow(HWND hwnd) {
   m_hwnd = hwnd;
 }

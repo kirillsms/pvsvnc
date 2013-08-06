@@ -194,9 +194,11 @@ int FileInfoListView::compareItem(LPARAM lParam1,
                                    LPARAM lParam2,
                                    LPARAM lParamSort)
 {
+  // check ascending order
+  bool sortAscending = lParamSort > 0;
+
   FileInfo *firstItem = reinterpret_cast<FileInfo *>(lParam1);
   FileInfo *secondItem = reinterpret_cast<FileInfo *>(lParam2);
-
 
   // Fake directory ".." should be into top list.
   if (_tcscmp(firstItem->getFileName(), _T("..")) == 0) {
@@ -214,25 +216,40 @@ int FileInfoListView::compareItem(LPARAM lParam1,
   if (!firstItem->isDirectory() && secondItem->isDirectory()) {
     return 1;
   }
+  
+  // change lParam1 and lParam2 with each other if order is descending
+  if (sortAscending) {
+    firstItem = reinterpret_cast<FileInfo *>(lParam1);
+    secondItem = reinterpret_cast<FileInfo *>(lParam2);
+  } else {
+    firstItem = reinterpret_cast<FileInfo *>(lParam2);
+    secondItem = reinterpret_cast<FileInfo *>(lParam1);
+  }
 
-  int columnIndex = static_cast<int>(lParamSort);
+  if (lParamSort < 0) {
+    // calculate column number when order is descending
+    lParamSort = abs(lParamSort) - 1;
+  } else {
+    // calculate column number when order is ascending
+    lParamSort -= 1;
+  }
  
   switch (lParamSort) {
   // It's column "FileName".
   case 0:
-    return _tcscmp(firstItem->getFileName(), secondItem->getFileName());
+    return _tcsicmp(firstItem->getFileName(), secondItem->getFileName());
 
   // It's column "FileSize".
   case 1:
     {
       // Size of directory is 0. Sort him by name.
       if (firstItem->isDirectory()) {
-        return compareItem(lParam1, lParam2, 0);
+        return compareItem(lParam1, lParam2, 1);
       }
       int compareSize = compareUInt64(firstItem->getSize(), secondItem->getSize());
       // Sort by name, if sizes is equal.
       if (compareSize == 0) {
-        return compareItem(lParam1, lParam2, 0);
+        return compareItem(lParam1, lParam2, 1);
       }
       return compareSize;
     }
@@ -242,7 +259,7 @@ int FileInfoListView::compareItem(LPARAM lParam1,
       int compareTime = compareUInt64(firstItem->lastModified(), secondItem->lastModified());
       // Sort by name, if time stamps is equal.
       if (compareTime == 0) {
-        return compareItem(lParam1, lParam2, 0);
+        return compareItem(lParam1, lParam2, 1);
       }
       return compareTime;
     }

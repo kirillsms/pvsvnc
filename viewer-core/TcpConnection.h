@@ -51,9 +51,11 @@ private:
   StringStorage m_host;
   UINT16 m_port;
   SocketIPv4 *m_socket;
+  bool m_socketOwner;
   SocketStream *m_socketStream;
   RfbInputGate *m_input;
   RfbOutputGate *m_output;
+  bool m_RfbGatesOwner;
 
   bool m_wasBound;
   bool m_wasConnected;

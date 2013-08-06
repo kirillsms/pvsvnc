@@ -49,7 +49,6 @@ public:
   void moveRightHorz(int inPercent = 0);
   int getVertPos();
   int getHorzPos();
-  void setVirtualScroll(bool isVirtualScroll);
   int getVerticalSize();
   int getHorizontalSize();
 

@@ -27,7 +27,9 @@
 #include "TcpConnection.h"
 
 TcpConnection::TcpConnection(LogWriter *logWriter)
-: m_logWriter(logWriter)
+: m_logWriter(logWriter),
+m_socketOwner(false),
+m_RfbGatesOwner(false)
 {
   m_port = 0;
   m_socket = 0;
@@ -102,6 +104,7 @@ void TcpConnection::connect()
                             ipAddressString.getString(), m_port);
 
         m_socket = new SocketIPv4;
+        m_socketOwner = true;
         m_socket->connect(ipAddress);
         m_socket->enableNaggleAlgorithm(false);
       } else {
@@ -114,6 +117,7 @@ void TcpConnection::connect()
 
     m_input = new RfbInputGate(m_socketStream);
     m_output = new RfbOutputGate(m_socketStream);
+    m_RfbGatesOwner = true;
   } else {
     _ASSERT(m_input != 0 && m_output != 0);
   }
@@ -158,14 +162,14 @@ TcpConnection::~TcpConnection()
 {
   // if socket is defined, then need delete gates and socket stream
   if (m_socket != 0) {
-    if (m_input != 0) {
+    if (m_input != 0 && m_RfbGatesOwner) {
       try {
         delete m_input;
       } catch (...) {
       }
     }
 
-    if (m_output != 0) {
+    if (m_output != 0 && m_RfbGatesOwner) {
       try {
         delete m_output;
       } catch (...) {
@@ -182,8 +186,9 @@ TcpConnection::~TcpConnection()
 
   // if host and port is defined, then need delete socket
   try {
-    if (!m_host.isEmpty() && m_port) {
+    if (m_socket != NULL && !m_host.isEmpty() && m_port && m_socketOwner) {
       delete m_socket;
+      m_socket = NULL;
     }
   } catch (...) {
   }

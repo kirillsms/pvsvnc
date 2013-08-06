@@ -24,7 +24,8 @@
 
 #include "ListView.h"
 
-ListView::ListView()
+ListView::ListView() :
+  m_sortAscending(false)
 {
   m_sortColumnIndex = -1;
   m_compareItem = 0;
@@ -257,6 +258,15 @@ void ListView::sort(int columnIndex, PFNLVCOMPARE compareItem)
   // Update parameters of sorting.
   int oldSortColumnIndex = m_sortColumnIndex;
   m_sortColumnIndex = columnIndex;
+
+  // make decision about order
+  // positive value of m_sortAscending for ascending order
+  // negative value of m_sortAscending for descending order
+  if (oldSortColumnIndex == m_sortColumnIndex) {
+    m_sortAscending = !m_sortAscending;
+  } else {
+    m_sortAscending = true;
+  }
   m_compareItem = compareItem;
 
   // Update arrow in header.
@@ -265,13 +275,15 @@ void ListView::sort(int columnIndex, PFNLVCOMPARE compareItem)
     HDITEM hdrItem = { 0 };
     hdrItem.mask = HDI_FORMAT;
 
+    // delete all header icons
     if (Header_GetItem(hHeader, oldSortColumnIndex, &hdrItem)) {
-      hdrItem.fmt = hdrItem.fmt & ~HDF_SORTUP;
+      hdrItem.fmt = hdrItem.fmt & ~HDF_SORTUP & ~HDF_SORTDOWN;
       Header_SetItem(hHeader, oldSortColumnIndex, &hdrItem);
     }
 
+    // add necessary header icon
     if (Header_GetItem(hHeader, m_sortColumnIndex, &hdrItem)) {
-      hdrItem.fmt = hdrItem.fmt | HDF_SORTUP;
+      hdrItem.fmt = hdrItem.fmt | (m_sortAscending ? HDF_SORTUP : HDF_SORTDOWN);
       Header_SetItem(hHeader, m_sortColumnIndex, &hdrItem);
     }
   }
@@ -282,7 +294,14 @@ void ListView::sort(int columnIndex, PFNLVCOMPARE compareItem)
 void ListView::sort()
 {
   if (m_sortColumnIndex >= 0 && m_compareItem != 0) {
-    ListView_SortItems(m_hwnd, m_compareItem, m_sortColumnIndex);
+    // use sortColumnIndex (lParamSort) as an index of column and
+    // as a flag: positive for ascending order,
+    // negative for descending order
+    int sortColumnIndex = m_sortColumnIndex + 1;
+    if (!m_sortAscending) {
+      sortColumnIndex = -sortColumnIndex;
+    }
+    ListView_SortItems(m_hwnd, m_compareItem, sortColumnIndex);
   }
 }
 

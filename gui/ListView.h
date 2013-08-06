@@ -187,6 +187,9 @@ protected:
   void sort();
 
 private:
+  // Kind of sorting: ascending or descending
+  bool m_sortAscending;
+
   //
   // Is list view not sorted, then m_sortClumnIndex is negative,
   // else him contained index of column.

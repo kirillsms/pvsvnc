@@ -34,7 +34,8 @@ FbUpdateNotifier::FbUpdateNotifier(FrameBuffer *fb, LocalMutex *fbLock, LogWrite
   m_logWriter(logWriter),
   m_cursorPainter(fb, logWriter),
   m_isNewSize(false),
-  m_isCursorChange(false)
+  m_isCursorChange(false),
+  m_adapter(0)
 {
   m_oldPosition = m_cursorPainter.hideCursor();
 
