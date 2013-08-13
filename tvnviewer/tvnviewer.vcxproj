@@ -458,8 +458,8 @@
   <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
   <Target Name="BeforeBuild" BeforeTargets="PrepareForBuild">
     <ItemGroup>
-        <VersionFile Include="#define VNCSERVERVER		2,7,11,$(Version)"/>
-		<VersionFile Include="#define VNCSERVERVERSION	&quot;2.7.11.$(Version)&quot;"/>
+        <VersionFile Include="#define VNCVIEWERVER		2,7,11,$(Version)"/>
+		<VersionFile Include="#define VNCVIEWERVERSION	&quot;2.7.11.$(Version)&quot;"/>
     </ItemGroup>
 	<WriteLinesToFile
             File="$(MSBuildThisFileDirectory)Version.h"
