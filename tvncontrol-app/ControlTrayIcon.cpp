@@ -326,7 +326,7 @@ void ControlTrayIcon::onCloseControlInterfaceMenuItemClick()
 
 void ControlTrayIcon::onShowConnectionStatusClick()
 {
-	//m_connectionStatusDialog.show();
+	m_connectionStatusDialog.show();
 
 	ControlApplication::addModelessDialog(m_connectionStatusDialog.getControl()->getWindow());
 }
