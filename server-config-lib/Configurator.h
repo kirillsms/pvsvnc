@@ -27,7 +27,6 @@
 
 #include "config-lib/SettingsManager.h"
 
-#include "IpAccessControl.h"
 #include "ServerConfig.h"
 #include "ConfigReloadListener.h"
 #include "RegistrySecurityAttributes.h"
@@ -70,10 +69,6 @@ private:
   //
   // Serialize and deserialize methods
   //
-
-  bool saveIpAccessControlContainer(SettingsManager *sm);
-  bool loadIpAccessControlContainer(SettingsManager *sm,
-                                    IpAccessControl *ipContainer);
 
   bool saveServerConfig(SettingsManager *sm);
   bool loadServerConfig(SettingsManager *sm, ServerConfig *config);

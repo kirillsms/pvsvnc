@@ -132,9 +132,6 @@ bool Configurator::save(SettingsManager *sm)
   if (!saveInputHandlingConfig(sm)) {
     saveResult = false;
   }
-  if (!saveIpAccessControlContainer(sm)) {
-    saveResult = false;
-  }
   if (!saveServerConfig(sm)) {
     saveResult = false;
   }
@@ -153,14 +150,6 @@ bool Configurator::load(SettingsManager *sm)
   }
   if (!loadInputHandlingConfig(sm, &m_serverConfig)) {
     loadResult = false;
-  }
-
-  {
-    AutoLock l(&m_serverConfig);
-
-    if (!loadIpAccessControlContainer(sm, m_serverConfig.getAccessControl())) {
-      loadResult = false;
-    }
   }
 
   if (!loadServerConfig(sm, &m_serverConfig)) {
@@ -330,66 +319,6 @@ bool Configurator::loadVideoRegionConfig(SettingsManager *sm, ServerConfig *conf
   }
 
   return loadResult;
-}
-
-bool Configurator::saveIpAccessControlContainer(SettingsManager *storage)
-{
-  AutoLock l(&m_serverConfig);
-
-  // Get rules container
-  IpAccessControl *rules = m_serverConfig.getAccessControl();
-  // Remember rules count
-  size_t rulesCount = rules->size();
-  // 1 rule can contain 34 character max
-  size_t maxStringBufferLength = 34 * 2 * rulesCount;
-  // Buffer that we need to write to storage
-  StringStorage buffer(_T(""));
-  // Variable to save temporary result from toString method
-  StringStorage ruleString;
-
-  // Generate rules string
-  for (size_t i = 0; i < rulesCount; i++) {
-    IpAccessRule *rule = rules->at(i);
-    // Get rule as string
-    rule->toString(&ruleString);
-    // Add it to result buffer
-    buffer.appendString(ruleString.getString());
-    // Add delimiter if we need it
-    if (i != rulesCount - 1)
-      buffer.appendString(_T(","));
-  }
-  if (!storage->setString(_T("IpAccessControl"), buffer.getString())) {
-    return false;
-  }
-  return true;
-}
-
-bool
-Configurator::loadIpAccessControlContainer(SettingsManager *sm, IpAccessControl *rules)
-{
-  bool wasError = false;
-  rules->clear();
-
-  StringStorage storage;
-  if (!sm->getString(_T("IpAccessControl"), &storage)) {
-    return false;
-  } else {
-    size_t maxBufSize = storage.getLength() + 1;
-    std::vector<TCHAR> ipacStringBuffer(maxBufSize + 1);
-    _tcscpy_s(&ipacStringBuffer.front(), maxBufSize, storage.getString());
-    TCHAR *pch = _tcstok(&ipacStringBuffer[0], _T(","));
-    while (pch != NULL) {
-      if (IpAccessRule::parse(pch, NULL)) {
-        IpAccessRule *rule = new IpAccessRule();
-        IpAccessRule::parse(pch, rule);
-        rules->push_back(rule);
-      } else {
-        wasError = true;
-      }
-      pch = _tcstok(NULL, _T(","));
-    } // while
-  } // else
-  return !wasError;
 }
 
 bool Configurator::saveServerConfig(SettingsManager *sm)

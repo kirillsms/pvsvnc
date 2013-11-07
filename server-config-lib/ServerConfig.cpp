@@ -85,9 +85,6 @@ void ServerConfig::serialize(DataOutputStream *output)
   output->writeInt8(m_defaultActionAccept ? 1 : 0);
   output->writeUInt32(m_queryTimeout);
 
-
-  m_accessControlContainer.serialize(output);
-
   output->writeInt8(m_allowLoopbackConnections ? 1 : 0);
 
   _ASSERT((UINT32)m_videoClassNames.size() == m_videoClassNames.size());
@@ -138,8 +135,6 @@ void ServerConfig::deserialize(DataInputStream *input)
   m_defaultActionAccept = input->readInt8() == 1;
   m_queryTimeout = input->readUInt32();
 
-  m_accessControlContainer.deserialize(input);
-
   m_allowLoopbackConnections = input->readInt8() == 1;
 
   m_videoClassNames.clear();
@@ -188,24 +183,6 @@ void ServerConfig::setLogFileDir(const TCHAR *logFilePath)
   AutoLock l(this);
 
   m_logFilePath.setString(logFilePath);
-}
-
-IpAccessRule::ActionType ServerConfig::getActionByAddress(unsigned long ip)
-{
-  AutoLock l(this);
-
-  IpAccessControl *rules = &m_accessControlContainer;
-
-  size_t rulesCount = rules->size();
-
-  for (size_t i = 0; i < rulesCount; i++) {
-    IpAccessRule *rule = rules->at(i);
-    if (rule->isIncludingAddress(ip)) {
-      return rule->getAction();
-    }
-  }
-
-  return IpAccessRule::ACTION_TYPE_ALLOW;
 }
 
 bool ServerConfig::isControlAuthEnabled()
@@ -581,11 +558,6 @@ void ServerConfig::setDefaultActionToAccept(bool accept)
 //
 // Ip access control config
 //
-
-IpAccessControl *ServerConfig::getAccessControl()
-{
-  return &m_accessControlContainer;
-}
 
 void ServerConfig::allowLoopbackConnections(bool allow)
 {
