@@ -398,9 +398,6 @@ bool Configurator::saveServerConfig(SettingsManager *sm)
   if (!sm->setUINT(_T("RfbPort"), m_serverConfig.getRfbPort())) {
     saveResult = false;
   }
-  if (!sm->setUINT(_T("HttpPort"), m_serverConfig.getHttpPort())) {
-    saveResult = false;
-  }
   if (!sm->setUINT(_T("DisconnectAction"), (UINT)m_serverConfig.getDisconnectAction())) {
     saveResult = false;
   }
@@ -419,9 +416,6 @@ bool Configurator::saveServerConfig(SettingsManager *sm)
   if (!sm->setBoolean(_T("LoopbackOnly"), m_serverConfig.isOnlyLoopbackConnectionsAllowed())) {
     saveResult = false;
   }
-  if (!sm->setBoolean(_T("AcceptHttpConnections"), m_serverConfig.isAcceptingHttpConnections())) {
-    saveResult = false;
-  }
   if (!sm->setUINT(_T("LogLevel"), (UINT)m_serverConfig.getLogLevel())) {
     saveResult = false;
   }
@@ -432,9 +426,6 @@ bool Configurator::saveServerConfig(SettingsManager *sm)
     saveResult = false;
   }
   if (!sm->setBoolean(_T("UseMirrorDriver"), m_serverConfig.getMirrorIsAllowed())) {
-    saveResult = false;
-  }
-  if (!sm->setBoolean(_T("EnableUrlParams"), m_serverConfig.isAppletParamInUrlEnabled())) {
     saveResult = false;
   }
   if (m_serverConfig.hasPrimaryPassword()) {
@@ -516,12 +507,6 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
   } else {
     m_serverConfig.setRfbPort(uintVal);
   }
-  if (!sm->getUINT(_T("HttpPort"), &uintVal)) {
-    loadResult = false;
-  } else {
-    m_isConfigLoadedPartly = true;
-    m_serverConfig.setHttpPort(uintVal);
-  }
   if (!sm->getUINT(_T("DisconnectAction"), &uintVal)) {
     loadResult = false;
   } else {
@@ -558,12 +543,6 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
     m_isConfigLoadedPartly = true;
     m_serverConfig.acceptOnlyLoopbackConnections(boolVal);
   }
-  if (!sm->getBoolean(_T("AcceptHttpConnections"), &boolVal)) {
-    loadResult = false;
-  } else {
-    m_isConfigLoadedPartly = true;
-    m_serverConfig.acceptHttpConnections(boolVal);
-  }
   if (!sm->getUINT(_T("LogLevel"), &uintVal)) {
     loadResult = false;
   } else {
@@ -592,7 +571,6 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
     loadResult = false;
   } else {
     m_isConfigLoadedPartly = true;
-    m_serverConfig.enableAppletParamInUrl(boolVal);
   }
 
   size_t passSize = 8;
