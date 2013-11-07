@@ -23,12 +23,6 @@
     <ClCompile Include="ConfigDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditIpAccessRuleDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IpAccessControlDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PasswordControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,12 +47,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ConfigDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EditIpAccessRuleDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IpAccessControlDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PasswordControl.h">

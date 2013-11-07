@@ -37,7 +37,6 @@
 
 #include "ServerConfigDialog.h"
 #include "AdministrationConfigDialog.h"
-#include "IpAccessControlDialog.h"
 
 #include "tvncontrol-app/ControlCommand.h"
 
@@ -85,7 +84,6 @@ protected:
   // Dialogs for tab control
   ServerConfigDialog m_serverConfigDialog;
   AdministrationConfigDialog m_administrationConfigDialog;
-  IpAccessControlDialog m_ipAccessControlDialog;
   
   // Other members
   bool m_isConfiguringService;

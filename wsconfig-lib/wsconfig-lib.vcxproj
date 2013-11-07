@@ -277,8 +277,6 @@
     <ClCompile Include="ChangePasswordDialog.cpp" />
     <ClCompile Include="CommonInputValidation.cpp" />
     <ClCompile Include="ConfigDialog.cpp" />
-    <ClCompile Include="EditIpAccessRuleDialog.cpp" />
-    <ClCompile Include="IpAccessControlDialog.cpp" />
     <ClCompile Include="PasswordControl.cpp" />
     <ClCompile Include="ServerConfigDialog.cpp" />
     <ClCompile Include="TvnLogFilename.cpp" />
@@ -289,8 +287,6 @@
     <ClInclude Include="ChangePasswordDialog.h" />
     <ClInclude Include="CommonInputValidation.h" />
     <ClInclude Include="ConfigDialog.h" />
-    <ClInclude Include="EditIpAccessRuleDialog.h" />
-    <ClInclude Include="IpAccessControlDialog.h" />
     <ClInclude Include="PasswordControl.h" />
     <ClInclude Include="ServerConfigDialog.h" />
     <ClInclude Include="TvnLogFilename.h" />
