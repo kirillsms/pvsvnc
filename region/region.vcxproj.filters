@@ -17,9 +17,6 @@
     <ClCompile Include="x11region.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RectSerializer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dimension.h">
@@ -35,9 +32,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="x11region.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RectSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,7 +26,6 @@
 
 #include "util/CommonHeader.h"
 #include "util/CommandLine.h"
-#include "region/RectSerializer.h"
 #include "util/StringParser.h"
 
 #include "ConnectStringParser.h"

@@ -15,6 +15,11 @@
 #endif
 #endif
 
+#ifdef WIN32
+// warning C4996: '=' : This function or variable may be unsafe.
+#pragma warning(disable : 4996)
+#endif
+
 /* Local functions */
 local void gz_reset OF((gz_statep));
 local gzFile gz_open OF((const void *, int, const char *));
