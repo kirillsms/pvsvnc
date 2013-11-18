@@ -33,12 +33,28 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
 }
 #endif
 
-CAVIGenerator::CAVIGenerator(LPCTSTR sFileName,LPCTSTR sPath, LPBITMAPINFOHEADER lpbih, DWORD dwRate)
-: m_dwRate(dwRate),
+
+CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate)
+	: m_dwRate(dwRate),
 m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 {
 		_tcscpy_s(m_sFile,sPath);
 		_tcscpy_s(mypath,sPath);
+		_tcscat_s(mypath,_T("\\"));
+		_tcscat_s(mypath,_T("codec.cfg"));
+		_tcscat_s(m_sFile,_T("\\"));
+		_tcscat_s(m_sFile,sFileName);
+		MakeExtAvi();
+		SetBitmapHeader(lpbih);
+}
+
+CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPCTSTR sConfigPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate)
+	
+: m_dwRate(dwRate),
+m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
+{
+		_tcscpy_s(m_sFile,sPath);
+		_tcscpy_s(mypath,sConfigPath);
 		_tcscat_s(mypath,_T("\\"));
 		_tcscat_s(mypath,_T("codec.cfg"));
 		_tcscat_s(m_sFile,_T("\\"));

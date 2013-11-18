@@ -93,6 +93,10 @@ public:
   // returns NULL otherwise
   const TCHAR *getPathToLogFile() const;
 
+  const TCHAR *getPathToVLogFile() const;
+
+  const TCHAR *getUserName() const;
+
   // Returns connection history
   ConnectionHistory *getConnectionHistory();
 
@@ -111,6 +115,8 @@ protected:
   bool m_promptOnFullscreen;
   // Log file
   StringStorage m_pathToLogFile;
+  StringStorage m_pathToVLogFile;
+  StringStorage m_userName;
   StringStorage m_logName;
   FileLogger *m_logger;
   // Connection history

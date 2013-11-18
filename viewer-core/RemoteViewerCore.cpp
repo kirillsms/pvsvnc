@@ -58,11 +58,7 @@
 
 #include <algorithm>
 
-#define SECURITY_WIN32
-
-//#define SECURITY_MAC
-
-#include <security.h>
+#include <client-config-lib/ViewerConfig.h>
 
 RemoteViewerCore::RemoteViewerCore(Logger *logger)
 : m_logWriter(logger),
@@ -1200,10 +1196,10 @@ void RemoteViewerCore::clientAndServerInit()
     m_logWriter.info(_T("Setting share flag is off..."));
   }
   m_output->writeUInt8(m_sharedFlag);
-  TCHAR name[1024];
+  
   ULONG nameSize;
-  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize);
-  StringStorage fullName(name);
+  
+  StringStorage fullName(ViewerConfig::getInstance()->getUserName());
   StringStorage nameParts[5];
   size_t namePartsCount;
   if (fullName.split(_T(" "), nameParts, &namePartsCount) && (3 == namePartsCount)) {
@@ -1215,7 +1211,6 @@ void RemoteViewerCore::clientAndServerInit()
  /* m_output->writeUInt32(nameSize);
   m_output->writeUTF8(fullName.getString());*/
   m_output->flush();
-  m_logWriter.info(_T("UserName: %s => %s"), name, fullName.getString());
   m_logWriter.debug(_T("Shared flag is set"));
 
   UINT16 width = m_input->readUInt16();

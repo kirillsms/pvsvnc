@@ -57,7 +57,6 @@ protected:
   CheckBox m_copyrect;
   CheckBox m_viewonly;
   CheckBox m_disclip;
-  CheckBox m_sharedses;
   ComboBox m_scale;
   CheckBox m_fullscr;
   CheckBox m_deiconfy;
@@ -69,6 +68,7 @@ protected:
   CheckBox m_smalldot;
   CheckBox m_arrow;
   CheckBox m_nlocal;
+  TextBox m_vlogging;
 
   void onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
   BOOL onCommand(UINT controlID, UINT notificationID);

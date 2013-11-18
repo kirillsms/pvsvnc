@@ -30,7 +30,7 @@ void AvilogThread::execute()
 			_sntprintf_s(str, sizeof str, _T("%04d-%02d-%02d_%02d-%02d-%02d"), lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
 			_tcscat_s(str,_T("_vnc.avi"));
 			
-			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
+			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
 			
 
 

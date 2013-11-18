@@ -29,6 +29,13 @@
 #include "win-system/Registry.h"
 
 #include "file-lib/File.h"
+#ifndef SECURITY_WIN32
+#define SECURITY_WIN32
+#endif
+
+//#define SECURITY_MAC
+
+#include <security.h>
 
 // FIXME: Duplicate macro, see ConnectionConfig.cpp file
 #define TEST_FAIL(C,R) if (!C) { R = false; }
@@ -44,6 +51,11 @@ ViewerConfig::ViewerConfig(const TCHAR registryPath[])
   m_conHistoryKey.open(Registry::getCurrentUserKey(),
                        registryKey.getString(),
                        true);
+  TCHAR name[1024];
+  ULONG nameSize;
+  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize);
+  m_userName.setString(name);
+
 }
 
 ViewerConfig::~ViewerConfig()
@@ -193,6 +205,18 @@ const TCHAR *ViewerConfig::getPathToLogFile() const
   return m_pathToLogFile.getString();
 }
 
+const TCHAR *ViewerConfig::getPathToVLogFile() const
+{
+  AutoLock l(&m_cs);
+  return m_pathToVLogFile.getString();
+}
+
+const TCHAR *ViewerConfig::getUserName() const
+{
+  AutoLock l(&m_cs);
+  return m_userName.getString();
+}
+
 ConnectionHistory *ViewerConfig::getConnectionHistory()
 {
   AutoLock l(&m_cs);
@@ -204,6 +228,12 @@ Logger *ViewerConfig::initLog(const TCHAR logDir[], const TCHAR logName[])
   m_logName = logName;
   StringStorage logFileFolderPath;
   StringStorage appDataPath;
+  StringStorage vlogFileFolderPath;
+  StringStorage vlogUserFileFolderPath;
+  vlogFileFolderPath.setString(_T("\\\\ra-fs\\raboss-joint\\TeamViewer Video"));
+  
+
+
 
   // After that logFilePath variable will contain path to folder
   // where tvnviewer.log must be located
@@ -219,9 +249,28 @@ Logger *ViewerConfig::initLog(const TCHAR logDir[], const TCHAR logName[])
     folder.mkdir();
   }
 
+  {
+	File videoFolder(vlogFileFolderPath.getString());
+	
+
+	if(!(videoFolder.exists() && videoFolder.isDirectory()))
+	{
+		vlogUserFileFolderPath = logFileFolderPath;
+	}
+	else{
+		vlogUserFileFolderPath.format(_T("%s\\%s"),vlogFileFolderPath.getString(),m_userName.getString());
+		File userVideoFolder(vlogUserFileFolderPath.getString());
+
+		if (!userVideoFolder.exists())
+			userVideoFolder.mkdir();
+	}
+  }
+
   // Path to log file
   AutoLock l(&m_cs);
   m_pathToLogFile = logFileFolderPath;
+
+  m_pathToVLogFile = vlogUserFileFolderPath;
 
   if (m_logger != 0) {
     delete m_logger;

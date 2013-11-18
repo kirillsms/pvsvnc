@@ -105,7 +105,6 @@ BOOL OptionsDialog::onInitDialog()
   setControlById(m_copyrect, IDC_CCOPYRECT);
   setControlById(m_viewonly, IDC_CVIEWONLY);
   setControlById(m_disclip, IDC_CDISCLIP);
-  setControlById(m_sharedses, IDC_CSHAREDSES);
   setControlById(m_scale, IDC_CSCALE);
   setControlById(m_fullscr, IDC_CFULLSCR);
   setControlById(m_deiconfy, IDC_CDEICONFY);
@@ -117,6 +116,7 @@ BOOL OptionsDialog::onInitDialog()
   setControlById(m_smalldot, IDC_RSMALLDOT);
   setControlById(m_arrow, IDC_RARROW);
   setControlById(m_nlocal, IDC_RNLOCAL);
+  setControlById(m_vlogging, IDC_VLOGGING);
 
   m_useEnc.addItem(_T("Raw"), reinterpret_cast<void *>(EncodingDefs::RAW));
   m_useEnc.addItem(_T("Hextile"), reinterpret_cast<void *>(EncodingDefs::HEXTILE));
@@ -165,8 +165,6 @@ void OptionsDialog::updateControlValues()
   m_deiconfy.check(m_conConfig->isDeiconifyOnRemoteBellEnabled());
   m_swapmouse.check(m_conConfig->isMouseSwapEnabled());
 
-  m_sharedses.check(m_conConfig->getSharedFlag());
-  m_sharedses.setEnabled(!m_connected);
 
   if (m_conConfig->isFitWindowEnabled()) {
     // FIXME: replace literal to named constant
@@ -226,6 +224,9 @@ void OptionsDialog::updateControlValues()
     m_dot.check(true);
     break;
   }
+  
+  m_vlogging.setText(ViewerConfig::getInstance()->getPathToVLogFile());
+
 
   onViewOnlyClick();
 
@@ -436,7 +437,6 @@ void OptionsDialog::apply()
   m_conConfig->enableFullscreen(m_fullscr.isChecked());
   m_conConfig->deiconifyOnRemoteBell(m_deiconfy.isChecked());
   m_conConfig->swapMouse(m_swapmouse.isChecked());
-  m_conConfig->setSharedFlag(m_sharedses.isChecked());
 
   StringStorage scaleText;
 
