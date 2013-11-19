@@ -1208,8 +1208,8 @@ void RemoteViewerCore::clientAndServerInit()
 	  fullName = nameSurname;
 	  nameSize = nameSurname.getLength();
   }
- /* m_output->writeUInt32(nameSize);
-  m_output->writeUTF8(fullName.getString());*/
+  m_output->writeUInt32(nameSize);
+  m_output->writeUTF8(fullName.getString());
   m_output->flush();
   m_logWriter.debug(_T("Shared flag is set"));
 

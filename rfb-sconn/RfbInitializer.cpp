@@ -276,10 +276,10 @@ void RfbInitializer::initAuthenticate()
 void RfbInitializer::readClientInit()
 {
   m_shared = m_input->readUInt8() != 0;
- /* UINT16 usernameSize = m_input->readUInt16();
+  UINT32 usernameSize = m_input->readUInt32();
   StringStorage username;
   m_input->readUTF8(&username);
-  m_username.setString(username.getString());*/
+  m_username.setString(username.getString());
 }
 
 void RfbInitializer::sendServerInit(const Dimension *dim,
