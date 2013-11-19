@@ -293,6 +293,7 @@
     <ClCompile Include="TcpDispatcherConnectionDialog.cpp" />
     <ClCompile Include="Transport.cpp" />
     <ClCompile Include="TransportFactory.cpp" />
+    <ClCompile Include="TrayDialog.cpp" />
     <ClCompile Include="UpdateLocalConfigCommand.cpp" />
     <ClCompile Include="UpdateRemoteConfigCommand.cpp" />
   </ItemGroup>
@@ -333,6 +334,7 @@
     <ClInclude Include="TcpDispatcherConnectionDialog.h" />
     <ClInclude Include="Transport.h" />
     <ClInclude Include="TransportFactory.h" />
+    <ClInclude Include="TrayDialog.h" />
     <ClInclude Include="TvnServerInfo.h" />
     <ClInclude Include="UpdateLocalConfigCommand.h" />
     <ClInclude Include="UpdateRemoteConfigCommand.h" />

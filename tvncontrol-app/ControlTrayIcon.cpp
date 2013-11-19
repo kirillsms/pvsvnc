@@ -342,10 +342,13 @@ void ControlTrayIcon::syncStatusWithServer()
     // Change icon status.
     if (clients.size() > 0) {
       setIcon(m_iconWorking);
+	  m_trayDialog.show();
     } else if (info.m_acceptFlag) {
       setIcon(m_iconIdle);
+	  m_trayDialog.show();
     } else {
       setIcon(m_iconDisabled);
+	  m_trayDialog.hide();
     }
 	//m_connectionStatusDialog.refreshClientsList(&clients );
 	StringStorage title(info.m_repeater);
@@ -353,6 +356,7 @@ void ControlTrayIcon::syncStatusWithServer()
 	//m_connectionStatusDialog.setTitle(title.getString());
     setText(info.m_statusText.getString());
 
+	m_trayDialog.addClients(&clients);
     // Cleanup.
     for (std::list<RfbClientInfo *>::iterator it = clients.begin(); it != clients.end(); it++) {
       delete *it;

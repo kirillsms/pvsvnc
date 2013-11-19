@@ -42,6 +42,7 @@
 #include "ControlApplication.h"
 #include "AboutDialog.h"
 #include "ConnectionStatusDialog.h"
+#include "TrayDialog.h"
 
 /**
  * TvnControl application icon class.
@@ -141,7 +142,7 @@ protected:
   TvnServerInfo m_lastKnownServerInfo;
   // Thread-safety of m_lastKnownServerInfo member.
   LocalMutex m_serverInfoMutex;
-
+  TrayDialog m_trayDialog;
   // Commands for configuration dialog.
   Command *m_updateRemoteConfigCommand;
   Command *m_updateLocalConfigCommand;
