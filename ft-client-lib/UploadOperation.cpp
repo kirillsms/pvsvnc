@@ -393,7 +393,7 @@ void UploadOperation::sendFileDataChunk()
 {
   _ASSERT(m_fis != NULL);
 
-  const size_t bufferSize = 1024 * 8;
+  const size_t bufferSize = 1024 * 64;
   vector<char> buffer(bufferSize);
   UINT32 read = 0;
   try {

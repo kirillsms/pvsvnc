@@ -131,7 +131,7 @@ void DownloadOperation::onDownloadReply(DataInputStream *input)
   // Send first request for file data
   //
 
-  UINT32 dataSize = 1024 * 8;
+  UINT32 dataSize = 1024 * 64;
   bool compression = m_replyBuffer->isCompressionSupported();
 
   m_sender->sendDownloadDataRequest(dataSize,
@@ -145,7 +145,7 @@ void DownloadOperation::onDownloadDataReply(DataInputStream *input)
     return ;
   }
 
-  UINT32 bufferSize = 1024 * 8;
+  UINT32 bufferSize = 1024 * 64;
 
   try {
     DataOutputStream dos(m_fos);
