@@ -3,7 +3,7 @@
 
 
 AvilogThread::AvilogThread(const FrameBuffer *buff):
-	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex()
+	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex(),crect(0,0,0,0)
 {
 	m_frame = buff;
 	ZeroMemory(&bmiHeader,sizeof(bmiHeader));
@@ -45,6 +45,53 @@ void AvilogThread::execute()
 		if(m_avilog)
 		{
 			CopyMemory(m_tempbuffer, m_frame->getBuffer(), bmiHeader.biSizeImage);
+			// draw cursor
+			Rect rc;			
+			rc.top = crect.top;
+			rc.bottom = crect.top+5;
+			rc.left = crect.left;
+			rc.right = crect.left+5;
+
+			// calc inmem pos
+			int pixelSize = m_frame->getBytesPerPixel();
+			size_t sizeLineFb = m_frame->getBytesPerRow();
+			size_t sizeLineRect = rc.getWidth() * pixelSize;
+			char *ptr = (char *)m_tempbuffer;
+			ptr += (rc.top * m_frame->getDimension().width + rc.left) * pixelSize;
+			UINT8 *srcLinePtr = reinterpret_cast<UINT8 *> (ptr);
+			UINT8 *pixPtr = srcLinePtr;
+
+
+if (pixPtr != NULL){
+
+int colour_white = 2147483647;
+int colour_black = 0;
+for (int x = rc.left; x < rc.right; x++, pixPtr += pixelSize)
+	memcpy(pixPtr, &colour_white, pixelSize);
+// it's pointer to next line of rect
+UINT8 *dstLinePtr = srcLinePtr + sizeLineFb;
+for (int y = rc.top + 1; y < rc.bottom; y++, dstLinePtr += sizeLineFb)
+    memcpy(dstLinePtr, srcLinePtr, sizeLineRect);
+
+rc.left++;
+rc.top++;
+rc.right--;
+rc.bottom--;
+
+sizeLineRect = rc.getWidth() * pixelSize;
+
+srcLinePtr+=pixelSize+sizeLineFb;
+pixPtr = srcLinePtr;
+for (int x = rc.left; x < rc.right; x++, pixPtr += pixelSize)
+	memcpy(pixPtr, &colour_black, pixelSize);
+dstLinePtr = srcLinePtr + sizeLineFb; 
+for (int y = rc.top + 1; y < rc.bottom; y++, dstLinePtr += sizeLineFb)
+    memcpy(dstLinePtr, srcLinePtr, sizeLineRect);
+}
+
+//////// end draw cursor
+
+
 			m_avilog->AddFrame(m_tempbuffer);
 		}
 		else
@@ -81,3 +128,12 @@ void AvilogThread::UpdateAvilog()
 }
 
 
+void AvilogThread::SetCursorPos(Rect cursorpos)
+{
+if(m_avilog){
+	if(cursorpos.left > 0 && cursorpos.left<m_frame->getDimension().width-5 && cursorpos.top>0 && cursorpos.top<m_frame->getDimension().height-5)
+	{
+		crect.setRect(&cursorpos);
+	}
+}
+}

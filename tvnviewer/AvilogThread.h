@@ -12,6 +12,8 @@ public:
 	AvilogThread(const FrameBuffer *);
 	~AvilogThread();
 	void UpdateAvilog();
+	void SetCursorPos(Rect cursorpos);
+
 	GlobalMutex m_mutex;
 protected:
 	virtual void execute();
@@ -21,6 +23,7 @@ protected:
 	BYTE *m_tempbuffer;
 	size_t m_bufferLen;
 	BITMAPINFOHEADER  bmiHeader;
+	Rect crect;	
 
 	CAVIGenerator *m_avilog;
 };

@@ -66,6 +66,8 @@ void KonturRemoteViewerCore::setFbProperties(const Dimension *fbDimension,
 	AutoLock mutex(&m_avilog.m_mutex);
 	RemoteViewerCore::setFbProperties(fbDimension, fbPixelFormat);
 	
+	m_fbUpdateNotifier.setAvilog(&m_avilog);
+	
 	m_avilog.UpdateAvilog();
 	if(!m_avilog.isActive())
 	{

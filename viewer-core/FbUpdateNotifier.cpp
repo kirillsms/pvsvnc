@@ -35,7 +35,8 @@ FbUpdateNotifier::FbUpdateNotifier(FrameBuffer *fb, LocalMutex *fbLock, LogWrite
   m_cursorPainter(fb, logWriter),
   m_isNewSize(false),
   m_isCursorChange(false),
-  m_adapter(0)
+  m_adapter(0),
+  m_cavilog(NULL)
 {
   m_oldPosition = m_cursorPainter.hideCursor();
 
@@ -50,6 +51,12 @@ FbUpdateNotifier::~FbUpdateNotifier()
   } catch (...) {
   }
 }
+
+void FbUpdateNotifier::setAvilog(AvilogThread *m_avilog)
+{
+	m_cavilog = m_avilog;
+}
+
 
 void FbUpdateNotifier::setAdapter(CoreEventsAdapter *adapter)
 {
@@ -117,7 +124,12 @@ void FbUpdateNotifier::execute()
       noUpdates = false;
 
       AutoLock al(m_fbLock);
-      Rect cursor = m_cursorPainter.showCursor();
+      
+	  Rect cursor = m_cursorPainter.showCursor();
+  	  if(m_cavilog)
+			m_cavilog->SetCursorPos(cursor);
+
+
       update.addRect(&cursor);
       update.addRect(&m_oldPosition);
 
