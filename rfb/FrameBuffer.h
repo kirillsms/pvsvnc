@@ -70,6 +70,11 @@ public:
     return setDimension(&dim);
   }
 
+  virtual inline void setDisplayCount(int dispCount) {  displayCount = dispCount;  };
+  
+  virtual inline int getDisplayCount() const {  return displayCount;  };
+
+
   // Sets dimension to the frame buffer without buffer resizing
   virtual void setEmptyDimension(const Rect *dimByRect);
 
@@ -121,6 +126,7 @@ protected:
 
   PixelFormat m_pixelFormat;
   void *m_buffer;
+  int displayCount;
 };
 
 #endif // __FRAMEBUFFER_H__

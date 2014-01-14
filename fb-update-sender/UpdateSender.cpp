@@ -30,6 +30,7 @@
 #include "util/inttypes.h"
 #include "util/Exception.h"
 #include "UpdSenderMsgDefs.h"
+#include "win-system/WindowsDisplays.h"
 
 UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                            UpdateRequestListener *updReqListener,
@@ -50,7 +51,8 @@ UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
   m_videoFrozen(false),
   m_shareOnlyApp(false),
   m_log(log),
-  m_cursorUpdates(log)
+  m_cursorUpdates(log),
+  m_display(0),m_viewportChanged(false)
 {
   // FIXME: argument must be defined
   m_updateKeeper = new UpdateKeeper(&Rect());
@@ -78,6 +80,7 @@ UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                             UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE_SIG);
 
   // Request codes
+  codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY, this);
   codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE, this);
   codeRegtor->regCode(ClientMsgDefs::FB_UPDATE_REQUEST, this);
   codeRegtor->regCode(ClientMsgDefs::SET_PIXEL_FORMAT, this);
@@ -113,6 +116,10 @@ void UpdateSender::onRequest(UINT32 reqCode, RfbInputGate *input)
   case UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE:
     readVideoFreeze(input);
     break;
+  case UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY:
+    readShareFull(input);
+    break;
+
   default:
     StringStorage errMess;
     errMess.format(_T("Unknown %d protocol code received"), (int)reqCode);
@@ -200,9 +207,12 @@ void UpdateSender::sendRectHeader(UINT16 x, UINT16 y, UINT16 w, UINT16 h,
 
 void UpdateSender::sendNewFBSize(Dimension *dim)
 {
+  WindowsDisplays m_winDisp;
+  std::vector<Rect> displays = m_winDisp.getDisplays();
+
   // Header
   m_output->writeUInt8(ServerMsgDefs::FB_UPDATE); // message type
-  m_output->writeUInt8(0); // padding
+  m_output->writeUInt8(displays.size()); // send display count insted of padding
   m_output->writeUInt16(1); // one rectangle
 
   Rect r(dim->width, dim->height);
@@ -390,8 +400,9 @@ void UpdateSender::sendUpdate()
   m_pixelConverter.setPixelFormats(&clientPixelFormat, &serverPixelFormat);
 
   // Send updates
-  if (updCont.screenSizeChanged || (!requestedFullReg.isEmpty() &&
+  if (m_viewportChanged || updCont.screenSizeChanged || (!requestedFullReg.isEmpty() &&
                                     !encodeOptions.desktopSizeEnabled())) {
+    m_viewportChanged = false; 
     m_log->debug(_T("Screen size changed or full region requested"));
     if (encodeOptions.desktopSizeEnabled()) {
       m_log->debug(_T("Desktop resize is enabled, sending NewFBSize %dx%d"),
@@ -735,6 +746,14 @@ void UpdateSender::setVideoFrozen(bool value)
   m_videoFrozen = value;
 }
 
+void UpdateSender::setDisplay(int value)
+{
+  m_display = value;
+  m_viewportChanged = true;
+}
+
+
+
 bool UpdateSender::getVideoFrozen()
 {
   AutoLock al(&m_vidFreezeLocMut);
@@ -745,6 +764,12 @@ void UpdateSender::readVideoFreeze(RfbInputGate *io)
 {
   setVideoFrozen(io->readUInt8() != 0);
 }
+
+void UpdateSender::readShareFull(RfbInputGate *io)
+{
+  setDisplay(io->readUInt8());
+}
+
 
 bool UpdateSender::extractReqRegions(Region *incrReqReg,
                                      Region *fullReqReg,
@@ -875,7 +900,19 @@ bool UpdateSender::updateViewPort(Rect *outNewViewPort, bool *shareApp, Region *
                                   Region *newShareAppRegion)
 {
   Rect newViewPort;
-  m_senderControlInformation->onGetViewPort(&newViewPort, shareApp, newShareAppRegion);
+  
+  ViewPortState dynViewPort;
+  if(m_viewportChanged)
+  {
+  if(m_display==0)
+	dynViewPort.setFullDesktop();
+   else
+	dynViewPort.setDisplayNumber(m_display);
+  
+  }
+
+
+  m_senderControlInformation->onGetViewPort(&newViewPort, shareApp, newShareAppRegion,m_viewportChanged,&dynViewPort);
 
   AutoLock al(&m_viewPortMut);
   bool viewPortChanged = !m_viewPort.isEqualTo(&newViewPort);

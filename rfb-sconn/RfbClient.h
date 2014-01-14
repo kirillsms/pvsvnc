@@ -115,7 +115,7 @@ protected:
   void setClientState(ClientState newState);
 
   Rect getViewPortRect(const Dimension *fbDimension);
-  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion);
+  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion,bool newViewpoint,const ViewPortState *dynViewPort);
   void getViewPortInfo(const Dimension *fbDimension, Rect *resultRect,
                        bool *shareApp, Region *shareAppRegion);
 

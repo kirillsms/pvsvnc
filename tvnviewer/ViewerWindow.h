@@ -108,6 +108,7 @@ protected:
   void commandScaleOut();
   void commandScale100();
   void commandScaleAuto();
+  void showDisp();
 
   //
   // It is implementation of CoreEventsAdapter functions.
@@ -197,6 +198,7 @@ private:
   StringStorage formatWindowName() const;
   void updateKeyState();
 
+  int m_displayCount;
 
   // onHookProc function implementation of HookEventListener base abstract class.
   virtual LRESULT onHookProc(int code, WPARAM wParam, LPARAM lParam);

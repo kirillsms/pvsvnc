@@ -29,7 +29,7 @@
 class SenderControlInformationInterface
 {
 public:
-  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion) = 0;
+  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion,bool newViewpoint,const ViewPortState *dynViewPort) = 0;
 };
 
 #endif // __SENDERCONTROLINFORMATIONINTERFACE_H__

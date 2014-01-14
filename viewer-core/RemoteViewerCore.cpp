@@ -55,7 +55,7 @@
 #include "LastRectDecoder.h"
 #include "PointerPosDecoder.h"
 #include "RichCursorDecoder.h"
-
+#include "fb-update-sender/UpdSenderMsgDefs.h"
 #include <algorithm>
 
 #include <client-config-lib/ViewerConfig.h>
@@ -721,6 +721,13 @@ int RemoteViewerCore::initAuthentication()
   return typeSelected;
 }
 
+void RemoteViewerCore::setDisplay(int disp){
+  m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY);
+  m_output->writeUInt8(disp);
+  m_output->flush();
+}
+
+
 void RemoteViewerCore::setFbProperties(const Dimension *fbDimension,
                                        const PixelFormat *fbPixelFormat)
 {
@@ -922,7 +929,7 @@ void RemoteViewerCore::receiveFbUpdate()
   // message type is already known: 0
 
   // read padding: one byte
-  m_input->readUInt8();
+  pad = m_input->readUInt8();
 
   UINT16 numberOfRectangles = m_input->readUInt16();
   m_logWriter.debug(_T("number of rectangles: %d"), numberOfRectangles);
@@ -997,6 +1004,7 @@ void RemoteViewerCore::processPseudoEncoding(const Rect *rect,
     m_logWriter.info(_T("Changed size of desktop"));
     {
       AutoLock al(&m_fbLock);
+	  m_frameBuffer.setDisplayCount(pad);
       setFbProperties(&Dimension(rect), &m_frameBuffer.getPixelFormat());
     }
     break;

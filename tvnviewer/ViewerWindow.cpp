@@ -52,7 +52,7 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
   m_sizeIsChanged(false),
   m_requiresReconnect(false),
   m_hooksEnabledFirstTime(true),
-  m_stopped(false)
+  m_stopped(false),m_displayCount(0)
 {
   m_standardScale.push_back(10);
   m_standardScale.push_back(15);
@@ -649,6 +649,52 @@ void ViewerWindow::commandScaleAuto()
   }
 }
 
+
+void ViewerWindow::showDisp()
+{
+
+
+if(m_displayCount!=0){
+
+HMENU hMenu = CreateMenu();
+HMENU hMenuPopup = CreateMenu();
+AppendMenu(hMenuPopup, MF_STRING, 100, _T("All screens"));
+
+for (int i=1; i<=m_displayCount;i++){
+StringStorage str;
+str.format(_T("Display %d"),i);
+AppendMenu(hMenuPopup, MF_STRING, 100+i, str.getString());
+}
+
+AppendMenu(hMenu, MF_POPUP,(UINT) hMenuPopup, _T(""));
+
+POINT pos;
+
+if (!GetCursorPos(&pos)) {
+    pos.x = pos.y = 0;
+  }
+
+int action = TrackPopupMenu(hMenuPopup,
+                              TPM_NONOTIFY | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+                              pos.x, pos.y, 0, getHWnd(), NULL);
+
+
+if(!action) return;
+
+  switch (action) {
+  case 100:
+    // share full
+	  m_viewerCore->setDisplay(0);
+    break;
+  default:
+	  m_viewerCore->setDisplay(action-100);
+    break;
+
+	}
+}
+}
+
+
 int ViewerWindow::translateAccelToTB(int val) 
 {
   static const std::pair<int, int> accelerators[] = {
@@ -741,6 +787,9 @@ bool ViewerWindow::onCommand(WPARAM wParam, LPARAM lParam)
     case IDS_TB_CONFIGURATION:
       dialogConfiguration();
       return true;
+	case IDS_TB_DISP:
+		showDisp();
+	 return true;
   }
   return false;
 }
@@ -1135,6 +1184,7 @@ void ViewerWindow::onFrameBufferUpdate(const FrameBuffer *fb, const Rect *rect)
 void ViewerWindow::onFrameBufferPropChange(const FrameBuffer *fb)
 {
   m_dsktWnd.setNewFramebuffer(fb);
+  m_displayCount = fb->getDisplayCount();
 }
 
 void ViewerWindow::onCutText(const StringStorage *cutText)

@@ -349,10 +349,14 @@ void RfbClient::getViewPortInfo(const Dimension *fbDimension, Rect *resultRect,
   }
 }
 
-void RfbClient::onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion)
+void RfbClient::onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion,bool newViewpoint,const ViewPortState *dynViewPort)
 {
   PixelFormat pfStub;
   Dimension fbDim;
+  if(newViewpoint){
+	changeDynViewPort(dynViewPort);
+  }
+
   m_desktop->getFrameBufferProperties(&fbDim, &pfStub);
   getViewPortInfo(&fbDim, viewRect, shareApp, shareAppRegion);
 }

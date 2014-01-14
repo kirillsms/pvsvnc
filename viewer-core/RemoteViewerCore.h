@@ -364,6 +364,8 @@ public:
   //
   void ignoreCursorShapeUpdates(bool ignored);
 
+  void setDisplay(int disp);
+
   //
   // Work with capabilities is documented in interface CapabilitiesManager.
   // Next methods is implements of CapabilitiesManager.
@@ -491,6 +493,8 @@ private:
   RfbCapabilityInfo readCapability();
   void sendEncodings();
 
+  
+
   //
   // This function return true, if flag m_wasConnected is true.
   // This flag is true after onConnected().
@@ -609,6 +613,7 @@ private:
   // Do not allow copying objects.
   RemoteViewerCore(const RemoteViewerCore &);
   RemoteViewerCore &operator=(const RemoteViewerCore &);
+  int pad;
 };
 
 #endif
