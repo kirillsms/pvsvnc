@@ -27,8 +27,11 @@
 
 #include "util/StringVector.h"
 #include "util/Exception.h"
+#include "PortMappingContainer.h"
+#include "IpAccessControl.h"
 #include "thread/AutoLock.h"
 #include "thread/LocalMutex.h"
+#include "IpAccessRule.h"
 #include "io-lib/DataInputStream.h"
 #include "io-lib/DataOutputStream.h"
 #include "io-lib/IOException.h"
@@ -100,6 +103,9 @@ public:
   void setRfbPort(int port);
   int getRfbPort();
 
+  void setHttpPort(int port);
+  int getHttpPort();
+
   //
   // Other server options access methods
   //
@@ -151,6 +157,14 @@ public:
   bool isOnlyLoopbackConnectionsAllowed();
 
   void acceptOnlyLoopbackConnections(bool enabled);
+
+  bool isAcceptingHttpConnections();
+
+  void acceptHttpConnections(bool accept);
+
+  bool isAppletParamInUrlEnabled();
+
+  void enableAppletParamInUrl(bool enabled);
 
   int getLogLevel();
 
@@ -208,11 +222,22 @@ public:
   void setDefaultActionToAccept(bool accept);
 
   //
+  // Port mapping config
+  //
+
+  // Remark: not-thread safe method, use lock / unlock methods of this class
+  // to lock and unlock server configuration.
+  PortMappingContainer *getPortMappingContainer();
+
+  //
   // Ip access control config
   //
 
   // Remark: not-thread safe method, use lock / unlock methods of this class
   // to lock and unlock server configuration.
+  IpAccessControl *getAccessControl();
+
+  IpAccessRule::ActionType getActionByAddress(unsigned long ip);
 
   void allowLoopbackConnections(bool allow);
 
@@ -253,6 +278,7 @@ protected:
   //
 
   int m_rfbPort;
+  int m_httpPort;
 
   //
   // Other server options members group
@@ -272,6 +298,7 @@ protected:
   //
 
   bool m_acceptRfbConnections;
+  bool m_acceptHttpConnections;
 
   unsigned char m_primaryPassword[VNC_PASSWORD_SIZE];
   unsigned char m_readonlyPassword[VNC_PASSWORD_SIZE];
@@ -337,9 +364,16 @@ protected:
   unsigned int m_queryTimeout;
 
   //
+  // Port mapping config
+  //
+
+  PortMappingContainer m_portMappings;
+
+  //
   // Ip access control config
   //
 
+  IpAccessControl m_accessControlContainer;
   bool m_allowLoopbackConnections;
 
   //

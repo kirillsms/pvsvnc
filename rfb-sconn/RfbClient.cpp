@@ -28,7 +28,6 @@
 #include "ft-server-lib/FileTransferRequestHandler.h"
 #include "network/socket/SocketStream.h"
 #include "RfbInitializer.h"
-#include "KonturRfbInitializer.h"
 #include "ClientAuthListener.h"
 #include "server-config-lib/Configurator.h"
 
@@ -39,7 +38,7 @@ RfbClient::RfbClient(NewConnectionEvents *newConnectionEvents,
                      bool isOutgoing, unsigned int id,
                      const ViewPortState *constViewPort,
                      const ViewPortState *dynViewPort,
-                     LogWriter *log)
+                     LogWriter *log,ChatDialog * chatDialog,FTStatusDialog * ftsDialog)
 : m_socket(socket), // now we own the socket
   m_newConnectionEvents(newConnectionEvents),
   m_viewOnly(viewOnly),
@@ -57,7 +56,7 @@ RfbClient::RfbClient(NewConnectionEvents *newConnectionEvents,
   m_desktop(0),
   m_constViewPort(constViewPort, log),
   m_dynamicViewPort(dynViewPort, log),
-  m_log(log)
+  m_log(log), m_chatDialog(chatDialog),m_ftsDialog(ftsDialog)
 {
   resume();
 }
@@ -90,7 +89,10 @@ bool RfbClient::isOutgoing() const
 void RfbClient::getPeerHost(StringStorage *host)
 {
   SocketAddressIPv4 addr;
-  host->setString(m_peerName.getString()); return;
+  if(m_peerName.getLength()!=0){
+  host->setString(m_peerName.getString()); 
+	return;
+  }
   if (m_socket->getPeerAddr(&addr)) {
     addr.toString(host);
   } else {
@@ -184,6 +186,8 @@ void RfbClient::execute()
   RfbInitializer rfbInitializer(&sockStream, m_extAuthListener, this,
                                 !m_isOutgoing);
 
+  
+
   try {
     // First initialization phase
     try {
@@ -198,6 +202,7 @@ void RfbClient::execute()
       m_log->debug(_T("Initial view-only state = %d"), (int)m_viewOnly);
       m_log->debug(_T("Authenticated with view-only password = %d"), (int)m_viewOnlyAuth);
       m_viewOnly = m_viewOnly || m_viewOnlyAuth;
+
 
 	  m_peerName.setString(rfbInitializer.getUserName());
 
@@ -239,10 +244,13 @@ void RfbClient::execute()
                                                 m_viewOnly, m_log);
     m_log->debug(_T("ClipboardExchange has been created"));
 
+	m_chatHandler = new TextChatHandler(&codeRegtor, &output, m_log,m_chatDialog);
+	//m_chatDialog->show();
+
     // FileTransfers initialization
     if (config->isFileTransfersEnabled() &&
         rfbInitializer.getTightEnabledFlag()) {
-      fileTransfer = new FileTransferRequestHandler(&codeRegtor, &output, m_desktop, m_log, !m_viewOnly);
+      fileTransfer = new FileTransferRequestHandler(&codeRegtor, &output, m_desktop, m_log, !m_viewOnly, m_ftsDialog);
       m_log->debug(_T("File transfer has been created"));
     } else {
       m_log->info(_T("File transfer is not allowed"));
@@ -293,6 +301,15 @@ void RfbClient::sendUpdate(const UpdateContainer *updateContainer,
 {
   m_updateSender->newUpdates(updateContainer, cursorShape);
 }
+
+
+void RfbClient::sendMsg(const StringStorage *msg)
+{
+  
+	m_chatHandler->sendMsgToClient(msg);
+
+}
+
 
 void RfbClient::sendClipboard(const StringStorage *newClipboard)
 {
@@ -349,14 +366,13 @@ void RfbClient::getViewPortInfo(const Dimension *fbDimension, Rect *resultRect,
   }
 }
 
-void RfbClient::onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion,bool newViewpoint,const ViewPortState *dynViewPort)
+void RfbClient::onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion, bool newViewpoint,const ViewPortState *dynViewPort)
 {
   PixelFormat pfStub;
   Dimension fbDim;
   if(newViewpoint){
 	changeDynViewPort(dynViewPort);
   }
-
   m_desktop->getFrameBufferProperties(&fbDim, &pfStub);
   getViewPortInfo(&fbDim, viewRect, shareApp, shareAppRegion);
 }

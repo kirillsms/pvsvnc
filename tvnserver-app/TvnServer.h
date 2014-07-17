@@ -31,8 +31,11 @@
 #include "desktop/ApplicationDesktopFactory.h"
 #include "RfbClientManager.h"
 #include "RfbServer.h"
+#include "ExtraRfbServers.h"
 #include "ControlServer.h"
 #include "TvnServerListener.h"
+
+#include "http-server-lib/HttpServer.h"
 
 #include "thread/ZombieKiller.h"
 #include "thread/LocalMutex.h"
@@ -40,12 +43,12 @@
 #include "util/Singleton.h"
 #include "util/ListenerContainer.h"
 #include "NewConnectionEvents.h"
-//#include "OutgoingRepeaterRfbConnectionThread.h"
+
 #include "server-config-lib/Configurator.h"
 
 #include "tvncontrol-app/TvnServerInfo.h"
 #include "LogInitListener.h"
-#include "KonturRfbClientManager.h"
+
 /**
  * TightVNC server singleton that includes serveral components:
  *   1) Zombie killer singleton.
@@ -82,14 +85,13 @@ public:
   TvnServer(bool runsInServiceContext,
             NewConnectionEvents *newConnectionEvents,
             LogInitListener *logInitListener,
-            Logger *logger,StringStorage *repeater=0);
+            Logger *logger, bool systemApp);
   /**
    * Stops and destroys TightVNC server.
    * @remark don't generate shutdown signal(like shutdown() method does) for listeners.
    */
   virtual ~TvnServer();
 
-  void setRepeaterStatus(StringStorage *repeaterStatus){m_repeaterStatus=*repeaterStatus;}
   /**
    * Fills structure with information of current state of TvnServer.
    * @param info [out] output parameter that will contain TightVNC server information
@@ -140,10 +142,11 @@ public:
   virtual void afterLastClientDisconnect();
 
 protected:
+  void restartHttpServer();
   void restartControlServer();
   void restartMainRfbServer();
-public:  void startRepeaterOutgoingConnection(); protected:
 
+  void stopHttpServer();
   void stopControlServer();
   void stopMainRfbServer();
 
@@ -171,24 +174,36 @@ protected:
    */
   const bool m_runAsService;
 
-  StringStorage m_repeater;
-  StringStorage m_repeaterStatus;
-
   WinServiceDesktopFactory m_serviceDesktopFactory;
   ApplicationDesktopFactory m_applicationDesktopFactory;
   /**
    * Rfb client manager (for all rfb servers), used by rfb servers
    * rfb clients, control server and control clients.
    */
-  KonturRfbClientManager *m_rfbClientManager;
+  RfbClientManager *m_rfbClientManager;
   /**
    * Control server.
    */
   ControlServer *m_controlServer;
   /**
+   * Builtin http server.
+   */
+  HttpServer *m_httpServer;
+  /**
    * Main rfb server.
    */
   RfbServer *m_rfbServer;
+  /**
+   * Extra servers for extra ports. This object is not protected by any mutex
+   * and it does not implement any internal locking, so it should be used with
+   * caution. Here we change its state on owner creation, on owner deletion
+   * and on each configuration change (via a listener function called from
+   * other threads). The listener function is registered after the object
+   * creation and unregistered before the owner destruction, and its calls are
+   * properly synchronized. Thus, we can be sure that m_extraRfbServers is not
+   * used by different threads simultaneously.
+   */
+  ExtraRfbServers m_extraRfbServers;
 
   LogInitListener *m_logInitListener;
 };

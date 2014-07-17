@@ -2,8 +2,8 @@
 #include "client-config-lib/ViewerConfig.h"
 
 
-AvilogThread::AvilogThread(const FrameBuffer *buff):
-	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex(),crect(0,0,0,0)
+AvilogThread::AvilogThread(const FrameBuffer *buff, bool isAutoStart):
+	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex(),crect(0,0,0,0),m_isRecord(isAutoStart)
 {
 	m_frame = buff;
 	ZeroMemory(&bmiHeader,sizeof(bmiHeader));
@@ -18,9 +18,16 @@ AvilogThread::~AvilogThread()
 
 void AvilogThread::execute()
 {
-	
+
 	while(!isTerminating())
 	{
+		
+		if(!m_isRecord){
+			sleep(500);
+			continue;
+		}
+
+
 		AutoLock mutex(&m_mutex);
 		if(!m_avilog)
 		{
@@ -29,10 +36,10 @@ void AvilogThread::execute()
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
 			_sntprintf_s(str, sizeof str, _T("%04d-%02d-%02d_%02d-%02d-%02d"), lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
 			_tcscat_s(str,_T("_vnc.avi"));
-			
-			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
-			
 
+			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
+
+			m_avilog->SetRate(10);
 
 			HRESULT hr = m_avilog->InitEngine();
 			if (FAILED(hr))
@@ -99,13 +106,15 @@ for (int y = rc.top + 1; y < rc.bottom; y++, dstLinePtr += sizeLineFb)
 			sleep(500);
 		}
 	}
+	if(m_avilog)
 	m_avilog->ReleaseEngine();
+	
 }
 
 
 void AvilogThread::UpdateAvilog()
 {
-	    
+
 		bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 		bmiHeader.biBitCount = m_frame->getBitsPerPixel();
 		bmiHeader.biWidth = m_frame->getDimension().width;

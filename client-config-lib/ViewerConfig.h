@@ -89,13 +89,26 @@ public:
   // Returns "prompt on fullscreen flag"
   bool isPromptOnFullscreenEnabled() const;
 
+
+    // Sets "show toolbar" flag
+  void autoRecord(bool rec);
+  // Returns "show toolbar" flag
+  bool isAutoRecord() const;
+
+
   // Returns path to log file if file is avaliable to write,
   // returns NULL otherwise
   const TCHAR *getPathToLogFile() const;
 
-  const TCHAR *getPathToVLogFile() const;
+   const TCHAR *getPathToVLogFile() const;
+   
+   const void setPathToVLogFile(StringStorage vPath);
 
-  const TCHAR *getUserName() const;
+     const TCHAR *getUserName() const;
+
+	 const TCHAR *getPeerName() const;
+	
+	const void setPeerName(StringStorage peer);
 
   // Returns connection history
   ConnectionHistory *getConnectionHistory();
@@ -113,10 +126,13 @@ protected:
   // If set then app must show promt dialog when viewer window
   // become fullscreen
   bool m_promptOnFullscreen;
+
+  bool m_autoRecord;
   // Log file
   StringStorage m_pathToLogFile;
   StringStorage m_pathToVLogFile;
   StringStorage m_userName;
+  StringStorage m_peerName;
   StringStorage m_logName;
   FileLogger *m_logger;
   // Connection history

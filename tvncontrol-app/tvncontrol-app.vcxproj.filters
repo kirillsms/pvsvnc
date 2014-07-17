@@ -110,6 +110,9 @@
     <ClCompile Include="SharePrimaryCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShareRectCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ShareWindowCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +120,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShareAppCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConnectionStatusDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TrayDialog.cpp">
@@ -232,6 +232,9 @@
     <ClInclude Include="SharePrimaryCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShareRectCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ShareWindowCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -239,9 +242,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShareAppCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConnectionStatusDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TrayDialog.h">

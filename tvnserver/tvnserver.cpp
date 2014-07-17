@@ -46,10 +46,22 @@
 
 #include "tvnserver-app/WinEventLogWriter.h"
 
+#include "win-system/Environment.h"
+#include "win-system/RegistryKey.h"
+
+
+
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                       LPTSTR lpCmdLine, int /*nCmdShow*/)
+                       LPTSTR lpCmdLine, int nCmdShow)
 {
-  LogWriter preLog(0);
+//  LIBSSH2_SESSION *session;
+
+LogWriter preLog(0);
+
+  //session = libssh2_session_init();
+
+
+
 
   // Life time of the sysLog must be greater than a TvnService object
   // because the crashHook uses it but fully functional usage possible
@@ -80,7 +92,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     { ServiceControlCommandLine::REMOVE_SERVICE },
     { ServiceControlCommandLine::REINSTALL_SERVICE },
     { ServiceControlCommandLine::START_SERVICE },
-    { ServiceControlCommandLine::STOP_SERVICE }
+    { ServiceControlCommandLine::STOP_SERVICE },
+	{ _T("-sas"), NEEDS_ARG }, {_T("-reboot"), NO_ARG}
   };
 
   CommandLine parser;
@@ -98,6 +111,40 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   parser.getOption(0, &firstKey);
 
   // Check if need to start additional application that packed into tvnserver.exe.
+
+if (firstKey.isEqualTo(_T("-reboot"))) {
+  Environment::RemoteReboot();	
+  return 0;
+}
+
+  if (firstKey.isEqualTo(_T("-sas"))) {
+	  StringStorage second(_T(""));
+	  if(parser.optionSpecified(firstKey.getString(),&second)){
+		DWORD (WINAPI* lpfnWmsgSendMessage)(DWORD dwSessionId, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		DWORD dwSessionId = _wtoi(second.getString());
+
+        HINSTANCE hLib = LoadLibrary(_T("wmsgapi.dll"));
+
+
+        if(hLib)
+        {
+            if (!(lpfnWmsgSendMessage = (DWORD (__stdcall *)(DWORD, UINT, WPARAM, LPARAM))GetProcAddress(hLib, ("WmsgSendMessage"))))
+            {
+                return 1;
+            }
+            else
+            {
+                LPARAM lParam = 0;
+                DWORD dwRet = lpfnWmsgSendMessage(dwSessionId, 0x208, 0, (LPARAM)&lParam); //Undocument API.
+				return 0;
+            }
+        }
+	  }else{
+		return 1;
+	  }
+  }
+
+  //
 
   if (firstKey.isEqualTo(TvnService::SERVICE_COMMAND_LINE_KEY)) {
     TvnService tvnService(&winEventLogWriter, &winEventLogWriter);

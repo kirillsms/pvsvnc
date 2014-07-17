@@ -106,7 +106,7 @@ void TcpConnection::connect()
         m_socket = new SocketIPv4;
         m_socketOwner = true;
         m_socket->connect(ipAddress);
-        m_socket->enableNaggleAlgorithm(false);
+        m_socket->enableNaggleAlgorithm(true);
       } else {
         throw Exception(_T("Connection parameters (host, port, socket, gates) is empty."));
       }

@@ -52,40 +52,32 @@
 
 #include <crtdbg.h>
 #include <time.h>
-#include "OutgoingRepeaterRfbConnectionThread.h"
+
 TvnServer::TvnServer(bool runsInServiceContext,
                      NewConnectionEvents *newConnectionEvents,
                      LogInitListener *logInitListener,
-                     Logger *logger, StringStorage *repeater)
+                     Logger *logger,
+					 bool systemApp)
 : Singleton<TvnServer>(),
   ListenerContainer<TvnServerListener *>(),
   m_runAsService(runsInServiceContext),
   m_logInitListener(logInitListener),
   m_rfbClientManager(0),
-  m_controlServer(0), m_rfbServer(0),
+  m_httpServer(0), m_controlServer(0), m_rfbServer(0),
   m_config(runsInServiceContext),
   m_log(logger),
-  m_repeater(*repeater),
-  m_repeaterStatus(_T(":Connecting"))
- 
+  m_extraRfbServers(&m_log)
 {
   m_log.message(_T("%s Build on %s"),
                  ProductNames::SERVER_PRODUCT_NAME,
                  BuildTime::DATE);
-  if(m_repeater.isEmpty())
-  {
-    srand(time(NULL));
-    TCHAR * id = new TCHAR[5];
-    UINT randNum = rand()%10000;
-    randNum = (randNum == 0? randNum+1: randNum );
-    _itot(randNum,id,5);
-	m_repeater.setString(id);
-  }
+
   // Initialize configuration.
   // FIXME: It looks like configurator may be created as a member object.
   Configurator *configurator = Configurator::getInstance();
   configurator->load();
   m_srvConfig = Configurator::getInstance()->getServerConfig();
+  Configurator::getInstance()->setSystemFlag(systemApp);
 
   try {
     StringStorage logDir;
@@ -109,7 +101,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
   }
 
   DesktopFactory *desktopFactory = 0;
-  if (runsInServiceContext) {
+  if (runsInServiceContext || systemApp) {
     desktopFactory = &m_serviceDesktopFactory;
   } else {
     desktopFactory = &m_applicationDesktopFactory;
@@ -117,7 +109,7 @@ TvnServer::TvnServer(bool runsInServiceContext,
 
    // Instanize zombie killer singleton.
    // FIXME: may be need to do it in another place or use "lazy" initialization.
-  m_rfbClientManager = new KonturRfbClientManager(0, newConnectionEvents, &m_log, desktopFactory);
+  m_rfbClientManager = new RfbClientManager(0, newConnectionEvents, &m_log, desktopFactory);
 
   m_rfbClientManager->addListener(this);
 
@@ -131,8 +123,9 @@ TvnServer::TvnServer(bool runsInServiceContext,
     AutoLock l(&m_mutex);
 
     restartMainRfbServer();
+    (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
+    restartHttpServer();
     restartControlServer();
-	startRepeaterOutgoingConnection();
   }
 }
 
@@ -141,6 +134,8 @@ TvnServer::~TvnServer()
   Configurator::getInstance()->removeListener(this);
 
   stopControlServer();
+  stopHttpServer();
+  m_extraRfbServers.shutDown();
   stopMainRfbServer();
 
   ZombieKiller *zombieKiller = ZombieKiller::getInstance();
@@ -187,8 +182,26 @@ void TvnServer::onConfigReload(ServerConfig *serverConfig)
       restartMainRfbServer();
     }
 
+    // NOTE: ExtraRfbServers::reload() does not throw exceptions if some
+    //       servers did not start. However, it returns false in that case.
+    //       Here we ignore all errors.
+    (void)m_extraRfbServers.reload(m_runAsService, m_rfbClientManager);
   }
 
+  // Start/stop/restart HTTP server if needed.
+  {
+    // FIXME: Protect only primitive operations.
+    AutoLock l(&m_mutex);
+
+    bool toggleHttp =
+      m_srvConfig->isAcceptingHttpConnections() != (m_httpServer != 0);
+    bool changePort = m_httpServer != 0 &&
+      (m_srvConfig->getHttpPort() != (int)m_httpServer->getBindPort());
+
+    if (toggleHttp || changePort) {
+      restartHttpServer();
+    }
+  }
   changeLogProps();
 }
 
@@ -234,8 +247,6 @@ void TvnServer::getServerInfo(TvnServerInfo *info)
                             statusString.getString());
   info->m_acceptFlag = rfbServerListening && !vncPasswordsError;
   info->m_serviceFlag = m_runAsService;
-  info->m_repeater = m_repeater;
-  info->m_repeaterStatus = m_repeaterStatus;
 }
 
 void TvnServer::generateExternalShutdownSignal()
@@ -303,6 +314,24 @@ void TvnServer::afterLastClientDisconnect()
   delete process;
 }
 
+void TvnServer::restartHttpServer()
+{
+  // FIXME: Errors are critical here, they should not be ignored.
+
+  stopHttpServer();
+
+  if (m_srvConfig->isAcceptingHttpConnections()) {
+    m_log.message(_T("Starting HTTP server"));
+    try {
+      // FIXME: HTTP server should bind to localhost if only loopback
+      //        connections are allowed.
+      m_httpServer = new HttpServer(_T("0.0.0.0"), m_srvConfig->getHttpPort(), m_runAsService, &m_log);
+    } catch (Exception &ex) {
+      m_log.error(_T("Failed to start HTTP server: \"%s\""), ex.getMessage());
+    }
+  }
+}
+
 void TvnServer::restartControlServer()
 {
   // FIXME: Memory leaks.
@@ -350,16 +379,19 @@ void TvnServer::restartMainRfbServer()
   }
 }
 
-void TvnServer::startRepeaterOutgoingConnection()
-{  
-  AnsiStringStorage ansiId(&m_repeater);
-  OutgoingRepeaterRfbConnectionThread *out = new OutgoingRepeaterRfbConnectionThread(_T("vnc.kontur.ru"),
- 	                                    (UINT)443,
- 										false,
- 										m_rfbClientManager,
-										&m_log,ansiId.getString());
-  out->resume();
-  ZombieKiller::getInstance()->addZombie(out);
+void TvnServer::stopHttpServer()
+{
+  m_log.message(_T("Stopping HTTP server"));
+
+  HttpServer *httpServer = 0;
+  {
+    AutoLock l(&m_mutex);
+    httpServer = m_httpServer;
+    m_httpServer = 0;
+  }
+  if (httpServer != 0) {
+    delete httpServer;
+  }
 }
 
 void TvnServer::stopControlServer()

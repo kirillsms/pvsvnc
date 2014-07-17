@@ -97,9 +97,9 @@ void ConnectToTcpDispatcherThread::execute()
     {
       AutoLock al(&m_socketDelegationMutex);
       if (!m_pendingToRemove) {
-        m_clientManager->addNewConnection(m_socket,
-                                          &ViewPortState(), // with a default view port
-                                          false, false);
+        //m_clientManager->addNewConnection(m_socket,
+                                          //&ViewPortState(), // with a default view port
+                                          //false, false, NULL);
         m_socket = 0; // Now, we aren't the socket owner.
       }
     }

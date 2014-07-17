@@ -30,7 +30,7 @@ bool StringParser::parseInt(const TCHAR *str, int *out)
 {
   int value = 0;
   TCHAR c;
-  if(_stscanf_s(str, _T("%d%c"), &value, &c) != 1) {
+  if(_stscanf(str, _T("%d%c"), &value, &c) != 1) {
     return false;
   }
   if (out != NULL) {
@@ -70,7 +70,7 @@ bool StringParser::parseUInt64(const TCHAR *str, UINT64 *out)
 {
   UINT64 value = 0;
   TCHAR c;
-  if(_stscanf_s(str, _T("%llu%c"), &value, &c) != 1) {
+  if(_stscanf(str, _T("%llu%c"), &value, &c) != 1) {
     return false;
   }
   if (out != NULL) {
@@ -89,7 +89,7 @@ bool StringParser::parseHex(const TCHAR *str, unsigned int *out)
 {
   TCHAR c;
   unsigned int val;
-  if (_stscanf_s(str, _T("%x%c"), &val, &c) != 1) {
+  if (_stscanf(str, _T("%x%c"), &val, &c) != 1) {
     return false;
   }
   if (out != NULL) {
@@ -102,7 +102,7 @@ bool StringParser::parseByteHex(const TCHAR *str, unsigned char *out)
 {
   TCHAR c;
   int val = 0;
-  if (_stscanf_s(str, _T("%x%c"), &val, &c) != 1) {
+  if (_stscanf(str, _T("%x%c"), &val, &c) != 1) {
     return false;
   }
   if (out != NULL) {
@@ -115,7 +115,7 @@ bool StringParser::parseByte(const TCHAR *str, unsigned char *out)
 {
   TCHAR c;
   int val = 0;
-  if (_stscanf_s(str, _T("%d%c"), &val, &c) != 1) {
+  if (_stscanf(str, _T("%d%c"), &val, &c) != 1) {
     return false;
   }
   if (out != NULL) {

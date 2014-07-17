@@ -51,7 +51,7 @@ void TvnService::onStart()
   try {
     m_winServiceEvents->enable();
     // FIXME: Use real logger instead of zero.
-    m_tvnServer = new TvnServer(true, m_newConnectionEvents, this, &m_clientLogger);
+    m_tvnServer = new TvnServer(true, m_newConnectionEvents, this, &m_clientLogger, false);
     m_tvnServer->addListener(this);
     m_winServiceEvents->onSuccServiceStart();
   } catch (Exception &e) {

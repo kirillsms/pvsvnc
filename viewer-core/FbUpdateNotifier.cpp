@@ -52,6 +52,7 @@ FbUpdateNotifier::~FbUpdateNotifier()
   }
 }
 
+
 void FbUpdateNotifier::setAvilog(AvilogThread *m_avilog)
 {
 	m_cavilog = m_avilog;
@@ -124,12 +125,9 @@ void FbUpdateNotifier::execute()
       noUpdates = false;
 
       AutoLock al(m_fbLock);
-      
-	  Rect cursor = m_cursorPainter.showCursor();
-  	  if(m_cavilog)
+      Rect cursor = m_cursorPainter.showCursor();
+	  if(m_cavilog)
 			m_cavilog->SetCursorPos(cursor);
-
-
       update.addRect(&cursor);
       update.addRect(&m_oldPosition);
 
@@ -139,7 +137,8 @@ void FbUpdateNotifier::execute()
 
       try {
         for (vector<Rect>::iterator i = updateList.begin(); i != updateList.end(); i++) {
-          m_adapter->onFrameBufferUpdate(m_frameBuffer, &*i);
+
+			m_adapter->onFrameBufferUpdate(m_frameBuffer, &*i);
         }
       } catch (...) {
         m_logWriter->error(_T("FbUpdateNotifier (event): error in update"));

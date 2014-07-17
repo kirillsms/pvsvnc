@@ -23,6 +23,7 @@
 //
 
 #include "CurrentConsoleProcess.h"
+#include <userenv.h>
 
 #include "win-system/WinStaLibrary.h"
 #include "win-system/Environment.h"
@@ -30,9 +31,9 @@
 #include "win-system/Workstation.h"
 #include "win-system/WTS.h"
 
-CurrentConsoleProcess::CurrentConsoleProcess(LogWriter *log, const TCHAR *path, const TCHAR *args)
+CurrentConsoleProcess::CurrentConsoleProcess(LogWriter *log, const TCHAR *path, const TCHAR *args, DWORD sessionID, bool imp)
 : Process(path, args),
-  m_log(log)
+  m_log(log),p_sessionID(sessionID),m_imp(imp)
 {
 }
 
@@ -40,11 +41,20 @@ CurrentConsoleProcess::~CurrentConsoleProcess()
 {
 }
 
+
 void CurrentConsoleProcess::start()
 {
   cleanup();
 
-  DWORD sessionId = WTS::getActiveConsoleSessionId(m_log);
+  DWORD sessionId;
+
+  sessionId = WTS::getActiveConsoleSessionId(m_log);
+
+  if (p_sessionID!=-1){
+	 m_args.format(_T("-sas %d"),sessionId);
+	  sessionId = p_sessionID;
+  } 
+
   m_log->info(_T("Try to start \"%s %s\" process as current user at %d session"),
             m_path.getString(),
             m_args.getString(),
@@ -63,8 +73,8 @@ void CurrentConsoleProcess::start()
              (unsigned int)sti.dwFlags);
 
   HANDLE procHandle = GetCurrentProcess();
-
-  HANDLE token, userToken;
+  PVOID                lpEnvironment = NULL;
+  HANDLE token, userToken, tmpToken;
 
   try {
     m_log->debug(_T("Try OpenProcessToken(%p, , )"),
@@ -75,6 +85,11 @@ void CurrentConsoleProcess::start()
 
     m_log->debug(_T("Try DuplicateTokenEx(%p, , , , , )"),
                (void *)token);
+	if(m_imp)
+		if(WTSQueryUserToken(sessionId, &tmpToken)){
+		 token = tmpToken;
+			}
+
     if (DuplicateTokenEx(token,
       MAXIMUM_ALLOWED,
       0,
@@ -83,6 +98,8 @@ void CurrentConsoleProcess::start()
       &userToken) == 0) {
         throw SystemException();
     }
+
+	
 
     m_log->debug(_T("Try SetTokenInformation(%p, , , )"),
                (void *)userToken);
@@ -94,6 +111,8 @@ void CurrentConsoleProcess::start()
     }
 
     StringStorage commandLine = getCommandLineString();
+	 
+	
 
     m_log->debug(_T("Try CreateProcessAsUser(%p, 0, %s, 0, 0, %d, NORMAL_PRIORITY_CLASS, 0, 0,")
                _T(" sti, pi)"),

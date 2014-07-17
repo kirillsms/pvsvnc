@@ -32,6 +32,9 @@
     <ClCompile Include="DesktopServerCommandLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExtraRfbServers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="OutgoingRfbConnectionThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -95,10 +98,10 @@
     <ClCompile Include="CrashHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OutgoingRepeaterRfbConnectionThread.cpp">
+    <ClCompile Include="ChatDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KonturRfbClientManager.cpp">
+    <ClCompile Include="FTStatusDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,6 +125,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DesktopServerCommandLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtraRfbServers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OutgoingRfbConnectionThread.h">
@@ -187,10 +193,10 @@
     <ClInclude Include="CrashHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OutgoingRepeaterRfbConnectionThread.h">
+    <ClInclude Include="ChatDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KonturRfbClientManager.h">
+    <ClInclude Include="FTStatusDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

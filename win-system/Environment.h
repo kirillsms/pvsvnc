@@ -35,6 +35,10 @@ class Environment
 public:
   static const int APPLICATION_DATA_SPECIAL_FOLDER = 0x0; 
   static const int COMMON_APPLICATION_DATA_SPECIAL_FOLDER = 0x1;
+  static const int USERDESKTOP_DATA_SPECIAL_FOLDER = 0x2;
+  static const int USERDOCS_DATA_SPECIAL_FOLDER = 0x3;
+  
+
 public:
   Environment();
   ~Environment();
@@ -105,13 +109,21 @@ public:
   // Simulates the "ctrl + alt + del" combination by using the "SAS" lib.
   static void simulateCtrlAltDelUnderVista(LogWriter *log);
 
+  static void startControlPanel(LogWriter *log);
+
+  static void RemoteReboot();
+
+  static bool initReboot();
+
   // Returns true if the Aero is On.
   static bool isAeroOn(LogWriter *log);
-
+    
 private:
   static void init();
   // Operation system version info.
   static OSVERSIONINFO m_osVerInfo;
+
+
 };
 
 #endif

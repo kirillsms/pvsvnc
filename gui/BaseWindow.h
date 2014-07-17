@@ -108,6 +108,7 @@ public:
 private:
   // This function may be implement in child class.
   // Here is stub function, always returned false.
+
   virtual bool onCommand(WPARAM wParam, LPARAM lParam);
   virtual bool onNotify(int idCtrl, LPNMHDR pnmh);
   virtual bool onSysCommand(WPARAM wParam, LPARAM lParam);

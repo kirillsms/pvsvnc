@@ -23,6 +23,9 @@
 //
 
 #include "WinFilePath.h"
+#include "win-system/Environment.h"
+#include <shlobj.h>
+
 
 WinFilePath::WinFilePath()
 : m_parentPathIsRoot(false)
@@ -50,6 +53,9 @@ bool WinFilePath::parentPathIsRoot()
   return m_parentPathIsRoot;
 }
 
+
+
+
 void WinFilePath::setString(const TCHAR *string)
 {
   StringStorage str(string);
@@ -65,5 +71,31 @@ void WinFilePath::setString(const TCHAR *string)
       str.truncate(1);
     }
   }
+  // desktop replacement
+TCHAR path[MAX_PATH + 1];
+
+	StringStorage specFolder;
+	str.getSubstring(&specFolder,0,8);
+
+	if(specFolder.isEqualTo(_T("[Desktop]"))){
+		StringStorage tmp;
+		str.getSubstring(&tmp,9,str.getLength());
+		Environment::getSpecialFolderPath(Environment::USERDESKTOP_DATA_SPECIAL_FOLDER, &specFolder);
+		str.setString(specFolder.getString());
+		str.appendString(tmp.getString());
+  }
+	
+	str.getSubstring(&specFolder,0,5);
+
+	if(specFolder.isEqualTo(_T("[Docs]"))){
+		StringStorage tmp;
+		str.getSubstring(&tmp,6,str.getLength());
+		Environment::getSpecialFolderPath(Environment::USERDOCS_DATA_SPECIAL_FOLDER, &specFolder);
+		str.setString(specFolder.getString());
+		str.appendString(tmp.getString());
+	}
+
+
+
   StringStorage::setString(str.getString());
 }

@@ -275,7 +275,7 @@ void DesktopBaseImpl::onClipboardUpdate(const StringStorage *newClipboard)
   m_extClipListener->onClipboardUpdate(newClipboard);
 }
 
-void DesktopBaseImpl::onConfigReload(ServerConfig * /*serverConfig*/)
+void DesktopBaseImpl::onConfigReload(ServerConfig *serverConfig)
 {
   applyNewConfiguration();
 }

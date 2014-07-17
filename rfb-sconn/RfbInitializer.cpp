@@ -46,7 +46,6 @@ RfbInitializer::RfbInitializer(Channel *stream,
   m_extAuthListener(extAuthListener),
   m_client(client),
   m_authAllowed(authAllowed),
-  m_username(),
   m_viewOnlyAuth(false)
 {
   m_output = new DataOutputStream(stream);
@@ -276,10 +275,13 @@ void RfbInitializer::initAuthenticate()
 void RfbInitializer::readClientInit()
 {
   m_shared = m_input->readUInt8() != 0;
+  if (m_minorVerNum > 8) {
   UINT32 usernameSize = m_input->readUInt32();
   StringStorage username;
   m_input->readUTF8(&username);
   m_username.setString(username.getString());
+  }
+  
 }
 
 void RfbInitializer::sendServerInit(const Dimension *dim,
@@ -357,6 +359,7 @@ const TCHAR *RfbInitializer::getUserName()
 {
 	return m_username.getString();
 }
+
 
 void RfbInitializer::checkForBan()
 {

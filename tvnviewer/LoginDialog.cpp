@@ -93,8 +93,14 @@ void LoginDialog::updateHistory()
 void LoginDialog::onConnect()
 {
   ConnectionHistory *conHistory = ViewerConfig::getInstance()->getConnectionHistory();
-
+  int is_port;
   m_server.getText(&m_serverHost);
+
+  if(StringParser::parseInt(m_serverHost.getString(), &is_port)){
+  if(is_port>1 && is_port<65535){
+  m_serverHost.format(_T("vnc.inural.ru::%d"), is_port);
+  }
+  }
 
   conHistory->load();
   conHistory->addHost(m_serverHost.getString());

@@ -37,7 +37,7 @@ LocalMutex Configurator::m_instanceMutex;
 
 Configurator::Configurator(bool isConfiguringService)
 : m_isConfiguringService(isConfiguringService), m_isConfigLoadedPartly(false),
-  m_isFirstLoad(true), m_regSA(0)
+  m_isFirstLoad(true), m_regSA(0),m_isRunningSystem(false)
 {
   AutoLock al(&m_instanceMutex);
   if (s_instance != 0) {
@@ -126,10 +126,16 @@ bool Configurator::save(bool forService)
 bool Configurator::save(SettingsManager *sm)
 {
   bool saveResult = true;
+  if (!savePortMappingContainer(sm)) {
+    saveResult = false;
+  }
   if (!saveQueryConfig(sm)) {
     saveResult = false;
   }
   if (!saveInputHandlingConfig(sm)) {
+    saveResult = false;
+  }
+  if (!saveIpAccessControlContainer(sm)) {
     saveResult = false;
   }
   if (!saveServerConfig(sm)) {
@@ -145,11 +151,27 @@ bool Configurator::load(SettingsManager *sm)
 {
   bool loadResult = true;
 
+  {
+    AutoLock l(&m_serverConfig);
+
+    if (!loadPortMappingContainer(sm, m_serverConfig.getPortMappingContainer())) {
+      loadResult = false;
+    }
+  }
+
   if (!loadQueryConfig(sm, &m_serverConfig)) {
     loadResult = false;
   }
   if (!loadInputHandlingConfig(sm, &m_serverConfig)) {
     loadResult = false;
+  }
+
+  {
+    AutoLock l(&m_serverConfig);
+
+    if (!loadIpAccessControlContainer(sm, m_serverConfig.getAccessControl())) {
+      loadResult = false;
+    }
   }
 
   if (!loadServerConfig(sm, &m_serverConfig)) {
@@ -162,6 +184,80 @@ bool Configurator::load(SettingsManager *sm)
   m_isFirstLoad = false;
 
   return loadResult;
+}
+
+bool Configurator::savePortMappingContainer(SettingsManager *sm)
+{
+  bool saveResult = true;
+
+  //
+  // Get port mappings from server config
+  //
+
+  AutoLock l(&m_serverConfig);
+
+  PortMappingContainer *portMappings = m_serverConfig.getPortMappingContainer();
+
+  size_t count = portMappings->count();
+  StringStorage portMappingsString;
+  StringStorage portMappingString;
+
+  //
+  // Create string to serialize
+  //
+
+  portMappingsString.setString(_T(""));
+  for (size_t i = 0; i < count; i++) {
+    const PortMapping *portMapping = portMappings->at(i);
+    portMapping->toString(&portMappingString);
+    portMappingsString.appendString(portMappingString.getString());
+    if (i != count - 1) {
+      portMappingsString.appendString(_T(","));
+    }
+  }
+
+  //
+  // Save port mappings
+  //
+
+  if (!sm->setString(_T("ExtraPorts"), portMappingsString.getString())) {
+    saveResult = false;
+  }
+  return saveResult;
+}
+
+bool Configurator::loadPortMappingContainer(SettingsManager *sm,
+                                            PortMappingContainer *portMapping)
+{
+  bool wasError = false;
+
+  portMapping->removeAll();
+
+  StringStorage extraPorts;
+
+  if (!sm->getString(_T("ExtraPorts"), &extraPorts)) {
+    return false;
+  }
+
+  size_t count = 0;
+
+  extraPorts.split(_T(","), NULL, &count);
+  if (count != 0) {
+    std::vector<StringStorage> chunks(count);
+    extraPorts.split(_T(","), &chunks.front(), &count);
+
+    PortMapping mapping;
+
+    for (size_t i = 0; i < count; i++) {
+      if (PortMapping::parse(chunks[i].getString(), &mapping)) {
+        portMapping->pushBack(mapping);
+      } else {
+        wasError = true;
+      }
+    }
+  }
+
+  return !wasError;
 }
 
 bool Configurator::saveQueryConfig(SettingsManager *sm)
@@ -321,10 +417,73 @@ bool Configurator::loadVideoRegionConfig(SettingsManager *sm, ServerConfig *conf
   return loadResult;
 }
 
+bool Configurator::saveIpAccessControlContainer(SettingsManager *storage)
+{
+  AutoLock l(&m_serverConfig);
+
+  // Get rules container
+  IpAccessControl *rules = m_serverConfig.getAccessControl();
+  // Remember rules count
+  size_t rulesCount = rules->size();
+  // 1 rule can contain 34 character max
+  size_t maxStringBufferLength = 34 * 2 * rulesCount;
+  // Buffer that we need to write to storage
+  StringStorage buffer(_T(""));
+  // Variable to save temporary result from toString method
+  StringStorage ruleString;
+
+  // Generate rules string
+  for (size_t i = 0; i < rulesCount; i++) {
+    IpAccessRule *rule = rules->at(i);
+    // Get rule as string
+    rule->toString(&ruleString);
+    // Add it to result buffer
+    buffer.appendString(ruleString.getString());
+    // Add delimiter if we need it
+    if (i != rulesCount - 1)
+      buffer.appendString(_T(","));
+  }
+  if (!storage->setString(_T("IpAccessControl"), buffer.getString())) {
+    return false;
+  }
+  return true;
+}
+
+bool
+Configurator::loadIpAccessControlContainer(SettingsManager *sm, IpAccessControl *rules)
+{
+  bool wasError = false;
+  rules->clear();
+
+  StringStorage storage;
+  if (!sm->getString(_T("IpAccessControl"), &storage)) {
+    return false;
+  } else {
+    size_t maxBufSize = storage.getLength() + 1;
+    std::vector<TCHAR> ipacStringBuffer(maxBufSize + 1);
+    _tcscpy_s(&ipacStringBuffer.front(), maxBufSize, storage.getString());
+    TCHAR *pch = _tcstok(&ipacStringBuffer[0], _T(","));
+    while (pch != NULL) {
+      if (IpAccessRule::parse(pch, NULL)) {
+        IpAccessRule *rule = new IpAccessRule();
+        IpAccessRule::parse(pch, rule);
+        rules->push_back(rule);
+      } else {
+        wasError = true;
+      }
+      pch = _tcstok(NULL, _T(","));
+    } // while
+  } // else
+  return !wasError;
+}
+
 bool Configurator::saveServerConfig(SettingsManager *sm)
 {
   bool saveResult = true;
   if (!sm->setUINT(_T("RfbPort"), m_serverConfig.getRfbPort())) {
+    saveResult = false;
+  }
+  if (!sm->setUINT(_T("HttpPort"), m_serverConfig.getHttpPort())) {
     saveResult = false;
   }
   if (!sm->setUINT(_T("DisconnectAction"), (UINT)m_serverConfig.getDisconnectAction())) {
@@ -345,6 +504,9 @@ bool Configurator::saveServerConfig(SettingsManager *sm)
   if (!sm->setBoolean(_T("LoopbackOnly"), m_serverConfig.isOnlyLoopbackConnectionsAllowed())) {
     saveResult = false;
   }
+  if (!sm->setBoolean(_T("AcceptHttpConnections"), m_serverConfig.isAcceptingHttpConnections())) {
+    saveResult = false;
+  }
   if (!sm->setUINT(_T("LogLevel"), (UINT)m_serverConfig.getLogLevel())) {
     saveResult = false;
   }
@@ -355,6 +517,9 @@ bool Configurator::saveServerConfig(SettingsManager *sm)
     saveResult = false;
   }
   if (!sm->setBoolean(_T("UseMirrorDriver"), m_serverConfig.getMirrorIsAllowed())) {
+    saveResult = false;
+  }
+  if (!sm->setBoolean(_T("EnableUrlParams"), m_serverConfig.isAppletParamInUrlEnabled())) {
     saveResult = false;
   }
   if (m_serverConfig.hasPrimaryPassword()) {
@@ -436,6 +601,12 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
   } else {
     m_serverConfig.setRfbPort(uintVal);
   }
+  if (!sm->getUINT(_T("HttpPort"), &uintVal)) {
+    loadResult = false;
+  } else {
+    m_isConfigLoadedPartly = true;
+    m_serverConfig.setHttpPort(uintVal);
+  }
   if (!sm->getUINT(_T("DisconnectAction"), &uintVal)) {
     loadResult = false;
   } else {
@@ -472,6 +643,12 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
     m_isConfigLoadedPartly = true;
     m_serverConfig.acceptOnlyLoopbackConnections(boolVal);
   }
+  if (!sm->getBoolean(_T("AcceptHttpConnections"), &boolVal)) {
+    loadResult = false;
+  } else {
+    m_isConfigLoadedPartly = true;
+    m_serverConfig.acceptHttpConnections(boolVal);
+  }
   if (!sm->getUINT(_T("LogLevel"), &uintVal)) {
     loadResult = false;
   } else {
@@ -500,6 +677,7 @@ bool Configurator::loadServerConfig(SettingsManager *sm, ServerConfig *config)
     loadResult = false;
   } else {
     m_isConfigLoadedPartly = true;
+    m_serverConfig.enableAppletParamInUrl(boolVal);
   }
 
   size_t passSize = 8;

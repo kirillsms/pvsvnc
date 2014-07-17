@@ -45,7 +45,7 @@ LocalWindowsApplication::LocalWindowsApplication(HINSTANCE hInstance,
   }
 
   CloseWindowStation(winSta);
-
+  
   // FIXME: why we don't check returning values?
   DesktopSelector::selectDesktop();
 }

@@ -60,7 +60,7 @@ void CursorPainter::setNewCursor(const Point *hotSpot,
   m_logWriter->debug(_T("Cursor size is (%d, %d)"), width, height);
   Dimension cursorDimension(width, height);
   PixelFormat pixelFormat = m_fb->getPixelFormat();
-
+  
   m_cursor.setProperties(&cursorDimension, &pixelFormat);
   m_cursorOverlay.setProperties(&cursorDimension, &pixelFormat);
 
@@ -113,7 +113,7 @@ Rect CursorPainter::hideCursor()
 Rect CursorPainter::showCursor()
 {
   AutoLock al(&m_lock);
-
+  Rect dot;
   m_lastPosition = m_pointerPosition;
 
   if (m_isExist) {

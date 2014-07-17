@@ -67,6 +67,12 @@ public:
   virtual void setUnsignedInt(unsigned int value);
 
   //
+  // Sets text vertical alignment
+  //
+
+  void setTextVerticalAlignment(VerticalAlignment align);
+
+  //
   // Sets input focus to this control
   //
 

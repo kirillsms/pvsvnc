@@ -102,16 +102,7 @@
     <ClCompile Include="AvilogThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KonturConnectionData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KonturLoginDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KonturTvnViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KonturViewerInstance.cpp">
+    <ClCompile Include="ClientChatDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,22 +194,7 @@
     <ClInclude Include="ViewerVncAuthHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AvilogThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KonturConnectionData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KonturLoginDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KonturTvnViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KonturViewerInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Version.h">
+    <ClInclude Include="ClientChatDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -247,21 +223,16 @@
     <None Include="res\toolbar.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\tightvnc.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\tightvnc48.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tvnviewer.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\konturvnc48.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\tightvnc.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\tightvnc48.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

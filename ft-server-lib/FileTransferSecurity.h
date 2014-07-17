@@ -54,7 +54,7 @@ protected:
   bool m_hasAccess;
 
   Desktop *m_desktop;
-
+  bool is_impersonate;
   LogWriter *m_log;
 };
 

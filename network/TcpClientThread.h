@@ -36,7 +36,7 @@
  * and some memory leaks.
  *
  * @remark it can be used as superclass in
- * RfbClientThread, ControlClientThread classes for example).
+ * HttpClientThread, RfbClientThread, ControlClientThread classes for example).
  */
 class TcpClientThread : public Thread
 {

@@ -53,7 +53,7 @@ bool FolderListener::list()
   StringStorage *fileNameList = NULL;
   m_filesCount = 0;
   bool listResult = true;
-
+  
   if (!m_folderPath.isEmpty()) {
     File folder(m_folderPath.getString());
     listResult = folder.list(NULL, &m_filesCount);
@@ -64,6 +64,12 @@ bool FolderListener::list()
   if (!listResult) {
     return false;
   }
+
+  if (m_folderPath.isEmpty()) {
+	  m_filesCount+=2;
+  }
+
+
 
   fileNameList = new StringStorage[m_filesCount];
 
@@ -80,6 +86,15 @@ bool FolderListener::list()
   } else {
     File::listRoots(fileNameList, NULL);
   }
+
+    // add [desktop] & [docs] for root
+      if (m_folderPath.isEmpty()) {
+		  fileNameList[m_filesCount-1].setString(_T("[Desktop]"));
+		  fileNameList[m_filesCount-2].setString(_T("[Docs]"));
+	  }
+
+	  
+
 
   for (UINT32 i = 0; i < m_filesCount; i++) {
 
@@ -102,6 +117,7 @@ bool FolderListener::list()
     }
   }
 
+  
   delete[] fileNameList;
 
   return true;

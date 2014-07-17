@@ -30,6 +30,11 @@
 #include "network/TcpServer.h"
 #include "region/Rect.h"
 
+#include "tvnserver-app/ChatDialog.h"
+#include "tvnserver-app/FTStatusDialog.h"
+
+
+
 /**
  * TCP Server that accepts connections and pases them to RfbClientManager.
  * @see RfbClientManager class.
@@ -77,6 +82,9 @@ protected:
    * View port for server.
    */
   ViewPortState m_viewPort;
+
+  ChatDialog m_chatDialog;
+  FTStatusDialog m_ftsDialog;
 
 private:
   LogWriter *m_log;

@@ -32,6 +32,13 @@
 #include "UpdSenderMsgDefs.h"
 #include "win-system/WindowsDisplays.h"
 
+#include "win-system/Environment.h"
+#include "server-config-lib/Configurator.h"
+#include "win-system/ProcessHandle.h"
+#include "win-system/CurrentConsoleProcess.h"
+
+
+
 UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                            UpdateRequestListener *updReqListener,
                            SenderControlInformationInterface *senderControlInformation,
@@ -80,6 +87,9 @@ UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                             UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE_SIG);
 
   // Request codes
+  
+  codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_START_CP, this);
+  codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_REQ_REBOOT, this);
   codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY, this);
   codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE, this);
   codeRegtor->regCode(ClientMsgDefs::FB_UPDATE_REQUEST, this);
@@ -119,7 +129,12 @@ void UpdateSender::onRequest(UINT32 reqCode, RfbInputGate *input)
   case UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY:
     readShareFull(input);
     break;
-
+  case UpdSenderClientMsgDefs::RFB_REQ_REBOOT:
+	reqReboot();
+	  break;
+  case UpdSenderClientMsgDefs::RFB_START_CP:
+	startCP();
+	break;
   default:
     StringStorage errMess;
     errMess.format(_T("Unknown %d protocol code received"), (int)reqCode);
@@ -208,11 +223,13 @@ void UpdateSender::sendRectHeader(UINT16 x, UINT16 y, UINT16 w, UINT16 h,
 void UpdateSender::sendNewFBSize(Dimension *dim)
 {
   WindowsDisplays m_winDisp;
+
   std::vector<Rect> displays = m_winDisp.getDisplays();
+
 
   // Header
   m_output->writeUInt8(ServerMsgDefs::FB_UPDATE); // message type
-  m_output->writeUInt8(displays.size()); // send display count insted of padding
+  m_output->writeUInt8(displays.size()); // padding
   m_output->writeUInt16(1); // one rectangle
 
   Rect r(dim->width, dim->height);
@@ -401,13 +418,15 @@ void UpdateSender::sendUpdate()
 
   // Send updates
   if (m_viewportChanged || updCont.screenSizeChanged || (!requestedFullReg.isEmpty() &&
-                                    !encodeOptions.desktopSizeEnabled())) {
+                                    !encodeOptions.desktopSizeEnabled())) 
+  {
     m_viewportChanged = false; 
     m_log->debug(_T("Screen size changed or full region requested"));
     if (encodeOptions.desktopSizeEnabled()) {
       m_log->debug(_T("Desktop resize is enabled, sending NewFBSize %dx%d"),
                  lastViewPortDim.width, lastViewPortDim.height);
       sendNewFBSize(&lastViewPortDim);
+
       // FIXME: "Dazzle" does not seem like a good word here.
       m_log->debug(_T("Dazzle changed region"));
       m_updateKeeper->dazzleChangedReg();
@@ -746,13 +765,42 @@ void UpdateSender::setVideoFrozen(bool value)
   m_videoFrozen = value;
 }
 
+void UpdateSender::reqReboot()
+{
+
+if(Configurator::getInstance()->getSystemFlag()){
+  Process *m_process;
+  StringStorage currentModulePath;
+  Environment::getCurrentModulePath(&currentModulePath);
+  m_process = new CurrentConsoleProcess(m_log,currentModulePath.getString(),_T("-reboot"),-1,true);
+  m_process->start();
+}else{
+	Environment::RemoteReboot();	
+}
+
+
+
+	//
+}
+
+void UpdateSender::startCP()
+{
+ Process *m_process;
+
+if(Configurator::getInstance()->getSystemFlag()){
+  m_process = new CurrentConsoleProcess(m_log,_T("control.exe"),_T(""),-1,true);
+}else{
+  m_process = new Process(_T("control.exe"),_T(""));
+}
+m_process->start();
+}
+
+
 void UpdateSender::setDisplay(int value)
 {
   m_display = value;
   m_viewportChanged = true;
 }
-
-
 
 bool UpdateSender::getVideoFrozen()
 {
@@ -769,6 +817,9 @@ void UpdateSender::readShareFull(RfbInputGate *io)
 {
   setDisplay(io->readUInt8());
 }
+
+
+
 
 
 bool UpdateSender::extractReqRegions(Region *incrReqReg,
@@ -911,8 +962,9 @@ bool UpdateSender::updateViewPort(Rect *outNewViewPort, bool *shareApp, Region *
   
   }
 
-
-  m_senderControlInformation->onGetViewPort(&newViewPort, shareApp, newShareAppRegion,m_viewportChanged,&dynViewPort);
+  m_senderControlInformation->onGetViewPort(&newViewPort, shareApp, newShareAppRegion, m_viewportChanged, &dynViewPort);
+  
+  
 
   AutoLock al(&m_viewPortMut);
   bool viewPortChanged = !m_viewPort.isEqualTo(&newViewPort);
@@ -923,6 +975,8 @@ bool UpdateSender::updateViewPort(Rect *outNewViewPort, bool *shareApp, Region *
   bool shareAppModeChanged = *shareApp != m_shareOnlyApp;
   // Emulating share app mode changes as view port changes.
   viewPortChanged = viewPortChanged || shareAppModeChanged;
+  
+  
 
   *outNewViewPort = newViewPort;
   return viewPortChanged;

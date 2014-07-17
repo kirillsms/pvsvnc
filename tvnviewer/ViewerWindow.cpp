@@ -32,6 +32,8 @@
 #include "TvnViewer.h"
 #include "ViewerWindow.h"
 
+
+
 ViewerWindow::ViewerWindow(WindowsApplication *application,
                            ConnectionData *conData,
                            ConnectionConfig *conConf,
@@ -50,9 +52,9 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
   m_dsktWnd(&m_logWriter, conConf),
   m_isConnected(false),
   m_sizeIsChanged(false),
-  m_requiresReconnect(false),
   m_hooksEnabledFirstTime(true),
-  m_stopped(false),m_displayCount(0)
+  m_requiresReconnect(false),
+  m_stopped(false),displayCount(0)//,m_chatDialog(this)
 {
   m_standardScale.push_back(10);
   m_standardScale.push_back(15);
@@ -74,16 +76,33 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
 
   m_dsktWnd.setClass(&windowClass);
   m_dsktWnd.createWindow(&subTitleName,
-	  WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD | WS_MAXIMIZE,
+                         WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD,
                          getHWnd());
 
   SetTimer(m_hWnd, TIMER_DESKTOP_STATE, TIMER_DESKTOP_STATE_DELAY, (TIMERPROC)NULL);
+  
+  m_chatDialog = new ClientChatDialog(this);
+
+
 }
 
 ViewerWindow::~ViewerWindow()
 {
-// Unregistration of keyboard hook.
+  // Unregistration of keyboard hook.
   m_winHooks.unregisterKeyboardHook(this);
+
+  if (m_chatDialog != 0) {
+    try {
+	  m_chatDialog->kill(0);
+      delete m_chatDialog;
+    } catch (...) {
+    }
+    m_chatDialog = 0;
+  }
+
+
+
+
   if (m_ftDialog != 0) {
     try {
       delete m_ftDialog;
@@ -92,6 +111,14 @@ ViewerWindow::~ViewerWindow()
     m_ftDialog = 0;
   }
 }
+
+void ViewerWindow::setChatHandler(TextCapability *chat)
+{
+  m_chatHandler = chat;
+  chat->setChatDialog(m_chatDialog);
+}
+
+
 
 void ViewerWindow::setFileTransfer(FileTransferCapability *ft)
 {
@@ -119,6 +146,7 @@ bool ViewerWindow::onCreate(LPCREATESTRUCT lps)
   m_toolbar.setViewAutoButtons(11, ToolBar::TB_Style_sep);
   m_toolbar.setViewAutoButtons(15, ToolBar::TB_Style_sep);
   m_toolbar.attachToolBar(getHWnd());
+  
   m_menu.getSystemMenu(getHWnd());
   m_menu.loadMenu();
   applySettings();
@@ -161,6 +189,12 @@ void ViewerWindow::enableUserElements()
     m_toolbar.enableButton(IDS_TB_SCALE100, true);
   } else {
     m_toolbar.enableButton(IDS_TB_SCALE100, scale != 100);
+  }
+  
+  if( ViewerConfig::getInstance()->isAutoRecord()){
+  m_toolbar.checkButton(IDS_TB_REC, true);
+  }else{
+  m_toolbar.checkButton(IDS_TB_REC, false);
   }
 }
 
@@ -332,6 +366,10 @@ bool ViewerWindow::onTimer(WPARAM idTimer)
   case TIMER_DESKTOP_STATE:
     desktopStateUpdate();
     return true;
+  case REC_START:
+	  KillTimer(m_hWnd, REC_START);
+	//  commandRec();
+	  return true;
   default:
     _ASSERT(false);
     return false;
@@ -370,8 +408,10 @@ void ViewerWindow::dialogConnectionInfo()
   int pixelSize = 0;
   m_dsktWnd.getServerGeometry(&geometry, &pixelSize);
   StringStorage str;
+  ConnectionData *connectionData = new ConnectionData(*m_conData);
+
   str.format(StringTable::getString(IDS_CONNECTION_INFO_FORMAT),
-             host.getString(),
+             host.getString(),connectionData->getPlainPassword().getString(),
              m_viewerCore->getRemoteDesktopName().getString(),
              m_viewerCore->getProtocolString().getString(),
              geometry.getWidth(),
@@ -620,6 +660,92 @@ void ViewerWindow::commandScale100()
   applySettings();
 }
 
+void ViewerWindow::remoteReboot()
+{
+        if (MessageBox(m_hWnd,_T("Sure?"), _T("Remote reboot"), MB_YESNO)==IDYES) {
+			m_viewerCore->reqReboot();
+		}
+}
+
+void ViewerWindow::remoteCP()
+{
+	m_viewerCore->startCP();
+}
+
+
+void ViewerWindow::takeScreenShot()
+{
+	m_viewerCore->saveScreenShot();
+}
+
+
+
+
+void ViewerWindow::showDisp()
+{
+
+
+if(displayCount!=0){
+
+HMENU hMenu = CreateMenu();
+
+HMENU hMenuPopup = CreateMenu();
+AppendMenu(hMenuPopup, MF_STRING, 100, _T("All screens"));
+
+for (int i=1; i<=displayCount;i++){
+StringStorage str;
+str.format(_T("Display %d"),i);
+AppendMenu(hMenuPopup, MF_STRING, 100+i, str.getString());
+}
+
+AppendMenu(hMenu, MF_POPUP,(UINT) hMenuPopup, _T(""));
+
+POINT pos;
+
+if (!GetCursorPos(&pos)) {
+    pos.x = pos.y = 0;
+  }
+
+int action = TrackPopupMenu(hMenuPopup,
+                              TPM_NONOTIFY | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+                              pos.x, pos.y, 0, getHWnd(), NULL);
+
+
+if(!action) return;
+
+  switch (action) {
+  case 100:
+    // share full
+	  //MessageBox(getHWnd(),_T("share full"),_T("share full"),0);
+	  m_viewerCore->setDisplay(0);
+    break;
+  default:
+	// share action - 100   
+	  m_viewerCore->setDisplay(action-100);
+    break;
+
+	}
+}
+}
+void ViewerWindow::commandRec()
+{
+  LRESULT iState = m_toolbar.getState(IDS_TB_REC);
+  
+  if (iState) {
+    if (iState == TBSTATE_ENABLED) {
+		m_toolbar.checkButton(IDS_TB_REC, true);
+		m_viewerCore->StartRecord();
+	}
+	else{
+		m_toolbar.checkButton(IDS_TB_REC, false);
+		
+		m_viewerCore->StopRecord();
+	}
+  }
+
+}
+
+
 void ViewerWindow::commandScaleAuto()
 {
   LRESULT iState = m_toolbar.getState(IDS_TB_SCALEAUTO);
@@ -649,52 +775,6 @@ void ViewerWindow::commandScaleAuto()
   }
 }
 
-
-void ViewerWindow::showDisp()
-{
-
-
-if(m_displayCount!=0){
-
-HMENU hMenu = CreateMenu();
-HMENU hMenuPopup = CreateMenu();
-AppendMenu(hMenuPopup, MF_STRING, 100, _T("All screens"));
-
-for (int i=1; i<=m_displayCount;i++){
-StringStorage str;
-str.format(_T("Display %d"),i);
-AppendMenu(hMenuPopup, MF_STRING, 100+i, str.getString());
-}
-
-AppendMenu(hMenu, MF_POPUP,(UINT) hMenuPopup, _T(""));
-
-POINT pos;
-
-if (!GetCursorPos(&pos)) {
-    pos.x = pos.y = 0;
-  }
-
-int action = TrackPopupMenu(hMenuPopup,
-                              TPM_NONOTIFY | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-                              pos.x, pos.y, 0, getHWnd(), NULL);
-
-
-if(!action) return;
-
-  switch (action) {
-  case 100:
-    // share full
-	  m_viewerCore->setDisplay(0);
-    break;
-  default:
-	  m_viewerCore->setDisplay(action-100);
-    break;
-
-	}
-}
-}
-
-
 int ViewerWindow::translateAccelToTB(int val) 
 {
   static const std::pair<int, int> accelerators[] = {
@@ -714,6 +794,7 @@ int ViewerWindow::translateAccelToTB(int val)
   }
   return -1;
 }
+
 
 void ViewerWindow::onAbout()
 {
@@ -786,12 +867,38 @@ bool ViewerWindow::onCommand(WPARAM wParam, LPARAM lParam)
       return true;
     case IDS_TB_CONFIGURATION:
       dialogConfiguration();
-      return true;
+	     return true;
+	case IDS_TB_REC:
+		commandRec();
+         return true;
 	case IDS_TB_DISP:
 		showDisp();
-	 return true;
+		return true;
+	case IDS_TB_REBOOT:
+		remoteReboot();
+		return true;
+	case IDS_TB_CP:
+		remoteCP();
+		return true;
+	case IDS_TB_SCREENSHOT:
+		takeScreenShot();
+		return true;
+	case IDS_TB_CHAT:
+		showChatDialog();
+		return true;
+
   }
   return false;
+}
+
+void ViewerWindow::showChatDialog()
+{
+	/*if (m_chatDialog == 0) {
+      m_chatDialog = new ClientChatDialog();
+    }
+    m_chatDialog->show();*/
+	m_chatDialog->create();
+	m_chatDialog->show();
 }
 
 void ViewerWindow::showFileTransferDialog()
@@ -815,6 +922,7 @@ void ViewerWindow::showFileTransferDialog()
     m_application->addModelessDialog(dialogWnd);
   }
 }
+
 
 void ViewerWindow::applyScreenChanges(bool isFullScreen)
 {
@@ -880,7 +988,8 @@ void ViewerWindow::doFullScr()
   if (config->isPromptOnFullscreenEnabled()) {
     postMessage(WM_USER_FS_WARNING);
   }
-    try {
+  
+  try {
     // Registration of keyboard hook.
     m_winHooks.registerKeyboardHook(this);
     // Switching off ignoring win key.
@@ -927,6 +1036,7 @@ void ViewerWindow::doUnFullScr()
 
   m_dsktWnd.setScale(m_scale);
   applyScreenChanges(false);
+  
   // Unregistration of keyboard hook.
   m_winHooks.unregisterKeyboardHook(this);
   // Switching on ignoring win key.
@@ -1010,10 +1120,20 @@ void ViewerWindow::showWindow()
 
 bool ViewerWindow::onDisconnect()
 {
-  MessageBox(getHWnd(),
+  int result = MessageBox(getHWnd(),
              m_disconnectMessage.getString(),
              formatWindowName().getString(),
-             MB_OK);
+             MB_RETRYCANCEL);
+  if (result == IDRETRY) {
+        m_requiresReconnect = true;
+        ConnectionData *connectionData = new ConnectionData(*m_conData);
+        ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
+        m_application->postMessage(TvnViewer::WM_USER_RECONNECT,
+                                   (WPARAM)connectionData,
+                                   (LPARAM)connectionConfig);
+  }else{
+	  commandNewConnection();
+  }
 
   m_dsktWnd.destroyWindow();
   destroyWindow();
@@ -1049,12 +1169,27 @@ bool ViewerWindow::onAuthError(WPARAM wParam)
 
 bool ViewerWindow::onError()
 {
+  int ret;
   StringStorage error;
   error.format(_T("Error in %s: %s"), ProductNames::VIEWER_PRODUCT_NAME, m_error.getMessage());
-  MessageBox(getHWnd(),
+   ret = MessageBox(getHWnd(),
              error.getString(),
              formatWindowName().getString(),
-             MB_OK | MB_ICONERROR);
+               MB_RETRYCANCEL | MB_ICONERROR);
+
+   if(ret == 4){
+        m_requiresReconnect = true;
+        ConnectionData *connectionData = new ConnectionData(*m_conData);
+        ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
+        m_application->postMessage(TvnViewer::WM_USER_RECONNECT,
+                                   (WPARAM)connectionData,
+                                   (LPARAM)connectionConfig);
+
+
+  }else if(ret == 2){
+	  commandNewConnection();
+  }
+
 
   m_dsktWnd.destroyWindow();
   destroyWindow();
@@ -1146,10 +1281,16 @@ void ViewerWindow::onConnected(RfbOutputGate *output)
 
   m_fileTransfer->getCore()->updateSupportedOperations(&clientMsgCodes, &serverMsgCodes);
 
+
+  
+
   // Start viewer window and applying settings.
   showWindow();
   setForegroundWindow();
   applySettings();
+
+  SetTimer(m_hWnd, REC_START, REC_START_DELAY, (TIMERPROC)NULL);
+
 }
 
 void ViewerWindow::onDisconnect(const StringStorage *message)
@@ -1184,7 +1325,7 @@ void ViewerWindow::onFrameBufferUpdate(const FrameBuffer *fb, const Rect *rect)
 void ViewerWindow::onFrameBufferPropChange(const FrameBuffer *fb)
 {
   m_dsktWnd.setNewFramebuffer(fb);
-  m_displayCount = fb->getDisplayCount();
+  displayCount = fb->getDisplayCount();
 }
 
 void ViewerWindow::onCutText(const StringStorage *cutText)
@@ -1192,6 +1333,13 @@ void ViewerWindow::onCutText(const StringStorage *cutText)
   m_dsktWnd.setClipboardData(cutText);
 }
 
+
+void ViewerWindow::onTextMsg(StringStorage *msg)
+{
+  m_viewerCore->sendTextMsg(msg);
+}
+
+ 
 void ViewerWindow::doCommand(int iCommand)
 {
   postMessage(WM_COMMAND, iCommand);
@@ -1214,7 +1362,6 @@ void ViewerWindow::adjustWindowSize()
     Rect defaultSize = calculateDefaultSize();
     bool defaultSizeIsChanged = defaultSize.getWidth() != m_rcNormal.getWidth() ||
                                 defaultSize.getHeight() != m_rcNormal.getHeight();
-   
     // If size is changed, isn't full screen, if window isn't maximized,
     // then set new position and size.
     if (!m_isFullScr && defaultSizeIsChanged) {
@@ -1222,7 +1369,8 @@ void ViewerWindow::adjustWindowSize()
       setPosition(m_rcNormal.left, m_rcNormal.top);
       setSize(m_rcNormal.getWidth(), m_rcNormal.getHeight());
     }
-	// This is done for keyboard hooks to work.
+
+    // This is done for keyboard hooks to work.
     // If m_conConf->isFullscreenEnabled() is true,
     // hooks don't work at the first start of the viewer.
     if (m_hooksEnabledFirstTime && m_isFullScr) {
@@ -1250,6 +1398,18 @@ void ViewerWindow::updateKeyState()
   if (altState != 0) {
     m_toolbar.checkButton(IDS_TB_ALT, m_dsktWnd.getAltState());
   }
+
+int y;
+if(m_isFullScr){
+y = m_dsktWnd.getY();
+ if(y<3){
+	m_toolbar.autoSize();
+	m_toolbar.show();
+  }else{
+	 m_toolbar.hide();
+  }
+}
+
 }
 
 StringStorage ViewerWindow::formatWindowName() const

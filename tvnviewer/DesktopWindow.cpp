@@ -23,7 +23,6 @@
 //
 
 #include "DesktopWindow.h"
-#include "AvilogThread.h"
 
 DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
 : m_logWriter(logWriter),
@@ -41,15 +40,12 @@ DesktopWindow::DesktopWindow(LogWriter *logWriter, ConnectionConfig *conConf)
   m_previousMousePos(-1, -1),
   m_previousMouseState(0),
   m_isBackgroundDirty(false)
-
-
 {
   m_rfbKeySym = std::auto_ptr<RfbKeySym>(new RfbKeySym(this, m_logWriter));
 }
 
 DesktopWindow::~DesktopWindow()
 {
-
 }
 
 void DesktopWindow::setConnected()
@@ -210,12 +206,15 @@ bool DesktopWindow::onMouse(unsigned char mouseButtons, unsigned short wheelSpee
       mouseButtons |= MOUSE_MDOWN;
     }
   }
+ m_y = position.y;
 
   // Translate coordinates from the Viewer Window to Desktop Window.
   POINTS mousePos = getViewerCoord(position.x, position.y);
   Point pos;
   pos.x = mousePos.x;
   pos.y = mousePos.y;
+
+ 
 
   // If coordinats of point is invalid, then skip event.
   if (pos.x >= 0 && pos.y >= 0) {
@@ -451,7 +450,6 @@ void DesktopWindow::calcClientArea() {
 
     getClientRect(&rc);
     m_clientArea.fromWindowsRect(&rc);
-	m_framebuffer;
     m_scManager.setWindow(&m_clientArea);
   }
 }
@@ -523,10 +521,13 @@ void DesktopWindow::setNewFramebuffer(const FrameBuffer *framebuffer)
     m_serverDimension = dimension;
     if (!dimension.isEmpty()) {
       // the width and height should be aligned to 4
+		
+if(dimension.width%4!=0){
       int alignWidth = (dimension.width + 3) / 4;
       dimension.width = alignWidth * 4;
       int alignHeight = (dimension.height + 3) / 4;
       dimension.height = alignHeight * 4;
+}
       m_framebuffer.setProperties(&dimension, 
                                   &framebuffer->getPixelFormat(), 
                                   getHWnd());
@@ -548,7 +549,6 @@ void DesktopWindow::setNewFramebuffer(const FrameBuffer *framebuffer)
 void DesktopWindow::repaint(const Rect *repaintRect)
 {
   Rect rect;
-
   m_scManager.getSourceRect(&rect);
   Rect paint = repaintRect;
   paint.intersection(&rect);
@@ -574,11 +574,7 @@ void DesktopWindow::repaint(const Rect *repaintRect)
   if (wnd.bottom < rect.bottom) {
     ++wnd.bottom;
   }
-  Rect intersection = wnd.intersection(&rect);
-  
-	  
-  
-  
+  wnd.intersection(&rect);
   redraw(&wnd.toWindowsRect());
 }
 
@@ -663,6 +659,12 @@ bool DesktopWindow::getAltState() const
   return m_altDown;
 }
 
+int DesktopWindow::getY() const
+{
+	return m_y;
+}
+
+
 void DesktopWindow::sendKey(WCHAR key, bool pressed)
 {
   m_rfbKeySym->sendModifier(static_cast<unsigned char>(key), pressed);
@@ -732,4 +734,3 @@ void DesktopWindow::sendCutTextEvent(const StringStorage *cutText)
                         exception.getMessage());
   }
 }
-

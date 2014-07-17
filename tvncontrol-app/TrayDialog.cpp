@@ -6,7 +6,7 @@
 
 
 TrayDialog::TrayDialog(void)
-	: BaseDialog(IDD_TRAYOUT),isVisible(false)
+	: BaseDialog(IDD_TRAYOUT),isVisible(false),m_min(false),m_baseSize(0)
 {
 }
 
@@ -29,6 +29,7 @@ void TrayDialog::PositionFlyout()
 
     SetWindowPos(hwnd, HWND_TOPMOST, desktopRect.right-sizeWindow.cx, desktopRect.bottom-sizeWindow.cy, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
 
+	m_baseSize = rcWindow.bottom - rcWindow.top;
 }
 
 int TrayDialog::show()
@@ -60,7 +61,7 @@ void TrayDialog::initControls()
 
 	m_clientList.setWindow(GetDlgItem(hwnd, IDC_CLIENT_LIST));
 
-	m_clientList.addColumn(0, _T("PeerName"), 135);
+	m_clientList.addColumn(0, _T("Èìÿ"), 190);
 }
 
 void TrayDialog::addClients(list<RfbClientInfo *> *clients)
@@ -81,8 +82,13 @@ void TrayDialog::addClients(list<RfbClientInfo *> *clients)
 
 	if(tmpClients.size()){
 		modified=true;
-		for(auto& x :tmpClients)
-			deleted.push_back(x.second);
+
+	typedef std::map<UINT32, int>::iterator it_type;
+		for(it_type iterator = m_clients.begin(); iterator != m_clients.end(); iterator++) {
+			deleted.push_back(iterator->second);
+		}
+
+
 
 		deleted.sort();
 		for (std::list<int>::reverse_iterator it = deleted.rbegin(); it != deleted.rend(); it++) {
@@ -108,4 +114,25 @@ BOOL TrayDialog::onInitDialog()
   return TRUE;
 }
 
+void TrayDialog::onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if(uMsg == WM_NCLBUTTONDBLCLK){
+		if(m_min){
+			//full size
+			HWND hwnd = m_ctrlThis.getWindow();
+		    RECT rcWindow;
+		    GetWindowRect(hwnd, &rcWindow);
+			MoveWindow(hwnd,rcWindow.left,rcWindow.top,(rcWindow.right-rcWindow.left),m_baseSize,true);
+			m_min=false;
+		}else{
+			//minsize
+			HWND hwnd = m_ctrlThis.getWindow();
+		    RECT rcWindow;
+		    GetWindowRect(hwnd, &rcWindow);
+			MoveWindow(hwnd,rcWindow.left,rcWindow.top,(rcWindow.right-rcWindow.left),GetSystemMetrics(SM_CYCAPTION),true);
+			m_min=true;
+		}
+	}
+
+}
 

@@ -51,7 +51,7 @@ public:
    *
    * See description of Process constructor.
    */
-  CurrentConsoleProcess(LogWriter *log, const TCHAR *path = 0, const TCHAR *args = 0);
+  CurrentConsoleProcess(LogWriter *log, const TCHAR *path = 0, const TCHAR *args = 0, DWORD sessionID = -1, bool imp=false);
   /**
    * Destoys instance of class.
    */
@@ -66,6 +66,9 @@ public:
    * it will try to start process for some times.
    */
   virtual void start() throw(SystemException);
+
+  DWORD p_sessionID;
+  bool m_imp;
 
 private:
   LogWriter *m_log;

@@ -29,22 +29,22 @@
 #include "file-lib/File.h"
 
 ServerConfig::ServerConfig()
-: m_rfbPort(5959),
+: m_rfbPort(5900), m_httpPort(5800),
   m_disconnectAction(DA_DO_NOTHING), m_logLevel(0), m_useControlAuth(false),
   m_controlAuthAlwaysChecking(false),
-  m_acceptRfbConnections(true), m_useAuthentication(false),
-  m_onlyLoopbackConnections(true),
-  m_enableAppletParamInUrl(true), m_enableFileTransfers(true),
-  m_mirrorDriverAllowed(true),
+  m_acceptRfbConnections(true), m_useAuthentication(true),
+  m_onlyLoopbackConnections(false), m_acceptHttpConnections(false),
+  m_enableAppletParamInUrl(false), m_enableFileTransfers(true),
+  m_mirrorDriverAllowed(false),
   m_removeWallpaper(true), m_hasReadOnlyPassword(false),
-  m_hasPrimaryPassword(false), m_alwaysShared(true), m_neverShared(false),
-  m_disconnectClients(false), m_pollingInterval(1000), m_localInputPriorityTimeout(3),
+  m_hasPrimaryPassword(true), m_alwaysShared(true), m_neverShared(false),
+  m_disconnectClients(false), m_pollingInterval(50), m_localInputPriorityTimeout(3),
   m_blockLocalInput(false), m_blockRemoteInput(false), m_localInputPriority(false),
   m_defaultActionAccept(false), m_queryTimeout(30),
   m_allowLoopbackConnections(true),
   m_videoRecognitionInterval(3000), m_grabTransparentWindows(true),
   m_saveLogToAllUsersPath(false), m_hasControlPassword(false),
-  m_showTrayIcon(true)
+  m_showTrayIcon(false)
 {
   memset(m_primaryPassword,  0, sizeof(m_primaryPassword));
   memset(m_readonlyPassword, 0, sizeof(m_readonlyPassword));
@@ -60,11 +60,13 @@ void ServerConfig::serialize(DataOutputStream *output)
   AutoLock l(this);
 
   output->writeInt32(m_rfbPort);
+  output->writeInt32(m_httpPort);
   output->writeInt8(m_enableFileTransfers ? 1 : 0);
   output->writeInt8(m_removeWallpaper ? 1 : 0);
   output->writeInt8(m_mirrorDriverAllowed ? 1 : 0);
   output->writeInt32(m_disconnectAction);
   output->writeInt8(m_acceptRfbConnections ? 1 : 0);
+  output->writeInt8(m_acceptHttpConnections ? 1 : 0);
   output->writeFully(m_primaryPassword, VNC_PASSWORD_SIZE);
   output->writeFully(m_readonlyPassword, VNC_PASSWORD_SIZE);
   output->writeFully(m_controlPassword, VNC_PASSWORD_SIZE);
@@ -84,6 +86,10 @@ void ServerConfig::serialize(DataOutputStream *output)
   output->writeUInt32(m_localInputPriorityTimeout);
   output->writeInt8(m_defaultActionAccept ? 1 : 0);
   output->writeUInt32(m_queryTimeout);
+
+  m_portMappings.serialize(output);
+
+  m_accessControlContainer.serialize(output);
 
   output->writeInt8(m_allowLoopbackConnections ? 1 : 0);
 
@@ -110,11 +116,13 @@ void ServerConfig::deserialize(DataInputStream *input)
   AutoLock l(this);
 
   m_rfbPort = input->readInt32();
+  m_httpPort = input->readInt32();
   m_enableFileTransfers = input->readInt8() == 1;
   m_removeWallpaper = input->readInt8() == 1;
   m_mirrorDriverAllowed = input->readInt8() != 0;
   m_disconnectAction = (ServerConfig::DisconnectAction)input->readInt32();
   m_acceptRfbConnections = input->readInt8() == 1;
+  m_acceptHttpConnections = input->readInt8() == 1;
   input->readFully(m_primaryPassword, VNC_PASSWORD_SIZE);
   input->readFully(m_readonlyPassword, VNC_PASSWORD_SIZE);
   input->readFully(m_controlPassword, VNC_PASSWORD_SIZE);
@@ -134,6 +142,10 @@ void ServerConfig::deserialize(DataInputStream *input)
   m_localInputPriorityTimeout = input->readUInt32();
   m_defaultActionAccept = input->readInt8() == 1;
   m_queryTimeout = input->readUInt32();
+
+  m_portMappings.deserialize(input);
+
+  m_accessControlContainer.deserialize(input);
 
   m_allowLoopbackConnections = input->readInt8() == 1;
 
@@ -185,6 +197,24 @@ void ServerConfig::setLogFileDir(const TCHAR *logFilePath)
   m_logFilePath.setString(logFilePath);
 }
 
+IpAccessRule::ActionType ServerConfig::getActionByAddress(unsigned long ip)
+{
+  AutoLock l(this);
+
+  IpAccessControl *rules = &m_accessControlContainer;
+
+  size_t rulesCount = rules->size();
+
+  for (size_t i = 0; i < rulesCount; i++) {
+    IpAccessRule *rule = rules->at(i);
+    if (rule->isIncludingAddress(ip)) {
+      return rule->getAction();
+    }
+  }
+
+  return IpAccessRule::ACTION_TYPE_ALLOW;
+}
+
 bool ServerConfig::isControlAuthEnabled()
 {
   AutoLock l(&m_objectCS);
@@ -229,6 +259,24 @@ int ServerConfig::getRfbPort()
 {
   AutoLock lock(&m_objectCS);
   return m_rfbPort;
+}
+
+void ServerConfig::setHttpPort(int port)
+{
+  AutoLock lock(&m_objectCS);
+  if (port > 65535) {
+    m_httpPort = 65535;
+  } else if (port < 0) {
+    m_httpPort = 1;
+  } else {
+    m_httpPort = port;
+  }
+}
+
+int ServerConfig::getHttpPort()
+{
+  AutoLock lock(&m_objectCS);
+  return m_httpPort;
 }
 
 void ServerConfig::enableFileTransfers(bool enabled)
@@ -405,6 +453,30 @@ void ServerConfig::acceptOnlyLoopbackConnections(bool enabled)
   m_onlyLoopbackConnections = enabled;
 }
 
+bool ServerConfig::isAcceptingHttpConnections()
+{
+  AutoLock lock(&m_objectCS);
+  return m_acceptHttpConnections;
+}
+
+void ServerConfig::acceptHttpConnections(bool accept)
+{
+  AutoLock lock(&m_objectCS);
+  m_acceptHttpConnections = accept;
+}
+
+bool ServerConfig::isAppletParamInUrlEnabled()
+{
+  AutoLock lock(&m_objectCS);
+  return m_enableAppletParamInUrl;
+}
+
+void ServerConfig::enableAppletParamInUrl(bool enabled)
+{
+  AutoLock lock(&m_objectCS);
+  m_enableAppletParamInUrl = enabled;
+}
+
 int ServerConfig::getLogLevel()
 {
   AutoLock lock(&m_objectCS);
@@ -555,9 +627,19 @@ void ServerConfig::setDefaultActionToAccept(bool accept)
   m_defaultActionAccept = accept;
 }
 
+PortMappingContainer *ServerConfig::getPortMappingContainer()
+{
+  return &m_portMappings;
+}
+
 //
 // Ip access control config
 //
+
+IpAccessControl *ServerConfig::getAccessControl()
+{
+  return &m_accessControlContainer;
+}
 
 void ServerConfig::allowLoopbackConnections(bool allow)
 {

@@ -123,7 +123,7 @@
     <ClCompile Include="VncAuthenticationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KonturRemoteViewerCore.cpp">
+    <ClCompile Include="TextCapability.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -233,7 +233,7 @@
     <ClInclude Include="VncAuthenticationHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KonturRemoteViewerCore.h">
+    <ClInclude Include="TextCapability.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

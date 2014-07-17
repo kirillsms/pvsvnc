@@ -29,6 +29,11 @@ RfbClientInfo::RfbClientInfo(UINT32 id, const TCHAR *peerAddr)
 {
 }
 
+RfbClientInfo::RfbClientInfo(UINT32 id, const TCHAR *peerAddr, const TCHAR *peerName)
+: m_id(id), m_peerAddr(peerAddr),m_peerName(peerName)
+{
+}
+
 RfbClientInfo::~RfbClientInfo()
 {
 }

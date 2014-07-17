@@ -109,7 +109,7 @@ LRESULT CALLBACK MessageWindow::staticWndProc(HWND hwnd, UINT message,
   return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-ATOM MessageWindow::regClass(HINSTANCE /*hinst*/, TCHAR *windowClassName)
+ATOM MessageWindow::regClass(HINSTANCE hinst, TCHAR *windowClassName)
 {
   WNDCLASS wcWindowClass = {0};
   wcWindowClass.lpfnWndProc = staticWndProc;

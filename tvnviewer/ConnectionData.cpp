@@ -78,6 +78,7 @@ void ConnectionData::resetPassword()
 void ConnectionData::setHost(const StringStorage *host)
 {
   StringStorage chompedString = *host;
+  //TCHAR spaceChar[] = _T(" \t\n\r");
   TCHAR spaceChar[] = _T(" ");
   chompedString.removeChars(spaceChar, sizeof(spaceChar));
   TCHAR tabChar[] = _T("\t");
@@ -86,7 +87,8 @@ void ConnectionData::setHost(const StringStorage *host)
   chompedString.removeChars(newChar, sizeof(newChar));
   TCHAR carChar[] = _T("\r");
   chompedString.removeChars(carChar, sizeof(carChar));
- 
+  
+
   AnsiStringStorage ansiStr(&chompedString);
 
   m_hostPath.set(ansiStr.getString());

@@ -98,15 +98,15 @@ void Win8DeskDuplicationThread::execute()
     }
   } catch (WinDxRecoverableException &e) {
     StringStorage errMess;
-    errMess.format(_T("Caught WinDxRecoverableException: %s, (%d)"), e.getMessage(), (int)e.getErrorCode());
+    errMess.format(_T("Catched WinDxRecoverableException: %s, (%d)"), e.getMessage(), (int)e.getErrorCode());
     setRecoverableError(errMess.getString());
   } catch (WinDxCriticalException &e) {
     StringStorage errMess;
-    errMess.format(_T("Caught WinDxCriticalException: %s, (%d)"), e.getMessage(), (int)e.getErrorCode());
+    errMess.format(_T("Catched WinDxCriticalException: %s, (%d)"), e.getMessage(), (int)e.getErrorCode());
     setRecoverableError(errMess.getString());
   } catch (Exception &e) {
     StringStorage errMess;
-    errMess.format(_T("Caught WinDxCriticalException: %s") , e.getMessage());
+    errMess.format(_T("Catched WinDxCriticalException: %s") , e.getMessage());
     setRecoverableError(errMess.getString());
   }
 }

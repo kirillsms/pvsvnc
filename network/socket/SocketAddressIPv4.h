@@ -26,11 +26,8 @@
 #define SOCKET_ADDRESS_IPV4_H
 
 #include "util/CommonHeader.h"
-
 #include "thread/LocalMutex.h"
-
 #include "SocketException.h"
-
 #include "sockdefs.h"
 #include "win-system/WsaStartup.h"
 

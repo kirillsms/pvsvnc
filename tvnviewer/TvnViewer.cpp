@@ -27,6 +27,8 @@
 #include "util/ResourceLoader.h"
 #include "resource.h"
 
+
+
 TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
                      const TCHAR *viewerWindowClassName)
 : WindowsApplication(appInstance, windowClassName),

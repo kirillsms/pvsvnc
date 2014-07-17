@@ -43,9 +43,6 @@ public:
    */
   bool parse(const CommandLineArgs *cmdArgs);
 
-  bool hasRepeaterFlag();
-  static const TCHAR REPEATER[];
-  StringStorage m_repeater;
   /**
    * Checks if help flags are set.
    * @return true if any of help flags are set.

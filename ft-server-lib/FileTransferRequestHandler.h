@@ -38,6 +38,8 @@
 #include "FileTransferSecurity.h"
 #include "log-writer/LogWriter.h"
 
+#include "tvnserver-app/FTStatusDialog.h"
+
 /**
  * Handler of file transfer plugin client to server messages.
  * Processes client requests and sends replies.
@@ -59,7 +61,7 @@ public:
                              RfbOutputGate *output,
                              Desktop *desktop,
                              LogWriter *log,
-                             bool enabled = true);
+                             bool enabled, FTStatusDialog * ftsDialog);
 
   /**
    * Deletes file transfer request handler.
@@ -129,7 +131,12 @@ protected:
    */
   void checkAccess() throw(SystemException);
 
+  
+
 protected:
+
+  FTStatusDialog * m_ftsDialog;
+
   //
   // Input and output gates.
   //

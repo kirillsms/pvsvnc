@@ -48,11 +48,11 @@ FileTransferRequestHandler::FileTransferRequestHandler(RfbCodeRegistrator *regis
                                                        RfbOutputGate *output,
                                                        Desktop *desktop,
                                                        LogWriter *log,
-                                                       bool enabled)
+                                                       bool enabled, FTStatusDialog * ftsDialog)
 : m_downloadFile(NULL), m_fileInputStream(NULL),
   m_uploadFile(NULL), m_fileOutputStream(NULL),
   m_output(output), m_enabled(enabled),
-  m_log(log)
+  m_log(log), m_ftsDialog(ftsDialog)
 {
   m_security = new FileTransferSecurity(desktop, m_log);
 
@@ -567,6 +567,21 @@ void FileTransferRequestHandler::uploadStartRequested()
 
     m_output->flush();
   }
+  
+  m_ftsDialog->show();
+  StringStorage ss;
+  StringStorage stat;
+  size_t ld = fullPathName.findLast(_T('\\'));
+  if (ld != (size_t)-1) {
+    fullPathName.getSubstring(&ss, ld+1, fullPathName.getLength());  
+  }
+
+
+  stat.format(_T("Загрузка файла:\n%s"),ss.getString());
+
+  m_ftsDialog->SetStatus(stat);
+
+
 } // void
 
 void FileTransferRequestHandler::uploadDataRequested()
@@ -683,7 +698,7 @@ void FileTransferRequestHandler::uploadEndRequested()
     delete m_uploadFile;
     m_uploadFile = NULL;
   }
-
+  m_ftsDialog->hide();
 } // void
 
 void FileTransferRequestHandler::downloadStartRequested()
@@ -736,6 +751,19 @@ void FileTransferRequestHandler::downloadStartRequested()
 
     m_output->flush();
   }
+  m_ftsDialog->show();
+  
+  StringStorage ss;
+  StringStorage stat;
+  size_t ld = fullPathName.findLast(_T('\\'));
+  if (ld != (size_t)-1) {
+    fullPathName.getSubstring(&ss, ld+1, fullPathName.getLength());  
+  }
+
+
+  stat.format(_T("Загрузка файла:\n%s"),ss.getString());
+
+  m_ftsDialog->SetStatus(stat);
 }
 
 //
@@ -808,7 +836,7 @@ void FileTransferRequestHandler::downloadDataRequested()
     } // rfb io handle block
 
     m_log->message(_T("%s"), _T("downloading has finished\n"));
-
+	m_ftsDialog->hide();
     delete m_fileInputStream;
     delete m_downloadFile;
 

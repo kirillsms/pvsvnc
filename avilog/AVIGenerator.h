@@ -78,6 +78,7 @@ public:
 	//! Inplace constructor with BITMAPINFOHEADER
 	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate);
 	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPCTSTR sConfigPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate);
+
 	~CAVIGenerator();
 	//@}
 

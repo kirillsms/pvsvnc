@@ -122,7 +122,6 @@ void Win8ScreenDriverImpl::initDxgi()
     }
   } catch (WinDxRecoverableException &e) {
     m_log->debug(_T("Reached the end of dxgi output list with iOutput = %u"), iOutput);
-	m_log->debug(_T("Error in Win8ScreenDriverImpl::initDxgi(): %s"), e.getMessage());
     // End of output list.
   }
 

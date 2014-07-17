@@ -26,8 +26,6 @@
 #define __RFBCLIENTMANAGER_H__
 
 #include "util/ListenerContainer.h"
-#include "util/AnsiStringStorage.h"
-#include "util/StringStorage.h"
 #include "rfb-sconn/RfbClient.h"
 #include "thread/AutoLock.h"
 #include "thread/Thread.h"
@@ -47,6 +45,10 @@
 #include "rfb-sconn/ClientAuthListener.h"
 #include "tvncontrol-app/RfbClientInfo.h"
 #include "NewConnectionEvents.h"
+#include "rfb-sconn/TextMsgListener.h"
+
+#include "tvnserver-app/ChatDialog.h"
+#include "tvnserver-app/FTStatusDialog.h"
 
 typedef std::list<RfbClient *> ClientList;
 typedef std::list<RfbClient *>::iterator ClientListIter;
@@ -69,7 +71,8 @@ class RfbClientManager: public ClientTerminationListener,
                         public UpdateSendingListener,
                         public ClientAuthListener,
                         public AbnormDeskTermListener,
-                        public ListenerContainer<RfbClientManagerEventListener *>
+                        public ListenerContainer<RfbClientManagerEventListener *>,
+						public TextMsgListener
 {
 public:
   // FIXME: parameter is not used.
@@ -83,8 +86,6 @@ public:
   // FIXME: This method needed only for control server.
   void getClientsInfo(RfbClientInfoList *list);
 
-  const TCHAR* getId();
-
   // Disconnects all connected clients.
   virtual void disconnectAllClients();
   virtual void disconnectNonAuthClients();
@@ -94,9 +95,13 @@ public:
   // will be run.
   void setDynViewPort(const ViewPortState *dynViewPort);
 
+
+  // send chat msg to all connected clients
+  void sendChatMsg(const StringStorage *msg);
+
   // FIXME: Place comment for this method here.
   void addNewConnection(SocketIPv4 *socket, ViewPortState *constViewPort,
-                        bool viewOnly, bool isOutgoing, char* id=0);
+                        bool viewOnly, bool isOutgoing,ChatDialog * chatDialog,FTStatusDialog * ftsDialog);
 
 protected:
   // Listen functions
@@ -115,9 +120,13 @@ protected:
   // object.
   virtual void onAbnormalDesktopTerminate();
 
+
+  virtual void onTextMsg(StringStorage * msg);
+
+
   void waitUntilAllClientAreBeenDestroyed();
 
-protected:
+private:
   void validateClientList();
 
   // Checks the ip to ban.
@@ -129,8 +138,6 @@ protected:
   void updateIpInBan(const StringStorage *ip, bool success);
   // Removes deprecated bans from the ban list.
   void refreshBan();
-
-  AnsiStringStorage m_ansiId;
 
   ClientList m_nonAuthClientList;
   ClientList m_clientList;

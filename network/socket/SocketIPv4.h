@@ -150,7 +150,7 @@ public:
   void enableNaggleAlgorithm(bool enabled) throw(SocketException);
   void setExclusiveAddrUse() throw(SocketException);
 
-  private:
+private:
   WsaStartup m_wsaStartup;
 
 protected:

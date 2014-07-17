@@ -26,7 +26,9 @@
 #include "thread/ZombieKiller.h"
 #include "QueryConnectionApplication.h"
 #include "server-config-lib/Configurator.h"
-#include "TvnServer.h"
+
+
+
 
 RfbClientManager::RfbClientManager(const TCHAR *serverName,
                                    NewConnectionEvents *newConnectionEvents,
@@ -36,7 +38,6 @@ RfbClientManager::RfbClientManager(const TCHAR *serverName,
   m_desktop(0),
   m_newConnectionEvents(newConnectionEvents),
   m_log(log),
-  m_ansiId(""),
   m_desktopFactory(desktopFactory)
 {
   m_log->info(_T("Starting rfb client manager"));
@@ -65,7 +66,7 @@ Desktop *RfbClientManager::onClientAuth(RfbClient *client)
   m_newConnectionEvents->onSuccAuth(&ip);
 
   AutoLock al(&m_clientListLocker);
-  
+
   // Checking if this client is allowed to connect, depending on its "shared"
   // flag and the server's configuration.
   ServerConfig *servConf = Configurator::getInstance()->getServerConfig();
@@ -129,6 +130,11 @@ bool RfbClientManager::onCheckForBan(RfbClient *client)
   return checkForBan(&ip);
 }
 
+void RfbClientManager::onTextMsg(StringStorage * msg)
+{
+	sendChatMsg(msg);
+}
+
 void RfbClientManager::onAuthFailed(RfbClient *client)
 {
   StringStorage ip;
@@ -153,6 +159,28 @@ void RfbClientManager::onCheckAccessControl(RfbClient *client)
 
   ServerConfig *config = Configurator::getInstance()->getServerConfig();
 
+  IpAccessRule::ActionType action;
+
+  if (!client->isOutgoing()) {
+    action = config->getActionByAddress((unsigned long)addr_in.sin_addr.S_un.S_addr);
+  } else {
+    action = IpAccessRule::ACTION_TYPE_ALLOW;
+  }
+
+  // Promt user to know what to do with incmoing connection.
+
+  if (action == IpAccessRule::ACTION_TYPE_QUERY) {
+    StringStorage peerHost;
+
+    peerAddr.toString(&peerHost);
+
+    int queryRetVal = QueryConnectionApplication::execute(peerHost.getString(),
+                                                          config->isDefaultActionAccept(),
+                                                          config->getQueryTimeout());
+    if (queryRetVal == 1) {
+      throw AuthException(_T("Connection has been rejected"));
+    }
+  }
 }
 
 void RfbClientManager::onClipboardUpdate(const StringStorage *newClipboard)
@@ -346,21 +374,18 @@ void RfbClientManager::refreshBan()
 
 void RfbClientManager::addNewConnection(SocketIPv4 *socket,
                                         ViewPortState *constViewPort,
-                                        bool viewOnly, bool isOutgoing, char * id)
+                                        bool viewOnly, bool isOutgoing, ChatDialog * chatDialog, FTStatusDialog * ftsDialog)
 {
   AutoLock al(&m_clientListLocker);
 
-  m_ansiId.setString(id);
-
   _ASSERT(constViewPort != 0);
-  TvnServer::getInstance()->setRepeaterStatus(new StringStorage(_T(":Ready")));
   m_nonAuthClientList.push_back(new RfbClient(m_newConnectionEvents,
                                               socket, this, this, viewOnly,
                                               isOutgoing,
                                               m_nextClientId,
                                               constViewPort,
                                               &m_dynViewPort,
-                                              m_log));
+                                              m_log, chatDialog, ftsDialog));
   m_nextClientId++;
 }
 
@@ -396,10 +421,13 @@ void RfbClientManager::setDynViewPort(const ViewPortState *dynViewPort)
   }
 }
 
-const TCHAR* RfbClientManager::getId()
-{
-	StringStorage newStr;
-	m_ansiId.toStringStorage(&newStr);
-	return newStr.getString();
-	
+void RfbClientManager::sendChatMsg(const StringStorage *msg){
+  AutoLock al(&m_clientListLocker);
+
+  // Assign the dynViewPort value for all already run clients too.
+  for (ClientListIter iter = m_clientList.begin();
+       iter != m_clientList.end(); iter++) {
+    (*iter)->sendMsg(msg);
+  }
+
 }

@@ -36,6 +36,7 @@
 
 #include "tvnviewer/AvilogThread.h"
 
+
 #include "CursorPainter.h"
 
 class CoreEventsAdapter;
@@ -57,12 +58,11 @@ public:
                     const vector<UINT8> *cursor, 
                     const vector<UINT8> *bitmask);
 
+
   void setAvilog(AvilogThread *m_avilog);
 
+
   void setIgnoreShapeUpdates(bool ignore);
-
-  
-
 protected:
   // Inherited from Thread
   void execute();
@@ -94,9 +94,8 @@ protected:
   // This flag is true after set new cursor or update position.
   bool m_isCursorChange;
 
-
-  // avi log to set cursor pos
   AvilogThread *m_cavilog;
+
 
 private:
   // Do not allow copying objects.

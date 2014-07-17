@@ -53,7 +53,7 @@ ControlTrayIcon::ControlTrayIcon(ControlProxy *serverControl,
   m_serverControl(serverControl), m_notificator(notificator),
   m_appControl(appControl),
   m_inWindowProc(false),
-  m_termination(false), m_connectionStatusDialog(this)
+  m_termination(false)
 {
   ResourceLoader *resLoader = ResourceLoader::getInstance();
 
@@ -77,7 +77,7 @@ ControlTrayIcon::ControlTrayIcon(ControlProxy *serverControl,
 
   // Default icon state.
   setNotConnectedState();
-  onShowConnectionStatusClick();
+
   // Update status.
   syncStatusWithServer();
 
@@ -182,9 +182,6 @@ void ControlTrayIcon::onRightButtonUp()
     break;
   case ID_CLOSE_CONTROL_INTERFACE:
     onCloseControlInterfaceMenuItemClick();
-    break;
-  case ID_SHOWCONNECTIONSTATUS:
-    onShowConnectionStatusClick();
     break;
   }
 }
@@ -324,13 +321,6 @@ void ControlTrayIcon::onCloseControlInterfaceMenuItemClick()
   m_appControl->shutdown();
 }
 
-void ControlTrayIcon::onShowConnectionStatusClick()
-{
-	//m_connectionStatusDialog.show();
-
-	ControlApplication::addModelessDialog(m_connectionStatusDialog.getControl()->getWindow());
-}
-
 void ControlTrayIcon::syncStatusWithServer()
 {
   try {
@@ -338,25 +328,22 @@ void ControlTrayIcon::syncStatusWithServer()
     TvnServerInfo info = m_serverControl->getServerInfo();
     std::list<RfbClientInfo *> clients;
     m_serverControl->getClientsList(&clients);
+	m_trayDialog.addClients(&clients);
 
     // Change icon status.
     if (clients.size() > 0) {
       setIcon(m_iconWorking);
-	  m_trayDialog.show();
+	   m_trayDialog.show();
     } else if (info.m_acceptFlag) {
       setIcon(m_iconIdle);
 	  m_trayDialog.show();
     } else {
       setIcon(m_iconDisabled);
-	  m_trayDialog.hide();
+	   m_trayDialog.hide();
     }
-	//m_connectionStatusDialog.refreshClientsList(&clients );
-	StringStorage title(info.m_repeater);
-	title.appendString(info.m_repeaterStatus.getString());
-	//m_connectionStatusDialog.setTitle(title.getString());
-    setText(info.m_statusText.getString());
 
-	m_trayDialog.addClients(&clients);
+    setText(info.m_statusText.getString());
+	
     // Cleanup.
     for (std::list<RfbClientInfo *>::iterator it = clients.begin(); it != clients.end(); it++) {
       delete *it;

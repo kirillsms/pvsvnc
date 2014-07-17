@@ -71,7 +71,7 @@ ViewerInstance::~ViewerInstance()
 
   if (m_socket != 0) {
     delete m_socket;
-	m_socket = NULL;
+    m_socket = NULL;
   }
 }
 
@@ -97,14 +97,19 @@ void ViewerInstance::stop()
 
 void ViewerInstance::start()
 {
-
+  Logger *logger = ViewerConfig::getInstance()->getLogger();
   m_viewerWnd.setRemoteViewerCore(&m_viewerCore);
+
 
   m_viewerWnd.setFileTransfer(&m_fileTransfer);
 
   m_vncAuthHandler.addAuthCapability(&m_viewerCore);
 
   m_fileTransfer.addCapabilities(&m_viewerCore);
+  
+  m_textCap.addCapabilities(&m_viewerCore);
+
+  m_viewerWnd.setChatHandler(&m_textCap);
 
   if (m_socket) {
     m_viewerCore.start(m_socket,

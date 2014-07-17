@@ -26,7 +26,6 @@
 #define __VIEWER_INSTANCE_H__
 
 #include "ViewerWindow.h"
-#include "viewer-core/KonturRemoteViewerCore.h"
 #include "network/socket/SocketIPv4.h"
 
 #include "ViewerVncAuthHandler.h"
@@ -60,9 +59,10 @@ protected:
   ConnectionConfig m_conConf;
 
   ViewerWindow m_viewerWnd;
-  KonturRemoteViewerCore m_viewerCore;
+  RemoteViewerCore m_viewerCore;
   ViewerVncAuthHandler m_vncAuthHandler;
   FileTransferCapability m_fileTransfer;
+  TextCapability m_textCap;
   SocketIPv4 *m_socket;
 };
 

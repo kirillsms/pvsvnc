@@ -37,6 +37,10 @@ public:
   static const UINT32 KEYBOARD_EVENT = 4;
   static const UINT32 POINTER_EVENT = 5;
   static const UINT32 CLIENT_CUT_TEXT = 6;
+  static const UINT32 CHAT_REQ = 7;
+  static const UINT32 CLIENT_CHAT_MSG = 8;
+  static const UINT32 SERVER_CHAT_MSG = 9;
+
 };
 
 class ServerMsgDefs

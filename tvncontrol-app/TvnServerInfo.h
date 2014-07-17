@@ -48,8 +48,6 @@ struct TvnServerInfo
    * TightVNC server status text.
    */
   StringStorage m_statusText;
-  StringStorage m_repeater;
-  StringStorage m_repeaterStatus;
 };
 
 #endif

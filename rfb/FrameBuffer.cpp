@@ -26,7 +26,7 @@
 #include <string.h>
 
 FrameBuffer::FrameBuffer(void)
-: m_buffer(0)
+: m_buffer(0), displayCount(0)
 {
   memset(&m_pixelFormat, 0, sizeof(m_pixelFormat));
 }

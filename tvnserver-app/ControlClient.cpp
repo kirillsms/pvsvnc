@@ -24,7 +24,7 @@
 
 #include "ControlClient.h"
 #include "TvnServer.h"
-#include "OutgoingRepeaterRfbConnectionThread.h"
+#include "OutgoingRfbConnectionThread.h"
 #include "ConnectToTcpDispatcherThread.h"
 
 #include "tvncontrol-app/ControlProto.h"
@@ -52,6 +52,7 @@ const UINT32 ControlClient::REQUIRES_AUTH[] = { ControlProto::ADD_CLIENT_MSG_ID,
                                                 ControlProto::SHARE_PRIMARY_MSG_ID,
                                                 ControlProto::SHARE_DISPLAY_MSG_ID,
                                                 ControlProto::SHARE_WINDOW_MSG_ID,
+                                                ControlProto::SHARE_RECT_MSG_ID,
                                                 ControlProto::SHARE_APP_MSG_ID,
                                                 ControlProto::SHARE_FULL_MSG_ID,
                                                 ControlProto::CONNECT_TO_TCPDISP_MSG_ID };
@@ -201,6 +202,10 @@ void ControlClient::execute()
           m_log->message(_T("Share window message recieved"));
           shareWindowIdMsgRcvd();
           break;
+        case ControlProto::SHARE_RECT_MSG_ID:
+          m_log->message(_T("Share rect message recieved"));
+          shareRectIdMsgRcvd();
+          break;
         case ControlProto::SHARE_FULL_MSG_ID:
           m_log->message(_T("Share full message recieved"));
           shareFullIdMsgRcvd();
@@ -323,8 +328,6 @@ void ControlClient::getServerInfoMsgRcvd()
   m_gate->writeUInt8(info.m_acceptFlag ? 1 : 0);
   m_gate->writeUInt8(info.m_serviceFlag ? 1 : 0);
   m_gate->writeUTF8(status.getString());
-  m_gate->writeUTF8(info.m_repeater.getString());
-  m_gate->writeUTF8(info.m_repeaterStatus.getString());
 }
 
 void ControlClient::reloadConfigMsgRcvd()
@@ -380,14 +383,14 @@ void ControlClient::addClientMsgRcvd()
   //
   // Make outgoing connection in separate thread.
   //
- /* OutgoingRepeaterRfbConnectionThread *newConnectionThread =
-                               new OutgoingRepeaterRfbConnectionThread(host.getString(),
+  OutgoingRfbConnectionThread *newConnectionThread =
+                               new OutgoingRfbConnectionThread(host.getString(),
                                                                hp.getVncPort(), viewOnly,
-															   m_rfbClientManager, m_log,ansiHost.getString());
+                                                               m_rfbClientManager, m_log);
 
   newConnectionThread->resume();
 
-  ZombieKiller::getInstance()->addZombie(newConnectionThread);*/
+  ZombieKiller::getInstance()->addZombie(newConnectionThread);
 }
 
 void ControlClient::connectToTcpDispatcher()
@@ -499,6 +502,20 @@ void ControlClient::shareWindowIdMsgRcvd()
 
   ViewPortState dynViewPort;
   dynViewPort.setWindowName(&windowName);
+  m_rfbClientManager->setDynViewPort(&dynViewPort);
+}
+
+void ControlClient::shareRectIdMsgRcvd()
+{
+  Rect shareRect;
+  shareRect.left = m_gate->readInt32();
+  shareRect.top = m_gate->readInt32();
+  shareRect.right = m_gate->readInt32();
+  shareRect.bottom = m_gate->readInt32();
+  m_gate->writeUInt32(ControlProto::REPLY_OK);
+
+  ViewPortState dynViewPort;
+  dynViewPort.setArbitraryRect(&shareRect);
   m_rfbClientManager->setDynViewPort(&dynViewPort);
 }
 

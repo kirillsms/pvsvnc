@@ -184,6 +184,10 @@ private:
    */
   void shareWindowIdMsgRcvd();
   /**
+   * Calling when "share rect id" message recieved.
+   */
+  void shareRectIdMsgRcvd();
+  /**
    * Calling when "share full id" message recieved.
    */
   void shareFullIdMsgRcvd();

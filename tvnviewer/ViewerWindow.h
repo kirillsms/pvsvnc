@@ -42,9 +42,15 @@
 #include "win-system/WindowsApplication.h"
 #include "win-system/WinHooks.h"
 
+#include "ClientChatDialog.h"
+
+#include "viewer-core/TextCapability.h"
+
+#include "rfb-sconn/TextMsgListener.h"
+
 class ViewerWindow : public BaseWindow,
                      public CoreEventsAdapter,
-                     private HookEventListener
+                     private HookEventListener, public TextMsgListener
 {
 public:
   ViewerWindow(WindowsApplication *application,
@@ -53,6 +59,7 @@ public:
   virtual ~ViewerWindow();
 
   void setFileTransfer(FileTransferCapability *ft);
+  void setChatHandler(TextCapability *chat);
   void setRemoteViewerCore(RemoteViewerCore *pCore);
 
   //
@@ -65,6 +72,8 @@ public:
   //
   bool isStopped() const;
 
+  virtual void onTextMsg(StringStorage * msg);
+
   static const int WM_USER_ERROR = WM_USER + 1;
   static const int WM_USER_STOP = WM_USER + 2;
   static const int WM_USER_DISCONNECT = WM_USER + 3;
@@ -74,6 +83,9 @@ public:
 protected:
   static const int TIMER_DESKTOP_STATE = 1;
   static const int TIMER_DESKTOP_STATE_DELAY = 50;
+
+  static const int REC_START = 2;
+  static const int REC_START_DELAY = 2000;
 
   bool onMessage(UINT message, WPARAM wParam, LPARAM lParam);
   bool onEraseBackground(HDC hdc);
@@ -93,7 +105,7 @@ protected:
   bool onFocus(WPARAM wParam);
   bool onKillFocus(WPARAM wParam);
   bool onTimer(WPARAM idTimer);
-
+  
   void desktopStateUpdate();
   void commandCtrlAltDel();
   void commandCtrlEsc();
@@ -107,8 +119,12 @@ protected:
   void commandScaleIn();
   void commandScaleOut();
   void commandScale100();
-  void commandScaleAuto();
+  void commandRec();
   void showDisp();
+  void remoteCP();
+  void remoteReboot();
+  void takeScreenShot();
+  void commandScaleAuto();
 
   //
   // It is implementation of CoreEventsAdapter functions.
@@ -121,6 +137,8 @@ protected:
   void onFrameBufferUpdate(const FrameBuffer *fb, const Rect *rect);
   void onFrameBufferPropChange(const FrameBuffer *fb);
   void onCutText(const StringStorage *cutText);
+
+  
 
   int translateAccelToTB(int val);
   void applyScreenChanges(bool isFullScreen);
@@ -140,6 +158,8 @@ protected:
   RemoteViewerCore *m_viewerCore;
   FileTransferCapability *m_fileTransfer;
   FileTransferMainDialog *m_ftDialog;
+  TextCapability *m_chatHandler;
+  ClientChatDialog * m_chatDialog;
   DesktopWindow m_dsktWnd;
   StringStorage m_strToolTip;
   ToolBar m_toolbar;
@@ -176,7 +196,6 @@ protected:
   // Flag is set, if viewer instance is stopped.
   // Destructor of ViewerWindow may be called, if this flag is true.
   bool m_stopped;
-
 private:
   vector<int> m_standardScale;
   void changeCursor(int type);
@@ -187,6 +206,7 @@ private:
   void doSize();
   void doCommand(int iCommand);
   void showFileTransferDialog();
+  void showChatDialog();
   void showWindow();
   void enableUserElements();
   bool viewerCoreSettings();
@@ -197,8 +217,8 @@ private:
   void adjustWindowSize();
   StringStorage formatWindowName() const;
   void updateKeyState();
-
-  int m_displayCount;
+  
+  int displayCount;
 
   // onHookProc function implementation of HookEventListener base abstract class.
   virtual LRESULT onHookProc(int code, WPARAM wParam, LPARAM lParam);

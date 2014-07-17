@@ -33,6 +33,7 @@
 #include "tvnserver-app/NamingDefs.h"
 #include "win-system/WinCommandLineArgs.h"
 
+
 #include "tvnserver/resource.h"
 
 TvnServerApplication::TvnServerApplication(HINSTANCE hInstance,
@@ -55,24 +56,28 @@ int TvnServerApplication::run()
 {
   // FIXME: May be an unhandled exception.
   // Check wrong command line and situation when we need to show help.
+StringStorage firstKey(_T(""));
+
 
   try {
     ServerCommandLine parser;
     WinCommandLineArgs cmdArgs(m_commandLine.getString());
+	
     if (!parser.parse(&cmdArgs) || parser.showHelp()) {
       throw Exception(_T("Wrong command line argument"));
     }
- 	m_repeater=parser.m_repeater;
+	parser.getOption(0, &firstKey);
   } catch (...) {
     TvnServerHelp::showUsage();
     return 0;
   }
 
+    
   // Reject 2 instances of TightVNC server application.
 
   GlobalMutex *appInstanceMutex;
 
-  try {
+  /*try {
     appInstanceMutex = new GlobalMutex(
       ServerApplicationNames::SERVER_INSTANCE_MUTEX_NAME, false, true);
   } catch (...) {
@@ -80,11 +85,14 @@ int TvnServerApplication::run()
                StringTable::getString(IDS_SERVER_ALREADY_RUNNING),
                StringTable::getString(IDS_MBC_TVNSERVER), MB_OK | MB_ICONEXCLAMATION);
     return 1;
-  }
+  }*/
 
   // Start TightVNC server and TightVNC control application.
   try {
-    m_tvnServer = new TvnServer(false, m_newConnectionEvents, this, &m_fileLogger, &m_repeater);
+  if(firstKey.isEqualTo(_T("-system")))
+	  m_tvnServer = new TvnServer(false, m_newConnectionEvents, this, &m_fileLogger,true);
+  else
+	  m_tvnServer = new TvnServer(false, m_newConnectionEvents, this, &m_fileLogger,false);
     m_tvnServer->addListener(this);
     m_tvnControlRunner = new WsConfigRunner(&m_fileLogger);
 
@@ -93,7 +101,7 @@ int TvnServerApplication::run()
     delete m_tvnControlRunner;
     m_tvnServer->removeListener(this);
     delete m_tvnServer;
-    delete appInstanceMutex;
+    //delete appInstanceMutex;
     return exitCode;
   } catch (Exception &e) {
     // FIXME: Move string to resource

@@ -70,6 +70,7 @@ private:
   //
 
   void onAcceptRfbConnectionsClick();
+  void onAcceptHttpConnectionsClick();
   void onAuthenticationClick();
   void onPrimaryPasswordChange();
   void onReadOnlyPasswordChange();
@@ -78,6 +79,7 @@ private:
   void onShowTrayIconCheckBoxClick();
   void onPollingIntervalSpinChangePos(LPNMUPDOWN message);
   void onRfbPortUpdate();
+  void onHttpPortUpdate();
   void onUrlParamsClick();
   void onPollingIntervalUpdate();
   void onFileTransferCheckBoxClick();
@@ -99,12 +101,14 @@ protected:
   ServerConfig *m_config;
   // Controls
   TextBox m_rfbPort;
+  TextBox m_httpPort;
   TextBox m_pollingInterval;
   CheckBox m_grabTransparentWindows;
   CheckBox m_useMirrorDriver;
   CheckBox m_enableFileTransfers;
   CheckBox m_removeWallpaper;
   CheckBox m_acceptRfbConnections;
+  CheckBox m_acceptHttpConnections;
   CheckBox m_showTrayIcon;
   Control m_primaryPassword;
   Control m_readOnlyPassword;
@@ -112,6 +116,7 @@ protected:
   Control m_unsetReadOnlyPassword;
   CheckBox m_useAuthentication;
   SpinControl m_rfbPortSpin;
+  SpinControl m_httpPortSpin;
   SpinControl m_pollingIntervalSpin;
 
   //

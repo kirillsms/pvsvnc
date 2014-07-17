@@ -27,6 +27,8 @@
 
 #include "config-lib/SettingsManager.h"
 
+#include "PortMappingContainer.h"
+#include "IpAccessControl.h"
 #include "ServerConfig.h"
 #include "ConfigReloadListener.h"
 #include "RegistrySecurityAttributes.h"
@@ -43,6 +45,10 @@ public:
 
   bool getServiceFlag() { return m_isConfiguringService; }
   void setServiceFlag(bool asService) { m_isConfiguringService = asService; }
+
+  bool getSystemFlag() { return m_isRunningSystem; }
+  void setSystemFlag(bool asSystem) { m_isRunningSystem = asSystem; }
+
 
   bool load();
   bool save();
@@ -69,6 +75,13 @@ private:
   //
   // Serialize and deserialize methods
   //
+
+  bool savePortMappingContainer(SettingsManager *sm);
+  bool loadPortMappingContainer(SettingsManager *sm, PortMappingContainer *portMapping);
+
+  bool saveIpAccessControlContainer(SettingsManager *sm);
+  bool loadIpAccessControlContainer(SettingsManager *sm,
+                                    IpAccessControl *ipContainer);
 
   bool saveServerConfig(SettingsManager *sm);
   bool loadServerConfig(SettingsManager *sm, ServerConfig *config);
@@ -102,6 +115,7 @@ protected:
 
   bool m_isConfiguringService;
   bool m_isConfigLoadedPartly;
+  bool m_isRunningSystem;
 
   //
   // Registry security attributes.

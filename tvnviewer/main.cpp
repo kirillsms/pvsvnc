@@ -29,7 +29,6 @@
 #include "ConnectionListener.h"
 #include "ViewerCmdLine.h"
 #include "util/ResourceLoader.h"
-#include "KonturTvnViewer.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
                        LPTSTR lpCmdLine, int nCmdShow)

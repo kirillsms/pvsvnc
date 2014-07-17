@@ -276,6 +276,8 @@ protected:
 
   FileInfo *m_fakeMoveUpFolder;
 
+  FileInfo *m_fakeDesktop;
+
 private:
 
   static const UINT WM_OPERATION_FINISHED = WM_USER + 2;

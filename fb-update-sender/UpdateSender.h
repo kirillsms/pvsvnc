@@ -107,9 +107,11 @@ protected:
 
   // Thread safed get and set of the m_videFrozen flag.
   void setVideoFrozen(bool value);
-  bool getVideoFrozen();
-
   void setDisplay(int value);
+  void reqReboot();
+  void startCP();
+
+  bool getVideoFrozen();
 
   // The sendUpdate() function sends all stored updates to the client.
   // Access to a FrameBuffer data passes through the frameBuffer pointer
@@ -240,8 +242,6 @@ protected:
 
   // This flag indicates that video is frozen or not.
   bool m_videoFrozen;
-  
-  //display count
   int m_display;
 
   bool m_viewportChanged;

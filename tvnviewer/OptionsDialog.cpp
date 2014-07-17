@@ -23,7 +23,6 @@
 //
 
 #include "OptionsDialog.h"
-#define AUTOSCALE _T("Авто")
 
 OptionsDialog::OptionsDialog()
 : BaseDialog(IDD_OPTIONS),
@@ -105,6 +104,7 @@ BOOL OptionsDialog::onInitDialog()
   setControlById(m_copyrect, IDC_CCOPYRECT);
   setControlById(m_viewonly, IDC_CVIEWONLY);
   setControlById(m_disclip, IDC_CDISCLIP);
+  setControlById(m_sharedses, IDC_CSHAREDSES);
   setControlById(m_scale, IDC_CSCALE);
   setControlById(m_fullscr, IDC_CFULLSCR);
   setControlById(m_deiconfy, IDC_CDEICONFY);
@@ -116,7 +116,6 @@ BOOL OptionsDialog::onInitDialog()
   setControlById(m_smalldot, IDC_RSMALLDOT);
   setControlById(m_arrow, IDC_RARROW);
   setControlById(m_nlocal, IDC_RNLOCAL);
-  setControlById(m_vlogging, IDC_VLOGGING);
 
   m_useEnc.addItem(_T("Raw"), reinterpret_cast<void *>(EncodingDefs::RAW));
   m_useEnc.addItem(_T("Hextile"), reinterpret_cast<void *>(EncodingDefs::HEXTILE));
@@ -127,7 +126,7 @@ BOOL OptionsDialog::onInitDialog()
 
   // FIXME: replaced literals to named constants
   TCHAR scaleComboText[8][20] = {_T("25"), _T("50"), _T("75"), _T("90"),
-                                 _T("100"), _T("125"), _T("150"), AUTOSCALE};
+                                 _T("100"), _T("125"), _T("150"), _T("Auto")};
   for (int i = 0; i < sizeof(scaleComboText)/sizeof(scaleComboText[0]); i++) {
       m_scale.addItem(static_cast<TCHAR FAR *>(scaleComboText[i]));
   }
@@ -165,6 +164,8 @@ void OptionsDialog::updateControlValues()
   m_deiconfy.check(m_conConfig->isDeiconifyOnRemoteBellEnabled());
   m_swapmouse.check(m_conConfig->isMouseSwapEnabled());
 
+  m_sharedses.check(m_conConfig->getSharedFlag());
+  m_sharedses.setEnabled(!m_connected);
 
   if (m_conConfig->isFitWindowEnabled()) {
     // FIXME: replace literal to named constant
@@ -224,9 +225,6 @@ void OptionsDialog::updateControlValues()
     m_dot.check(true);
     break;
   }
-  
-  m_vlogging.setText(ViewerConfig::getInstance()->getPathToVLogFile());
-
 
   onViewOnlyClick();
 
@@ -344,7 +342,7 @@ void OptionsDialog::onScaleKillFocus()
   int scale;
 
   if (!StringParser::parseInt(scaleText.getString(), &scale)) {
-    if (scaleText.isEqualTo(AUTOSCALE)) {
+    if (scaleText.isEqualTo(_T("Auto"))) {
       return ;
     }
     scale = 100;
@@ -367,7 +365,7 @@ bool OptionsDialog::isInputValid()
 
   m_scale.getText(&scaleText);
 
-  if (scaleText.isEqualTo(AUTOSCALE)) {
+  if (scaleText.isEqualTo(_T("Auto"))) {
     return true;
   }
 
@@ -437,6 +435,7 @@ void OptionsDialog::apply()
   m_conConfig->enableFullscreen(m_fullscr.isChecked());
   m_conConfig->deiconifyOnRemoteBell(m_deiconfy.isChecked());
   m_conConfig->swapMouse(m_swapmouse.isChecked());
+  m_conConfig->setSharedFlag(m_sharedses.isChecked());
 
   StringStorage scaleText;
 

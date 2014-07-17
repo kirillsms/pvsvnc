@@ -46,6 +46,13 @@ DWORD WTS::getActiveConsoleSessionId(LogWriter *log)
 {
   AutoLock l(&m_mutex);
 
+  DWORD sessionId;
+
+  ProcessIdToSessionId(GetCurrentProcessId(),&sessionId);
+
+  return sessionId;
+
+  
   if (!m_initialized) {
     initialize(log);
   }
@@ -69,6 +76,9 @@ void WTS::queryConsoleUserToken(HANDLE *token, LogWriter *log) throw(SystemExcep
 
   DWORD sessionId = getActiveConsoleSessionId(log);
 
+  //ProcessIdToSessionId(GetCurrentProcessId(),&sessionId);
+
+
   AutoLock l(&m_mutex);
 
   if (m_WTSQueryUserToken != 0) {
@@ -88,6 +98,7 @@ void WTS::queryConsoleUserToken(HANDLE *token, LogWriter *log) throw(SystemExcep
 
 bool WTS::getCurrentUserName(StringStorage *userName, LogWriter *log)
 {
+
   if (m_WTSQuerySessionInformation == 0) {
     return false;
   }
@@ -95,6 +106,9 @@ bool WTS::getCurrentUserName(StringStorage *userName, LogWriter *log)
   LPTSTR *buffer;
   DWORD byteCount;
   DWORD sessionId = getActiveConsoleSessionId(log);
+  
+  //ProcessIdToSessionId(GetCurrentProcessId(),&sessionId);
+
   if (m_WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, sessionId,
                                    WTSUserName, &buffer, &byteCount) == 0) {
     return false;

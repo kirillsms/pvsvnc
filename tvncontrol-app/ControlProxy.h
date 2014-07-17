@@ -130,6 +130,9 @@ public:
   // shareWindowName - is a part of the window header name.
   void shareWindow(const StringStorage *shareWindowName);
 
+  // Share only a rect.
+  void shareRect(const Rect *shareRect);
+
   // Share full desktop for all clients.
   void shareFull();
 

@@ -14,6 +14,7 @@ public:
 	void PositionFlyout();
 	virtual ~TrayDialog(void);
 	virtual BOOL onInitDialog();
+	virtual void onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	int show();
 	void hide();
@@ -28,7 +29,8 @@ private:
 	map<UINT32, int> m_clients;
 
 	bool compare_nocase (RfbClientInfo * first, RfbClientInfo * second) { return first->m_id <= second->m_id;	 }
-
+	bool m_min;
+	int m_baseSize;
 	mutable LocalMutex m_mapLock;
 };
 

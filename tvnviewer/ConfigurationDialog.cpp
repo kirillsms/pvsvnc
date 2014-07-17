@@ -119,6 +119,9 @@ void ConfigurationDialog::onOpenFolderButtonClick()
 
 BOOL ConfigurationDialog::onInitDialog()
 {
+  setControlById(m_vidPath,IDC_VIDPATH);
+  setControlById(m_peerName,IDC_PEERNAME);
+  setControlById(m_autoRec,IDC_AUTOREC);
   setControlById(m_showToolBars, IDC_CSHOWTOOLBARS); 
   setControlById(m_warnAtSwitching, IDC_CWARNATSW);
   setControlById(m_numberConn, IDC_ENUMCON);
@@ -162,9 +165,22 @@ void ConfigurationDialog::updateControlValues()
   m_showToolBars.check(config->isToolbarShown());
   m_warnAtSwitching.check(config->isPromptOnFullscreenEnabled());
 
+  m_autoRec.check(config->isAutoRecord());
+
   StringStorage logFileName;
   logFileName.format(_T("%s\\%s.log"), config->getPathToLogFile(), LogNames::VIEWER_LOG_FILE_STUB_NAME);
   m_logging.setText(logFileName.getString());
+
+  StringStorage vlogFileName;
+  vlogFileName.format(_T("%s"), config->getPathToVLogFile());
+  m_vidPath.setText(vlogFileName.getString());
+
+  StringStorage sPeerName;
+  sPeerName.format(_T("%s"), config->getPeerName());
+  m_peerName.setText(sPeerName.getString());
+
+
+
 }
 
 bool ConfigurationDialog::isInputValid()
@@ -231,7 +247,17 @@ void ConfigurationDialog::onOkPressed()
 
   config->showToolbar(m_showToolBars.isChecked());
   config->promptOnFullscreen(m_warnAtSwitching.isChecked());
+  config->autoRecord(m_autoRec.isChecked());
+  
+  StringStorage vPath;
+  m_vidPath.getText(&vPath);
+  config->setPathToVLogFile(vPath);
 
+  StringStorage sPeerName;
+
+  m_peerName.getText(&sPeerName);
+  config->setPeerName(sPeerName);
+  
   SettingsManager *sm = ViewerSettingsManager::getInstance();
   config->saveToStorage(sm);
 }

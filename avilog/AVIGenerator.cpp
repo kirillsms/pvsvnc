@@ -33,9 +33,8 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
 }
 #endif
 
-
-CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate)
-	: m_dwRate(dwRate),
+CAVIGenerator::CAVIGenerator(LPCTSTR sFileName,LPCTSTR sPath, LPBITMAPINFOHEADER lpbih, DWORD dwRate)
+: m_dwRate(dwRate),
 m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 {
 		_tcscpy_s(m_sFile,sPath);
@@ -48,8 +47,9 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 		SetBitmapHeader(lpbih);
 }
 
+
 CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPCTSTR sConfigPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate)
-	
+
 : m_dwRate(dwRate),
 m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 {
@@ -62,6 +62,7 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false)
 		MakeExtAvi();
 		SetBitmapHeader(lpbih);
 }
+
 
 CAVIGenerator::~CAVIGenerator()
 {
@@ -324,6 +325,8 @@ HRESULT CAVIGenerator::InitEngine()
 
 void CAVIGenerator::ReleaseEngine()
 {
+
+	
 	if (m_pStream)
 	{
 		AVIStreamRelease(m_pStream);

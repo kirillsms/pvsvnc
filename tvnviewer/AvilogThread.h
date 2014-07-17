@@ -9,12 +9,14 @@ class AvilogThread :
 	public Thread
 {
 public:
-	AvilogThread(const FrameBuffer *);
+	AvilogThread(const FrameBuffer *, bool isAutoStart);
 	~AvilogThread();
 	void UpdateAvilog();
 	void SetCursorPos(Rect cursorpos);
 
 	GlobalMutex m_mutex;
+	bool m_isRecord;
+
 protected:
 	virtual void execute();
 
@@ -24,7 +26,6 @@ protected:
 	size_t m_bufferLen;
 	BITMAPINFOHEADER  bmiHeader;
 	Rect crect;	
-
+	
 	CAVIGenerator *m_avilog;
 };
-

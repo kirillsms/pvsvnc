@@ -210,6 +210,8 @@ protected:
   bool m_useFullscreen;
   // If set then deiconify window and play sound
   bool m_deiconifyOnRemoteBell;
+  // If set then use autoscale to scale remote display image
+  bool m_useAutoScale;
   // Scale numerator
   int m_scaleNumerator;
   // Scale denominator

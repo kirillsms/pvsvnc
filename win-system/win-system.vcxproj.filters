@@ -149,10 +149,13 @@
     <ClCompile Include="WinCursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WsaStartup.cpp">
+    <ClCompile Include="WindowsEventEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHooks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WsaStartup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -295,13 +298,16 @@
     <ClInclude Include="WinCursor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WindowsEventEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="WsaStartup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WinHooks.h">
+    <ClInclude Include="HookEventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HookEventListener.h">
+    <ClInclude Include="WinHooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

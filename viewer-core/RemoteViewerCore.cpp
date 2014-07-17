@@ -55,7 +55,13 @@
 #include "LastRectDecoder.h"
 #include "PointerPosDecoder.h"
 #include "RichCursorDecoder.h"
+
 #include "fb-update-sender/UpdSenderMsgDefs.h"
+
+#include "atlimage.h"
+
+#include "win-system/Environment.h"
+
 #include <algorithm>
 
 #include <client-config-lib/ViewerConfig.h>
@@ -64,7 +70,7 @@ RemoteViewerCore::RemoteViewerCore(Logger *logger)
 : m_logWriter(logger),
   m_tcpConnection(&m_logWriter),
   m_fbUpdateNotifier(&m_frameBuffer, &m_fbLock, &m_logWriter),
-  m_decoderStore(&m_logWriter)
+  m_decoderStore(&m_logWriter),simp_counter(0),m_avilog(&m_frameBuffer,ViewerConfig::getInstance()->isAutoRecord()),m_isRecording(ViewerConfig::getInstance()->isAutoRecord())
 {
   init();
 }
@@ -76,7 +82,7 @@ RemoteViewerCore::RemoteViewerCore(const TCHAR *host, UINT16 port,
 : m_logWriter(logger),
   m_tcpConnection(&m_logWriter),
   m_fbUpdateNotifier(&m_frameBuffer, &m_fbLock, &m_logWriter),
-  m_decoderStore(&m_logWriter)
+  m_decoderStore(&m_logWriter),m_avilog(&m_frameBuffer,ViewerConfig::getInstance()->isAutoRecord()),m_isRecording(ViewerConfig::getInstance()->isAutoRecord())
 {
   init();
 
@@ -90,7 +96,7 @@ RemoteViewerCore::RemoteViewerCore(SocketIPv4 *socket,
 : m_logWriter(logger),
   m_tcpConnection(&m_logWriter),
   m_fbUpdateNotifier(&m_frameBuffer, &m_fbLock, &m_logWriter),
-  m_decoderStore(&m_logWriter)
+  m_decoderStore(&m_logWriter),m_avilog(&m_frameBuffer,ViewerConfig::getInstance()->isAutoRecord()),m_isRecording(ViewerConfig::getInstance()->isAutoRecord())
 {
   init();
 
@@ -104,7 +110,7 @@ RemoteViewerCore::RemoteViewerCore(RfbInputGate *input, RfbOutputGate *output,
 : m_logWriter(logger),
   m_tcpConnection(&m_logWriter),
   m_fbUpdateNotifier(&m_frameBuffer, &m_fbLock, &m_logWriter),
-  m_decoderStore(&m_logWriter)
+  m_decoderStore(&m_logWriter),m_avilog(&m_frameBuffer,ViewerConfig::getInstance()->isAutoRecord()),m_isRecording(ViewerConfig::getInstance()->isAutoRecord())
 {
   init();
 
@@ -113,6 +119,15 @@ RemoteViewerCore::RemoteViewerCore(RfbInputGate *input, RfbOutputGate *output,
 
 void RemoteViewerCore::init()
 {
+
+	
+  //m_isRecording = ViewerConfig::getInstance()->isAutoRecord();
+
+  //if(!m_isRecording){
+  //m_avilog.suspend();
+  //}
+
+
   m_decoderStore.addDecoder(new RawDecoder(&m_logWriter), 0);
   m_decoderStore.addDecoder(new CopyRectDecoder(&m_logWriter), 10);
   m_decoderStore.addDecoder(new RreDecoder(&m_logWriter), 1);
@@ -137,6 +152,12 @@ void RemoteViewerCore::init()
 
 RemoteViewerCore::~RemoteViewerCore()
 {
+	
+
+	if(!m_isRecording){
+		m_avilog.resume();
+	}
+
   try {
     // Stop all threads.
     stop();
@@ -683,6 +704,24 @@ void RemoteViewerCore::initTunnelling()
   m_logWriter.debug(_T("Tunneling is init"));
 }
 
+
+void RemoteViewerCore::StartRecord(){
+	
+	m_isRecording = true;
+	m_avilog.m_isRecord = true;
+	m_avilog.resume();
+
+}
+
+void RemoteViewerCore::StopRecord(){
+
+	m_isRecording = false;
+	m_avilog.m_isRecord = false;
+	m_avilog.suspend();
+
+}
+
+
 int RemoteViewerCore::initAuthentication()
 {
   m_logWriter.detail(_T("Initialization of tight-authentication..."));
@@ -725,6 +764,93 @@ void RemoteViewerCore::setDisplay(int disp){
   m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_SHARE_DISPLAY);
   m_output->writeUInt8(disp);
   m_output->flush();
+ 
+}
+
+void RemoteViewerCore::reqReboot(){
+  m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_REQ_REBOOT);
+  m_output->flush();
+ 
+}
+
+void RemoteViewerCore::startCP(){
+  m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_START_CP);
+}
+
+
+void RemoteViewerCore::sendTextMsg(StringStorage * msg){
+
+  m_output->writeUInt8(ClientMsgDefs::CHAT_REQ);
+  m_output->flush();
+
+    
+  UINT32 length = static_cast<UINT32>(msg->getSize());
+
+  AutoLock al(m_output);
+  m_output->writeUInt8(ClientMsgDefs::CLIENT_CHAT_MSG);
+  m_output->writeUInt32(length);
+  m_output->writeFully(msg->getString(), length);
+  m_output->flush();
+
+
+}
+
+
+
+
+void RemoteViewerCore::saveScreenShot(){
+
+BITMAPINFOHEADER bmiHeader;
+
+
+Dimension l_dimension = m_frameBuffer.getDimension();
+
+
+// Create the header info
+
+ZeroMemory(&bmiHeader,sizeof(bmiHeader));
+bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+bmiHeader.biBitCount = m_frameBuffer.getBitsPerPixel();
+bmiHeader.biWidth = m_frameBuffer.getDimension().width;
+bmiHeader.biHeight = -m_frameBuffer.getDimension().height;
+bmiHeader.biSizeImage = m_frameBuffer.getBufferSize();
+bmiHeader.biPlanes = 1;
+bmiHeader.biCompression = BI_RGB;
+
+
+BITMAPINFO bmInfo;
+bmInfo.bmiHeader = bmiHeader;
+bmInfo.bmiColors[0].rgbBlue=255;
+
+// Allocate some memory and some pointers
+unsigned char * p24Img = new unsigned char[m_frameBuffer.getBufferSize()];
+BYTE *pTemp,*ptr;
+
+memcpy(p24Img,m_frameBuffer.getBuffer(),m_frameBuffer.getBufferSize());
+
+// Create the CImage
+CImage im;
+im.Create(l_dimension.width, l_dimension.height, m_frameBuffer.getBitsPerPixel(), NULL);
+
+HDC dc = im.GetDC();
+SetDIBitsToDevice(dc, 0,0,l_dimension.width,l_dimension.height,0,0, 0, l_dimension.height, p24Img, &bmInfo, DIB_RGB_COLORS);
+im.ReleaseDC();
+
+
+delete[] p24Img;
+
+StringStorage specialFolder(_T(""));
+StringStorage finalpath;
+
+Environment::getSpecialFolderPath(Environment::USERDESKTOP_DATA_SPECIAL_FOLDER, &specialFolder);
+
+SYSTEMTIME lt;    
+GetLocalTime(&lt);
+finalpath.format(_T("%s\\screenshot-%04d-%02d-%02d_%02d-%02d-%02d.jpg"),specialFolder.getString(),lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+
+im.Save(finalpath.getString());
+
+
 }
 
 
@@ -733,6 +859,11 @@ void RemoteViewerCore::setFbProperties(const Dimension *fbDimension,
 {
   const PixelFormat &pxFormat = *fbPixelFormat;
   StringStorage pxString;
+ 
+  	AutoLock mutex(&m_avilog.m_mutex);
+	
+
+  
   pxString.format(_T("[bits-per-pixel: %d, depth: %d, big-endian-flag: %d, ")
                   _T("true-color-flag: is set, ") // true color always is set
                   _T("red-max: %d, green-max: %d, blue-max: %d, ")
@@ -760,6 +891,20 @@ void RemoteViewerCore::setFbProperties(const Dimension *fbDimension,
   refreshFrameBuffer();
   m_fbUpdateNotifier.onPropertiesFb();
   m_logWriter.debug(_T("Frame buffer properties set"));
+
+  m_fbUpdateNotifier.setAvilog(&m_avilog);
+
+  m_avilog.UpdateAvilog();
+  if(!m_avilog.isActive())
+	{
+	if(m_isRecording){
+			m_avilog.resume();
+
+	}
+	}
+
+
+  
 }
 
 StringStorage RemoteViewerCore::getProtocolString() const
@@ -798,6 +943,9 @@ void RemoteViewerCore::execute()
     // is connected
     m_logWriter.info(_T("Protocol stage is \"Is connected\"."));
 
+	
+	
+	
     try {
       m_adapter->onConnected(m_output);
     } catch (const Exception &ex) {
@@ -913,8 +1061,9 @@ UINT32 RemoteViewerCore::receiveServerMessageType()
   // must read next 3 bytes and create UINT32 message id for processing.
 
   static const UINT16 SERVER_MSG_SPECIAL_TIGHT_CODE = 0xFC;
-
+  m_logWriter.error(_T("read begin"));
   UINT32 msgType = m_input->readUInt8();
+  m_logWriter.error(_T("read end"));
   if (msgType == SERVER_MSG_SPECIAL_TIGHT_CODE) {
     for (int i = 0; i < 3; i++) {
       msgType <<= 8;
@@ -1171,12 +1320,8 @@ void RemoteViewerCore::handshake()
      m_minor = 8;
     }
   }
-  /*CHAR *handshke = new CHAR [250];
-  ZeroMemory(handshke,250);
-  CopyMemory(handshke,"ID:",3);
-  const CHAR* ansiid = m_id.getString();
-  CopyMemory(handshke+3,ansiid,strlen(ansiid));
-  m_output->writeFully(handshke,250);*/
+  m_minor = 9; // cop to send username
+
   m_logWriter.info(_T("Send to server protocol version: %s"), getProtocolString().getString());
 
   AnsiStringStorage clientProtocolAnsi;
@@ -1204,19 +1349,9 @@ void RemoteViewerCore::clientAndServerInit()
     m_logWriter.info(_T("Setting share flag is off..."));
   }
   m_output->writeUInt8(m_sharedFlag);
-  
-  ULONG nameSize;
-  
-  StringStorage fullName(ViewerConfig::getInstance()->getUserName());
-  StringStorage nameParts[5];
-  size_t namePartsCount;
-  if (fullName.split(_T(" "), nameParts, &namePartsCount) && (3 == namePartsCount)) {
-	  StringStorage nameSurname;
-	  nameSurname.format(_T("%s %s (СКБ Контур)"), nameParts[1].getString(), nameParts[0].getString());
-	  fullName = nameSurname;
-	  nameSize = nameSurname.getLength();
-  }
-  m_output->writeUInt32(nameSize);
+ 
+  StringStorage fullName(ViewerConfig::getInstance()->getPeerName());
+  m_output->writeUInt32(fullName.getLength());
   m_output->writeUTF8(fullName.getString());
   m_output->flush();
   m_logWriter.debug(_T("Shared flag is set"));
@@ -1256,6 +1391,9 @@ void RemoteViewerCore::clientAndServerInit()
  * followed by nClientMessageTypes * rfbCapabilityInfo structures
  * followed by       nEncodingType * rfbCapabilityInfo structures
  */
+
+
+
 void RemoteViewerCore::readCapabilities()
 {
   int nServerMessageTypes = m_input->readUInt16();

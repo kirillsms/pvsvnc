@@ -74,7 +74,6 @@ public:
   
   virtual inline int getDisplayCount() const {  return displayCount;  };
 
-
   // Sets dimension to the frame buffer without buffer resizing
   virtual void setEmptyDimension(const Rect *dimByRect);
 

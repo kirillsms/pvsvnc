@@ -37,8 +37,6 @@
 #include "gui/drawing/Graphics.h"
 #include "rfb/RfbKeySym.h"
 #include "viewer-core/RemoteViewerCore.h"
-#include "avilog/AVIGenerator.h"
-#include "client-config-lib/ViewerConfig.h"
 
 class DesktopWindow : public PaintWindow,
                       protected RfbKeySymListener
@@ -75,23 +73,24 @@ public:
   // This function return true, if key "Alt" is pressed.
   bool getAltState() const;
 
+  int getY() const;
+
   // this function sends to remote viewer core
   // key what is pressed or unpressed
   void sendKey(WCHAR key, bool pressed);
   // this function sends to remote viewer core the combination
   // Ctrl + Alt + Del
   void sendCtrlAltDel();
+
   // Set function for m_winKeyIgnore.
   void setWinKeyIgnore(bool winKeyIgnore) { m_rfbKeySym->setWinKeyIgnore(winKeyIgnore); }
-
 
 protected:
   //
   // Overrides RfbKeySymListener::onRfbKeySymEvent().
   //
   void onRfbKeySymEvent(unsigned int rfbKeySym, bool down);
-  //AnonymousPipe *forFrame;
-  bool * frameRead;
+
   //
   // Inherited from BaseWindow.
   //
@@ -164,6 +163,8 @@ protected:
   RemoteViewerCore *m_viewerCore;
   ConnectionConfig *m_conConf;
   bool m_isBackgroundDirty;
+
+  int m_y;
 
 private:
   void doDraw(DeviceContext *dc);

@@ -33,6 +33,7 @@ class RfbClientInfo
 {
 public:
   RfbClientInfo(UINT32 id, const TCHAR *peerAddr);
+  RfbClientInfo(UINT32 id, const TCHAR *peerAddr, const TCHAR *peerName);
   virtual ~RfbClientInfo();
 
   // FIXME: Debug.
@@ -40,6 +41,7 @@ public:
 public:
   UINT32 m_id;
   StringStorage m_peerAddr;
+  StringStorage m_peerName;
 };
 
 typedef std::list<RfbClientInfo> RfbClientInfoList;

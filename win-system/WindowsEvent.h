@@ -39,8 +39,6 @@ public:
   HANDLE getHandle() const { return m_hEvent; }
 
 protected:
-  void setAccessToAll(HANDLE objHandle);
-
   HANDLE m_hEvent;
 };
 

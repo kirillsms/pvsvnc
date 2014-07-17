@@ -24,7 +24,6 @@
 
 #include "WindowsEvent.h"
 #include "util/Exception.h"
-#include <Aclapi.h>
 
 WindowsEvent::WindowsEvent(const TCHAR *name)
 {
@@ -34,11 +33,6 @@ WindowsEvent::WindowsEvent(const TCHAR *name)
     StringStorage errMess;
     errMess.format(_T("Cannot create windows event with error = %d"), errCode);
     throw Exception(errMess.getString());
-  }
-
-  bool needToInit = GetLastError() != ERROR_ALREADY_EXISTS;
-  if (needToInit) {
-    setAccessToAll(m_hEvent);
   }
 }
 
@@ -61,21 +55,5 @@ void WindowsEvent::waitForEvent(DWORD milliseconds)
   // FIXME: Check WaitForSingleObject result to an error
   if (m_hEvent) {
     WaitForSingleObject(m_hEvent, milliseconds);
-  }
-}
-
-void WindowsEvent::setAccessToAll(HANDLE objHandle)
-{
-  DWORD errorCode = SetSecurityInfo(objHandle, SE_KERNEL_OBJECT,
-                                    DACL_SECURITY_INFORMATION, // Modify DACL
-                                    0,
-                                    0,
-                                    0, // Pointer to DACL (0 = access to all)
-                                    0);
-  if (errorCode != ERROR_SUCCESS &&
-      errorCode != ERROR_NO_SECURITY_ON_OBJECT) {
-    StringStorage errMess;
-    errMess.format(_T("Cannot SetSecurityInfo with error = %d"), (int)errorCode);
-    throw Exception(errMess.getString());
   }
 }

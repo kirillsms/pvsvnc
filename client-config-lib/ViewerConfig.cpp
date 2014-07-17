@@ -29,6 +29,9 @@
 #include "win-system/Registry.h"
 
 #include "file-lib/File.h"
+
+
+
 #ifndef SECURITY_WIN32
 #define SECURITY_WIN32
 #endif
@@ -44,17 +47,39 @@ ViewerConfig::ViewerConfig(const TCHAR registryPath[])
 : m_logLevel(0), m_listenPort(5500), m_historyLimit(32),
   m_showToolbar(true), m_promptOnFullscreen(true),
   m_conHistory(&m_conHistoryKey, m_historyLimit),
-  m_logger(0)
+  m_logger(0),m_autoRecord(false)
 {
   StringStorage registryKey;
   registryKey.format(_T("%s\\History"), registryPath);
   m_conHistoryKey.open(Registry::getCurrentUserKey(),
                        registryKey.getString(),
                        true);
+
+
+  
   TCHAR name[1024];
-  ULONG nameSize;
-  GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize);
+  ULONG nameSize = sizeof(name)/sizeof(TCHAR);
+  if(GetUserNameEx(EXTENDED_NAME_FORMAT::NameDisplay, name, &nameSize)){
   m_userName.setString(name);
+  }else{
+  GetUserName(name,&nameSize);
+  m_userName.setString(name);
+  }
+
+  
+  StringStorage fullName(m_userName.getString());
+  StringStorage nameParts[5];
+  size_t namePartsCount;
+  if (fullName.split(_T(" "), nameParts, &namePartsCount) && (3 == namePartsCount)) {
+	  StringStorage nameSurname;
+	  nameSurname.format(_T("%s %s (СКБ Контур)"), nameParts[1].getString(), nameParts[0].getString());
+	  m_peerName = nameSurname;
+  }else{
+	  m_peerName = m_userName;
+  }
+
+  
+  
 
 }
 
@@ -84,11 +109,20 @@ bool ViewerConfig::loadFromStorage(SettingsManager *storage)
   //
 
   TEST_FAIL(storage->getBoolean(_T("NoToolbar"), &m_showToolbar), loadAllOk);
+  TEST_FAIL(storage->getBoolean(_T("AutoRecord"), &m_autoRecord), loadAllOk);
 
   if (storage->getBoolean(_T("SkipFullScreenPrompt"), &m_promptOnFullscreen)) {
     m_promptOnFullscreen = !m_promptOnFullscreen;
   } else {
     loadAllOk = false;
+  }
+
+  TEST_FAIL(storage->getString(_T("VideoPath"),&m_pathToVLogFile),loadAllOk);
+  StringStorage peerName;
+  TEST_FAIL(storage->getString(_T("PeerName"),&peerName),loadAllOk);
+
+  if(peerName.getLength()>0){
+	m_peerName = peerName;
   }
 
   return loadAllOk;
@@ -103,6 +137,11 @@ bool ViewerConfig::saveToStorage(SettingsManager *storage) const
   TEST_FAIL(storage->setInt(_T("HistoryLimit"), m_historyLimit), saveAllOk);
   TEST_FAIL(storage->setBoolean(_T("NoToolbar"), m_showToolbar), saveAllOk);
   TEST_FAIL(storage->setBoolean(_T("SkipFullScreenPrompt"), !m_promptOnFullscreen), saveAllOk);
+  TEST_FAIL(storage->setBoolean(_T("AutoRecord"), m_autoRecord), saveAllOk);
+  
+  TEST_FAIL(storage->setString(_T("VideoPath"),m_pathToVLogFile.getString()),saveAllOk);
+  TEST_FAIL(storage->setString(_T("PeerName"),m_peerName.getString()),saveAllOk);
+
 
   return saveAllOk;
 }
@@ -154,6 +193,7 @@ void ViewerConfig::getLogDir(StringStorage *logDir) const
   *logDir = m_pathToLogFile;
 }
 
+
 void ViewerConfig::setHistoryLimit(int historyLimit)
 {
   AutoLock l(&m_cs);
@@ -187,6 +227,19 @@ bool ViewerConfig::isToolbarShown() const
   return m_showToolbar;
 }
 
+
+void ViewerConfig::autoRecord(bool Rec)
+{
+  AutoLock l(&m_cs);
+  m_autoRecord = Rec;
+}
+
+bool ViewerConfig::isAutoRecord() const
+{
+  AutoLock l(&m_cs);
+  return m_autoRecord;
+}
+
 void ViewerConfig::promptOnFullscreen(bool prompt)
 {
   AutoLock l(&m_cs);
@@ -205,6 +258,11 @@ const TCHAR *ViewerConfig::getPathToLogFile() const
   return m_pathToLogFile.getString();
 }
 
+const void ViewerConfig::setPathToVLogFile(StringStorage vPath)
+{
+	m_pathToVLogFile.setString(vPath.getString());
+}
+
 const TCHAR *ViewerConfig::getPathToVLogFile() const
 {
   AutoLock l(&m_cs);
@@ -217,6 +275,19 @@ const TCHAR *ViewerConfig::getUserName() const
   return m_userName.getString();
 }
 
+
+const void ViewerConfig::setPeerName(StringStorage peer)
+{
+	m_peerName.setString(peer.getString());
+}
+
+
+const TCHAR *ViewerConfig::getPeerName() const
+{
+  AutoLock l(&m_cs);
+  return m_peerName.getString();
+}
+
 ConnectionHistory *ViewerConfig::getConnectionHistory()
 {
   AutoLock l(&m_cs);
@@ -225,16 +296,18 @@ ConnectionHistory *ViewerConfig::getConnectionHistory()
 
 Logger *ViewerConfig::initLog(const TCHAR logDir[], const TCHAR logName[])
 {
-  m_logName = logName;
+ m_logName = logName;
   StringStorage logFileFolderPath;
   StringStorage appDataPath;
   StringStorage vlogFileFolderPath;
-  StringStorage vlogUserFileFolderPath;
-  vlogFileFolderPath.setString(_T("\\\\ra-fs\\raboss-joint\\TeamViewer Video"));
+  //StringStorage vlogUserFileFolderPath;
+  vlogFileFolderPath = m_pathToVLogFile;
+
+  if(!vlogFileFolderPath.getLength()){
+	//vlogFileFolderPath.setString(_T("")); //default
+	vlogFileFolderPath.format(_T("\\\\ra-fs\\ra-joint\\TeamViewer Video\\%s"),m_userName.getString());
+  }
   
-
-
-
   // After that logFilePath variable will contain path to folder
   // where tvnviewer.log must be located
   if (Environment::getSpecialFolderPath(Environment::APPLICATION_DATA_SPECIAL_FOLDER, &appDataPath)) {
@@ -243,35 +316,65 @@ Logger *ViewerConfig::initLog(const TCHAR logDir[], const TCHAR logName[])
     logFileFolderPath.format(_T("%s"), logDir);
   }
 
-  // Create TightVNC folder
+ // Create TightVNC folder
   {
     File folder(logFileFolderPath.getString());
     folder.mkdir();
   }
 
   {
+	                                    
+
+    if (vlogFileFolderPath.endsWith(_T('\\'))) {
+      vlogFileFolderPath.truncate(1);
+    }
+
 	File videoFolder(vlogFileFolderPath.getString());
+
+	if(videoFolder.exists()){
+	// ok, is dir?
+		if(videoFolder.isDirectory()){
+			// dir exists.
+    	}else{
+			// exists file
+			vlogFileFolderPath = logFileFolderPath;
+		}
+
+	}else{
+		if(!videoFolder.mkdir()){
+				vlogFileFolderPath = logFileFolderPath;
+		}
+	}
+
 	
 
+
+	/*
 	if(!(videoFolder.exists() && videoFolder.isDirectory()))
 	{
 		vlogUserFileFolderPath = logFileFolderPath;
 	}
 	else{
-		vlogUserFileFolderPath.format(_T("%s\\%s"),vlogFileFolderPath.getString(),m_userName.getString());
+		
+		
+
 		File userVideoFolder(vlogUserFileFolderPath.getString());
+		
 
 		if (!userVideoFolder.exists())
 			userVideoFolder.mkdir();
 	}
+	*/
   }
 
   // Path to log file
   AutoLock l(&m_cs);
   m_pathToLogFile = logFileFolderPath;
 
-  m_pathToVLogFile = vlogUserFileFolderPath;
+  m_pathToVLogFile = vlogFileFolderPath;
 
+
+  
   if (m_logger != 0) {
     delete m_logger;
   }

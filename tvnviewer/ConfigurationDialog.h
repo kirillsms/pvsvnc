@@ -56,6 +56,9 @@ protected:
 
   CheckBox m_showToolBars;
   CheckBox m_warnAtSwitching;
+  CheckBox m_autoRec;
+  TextBox m_vidPath;
+  TextBox m_peerName;
   TextBox m_numberConn;
   SpinControl m_snumConn;
   TextBox m_reverseConn;

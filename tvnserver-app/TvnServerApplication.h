@@ -87,7 +87,7 @@ private:
   virtual void onChangeLogProps(const TCHAR *newLogDir, unsigned char newLevel);
 
   FileLogger m_fileLogger;
-  StringStorage m_repeater;
+
   /**
    * Command line string.
    */

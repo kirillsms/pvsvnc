@@ -74,7 +74,6 @@ public:
   // use a current desktop dc.
   void getBMI(BMI *bmi, HDC dc);
 
-  
   // Windows contain both visible and invisible pseudo-monitors
   // that are associated with mirroring drivers.
   // The function returns only visible monitor count.

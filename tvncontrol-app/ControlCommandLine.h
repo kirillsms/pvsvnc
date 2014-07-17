@@ -44,6 +44,7 @@ public:
   static const TCHAR CONNECT[];
   static const TCHAR SHUTDOWN[];
   static const TCHAR SHARE_PRIMARY[];
+  static const TCHAR SHARE_RECT[];
   static const TCHAR SHARE_DISPLAY[];
   static const TCHAR SHARE_WINDOW[];
   static const TCHAR SHARE_FULL[];
@@ -55,6 +56,8 @@ public:
 
   static const TCHAR SLAVE_MODE[];
   static const TCHAR DONT_ELEVATE[];
+
+  
 
 public:
   ControlCommandLine();
@@ -80,12 +83,14 @@ public:
   bool isSlave();
 
   bool hasSharePrimaryFlag();
+  bool hasShareRect();
   bool hasShareDisplay();
   bool hasShareWindow();
   bool hasShareFull();
   bool hasShareApp();
   unsigned char getShareDisplayNumber();
   void getShareWindowName(StringStorage *out);
+  Rect getShareRect();
   unsigned int getSharedAppProcessId();
 
   const TCHAR *getPrimaryVncPassword() const;
@@ -104,6 +109,7 @@ private:
   StringStorage m_connectHostName;
   StringStorage m_passwordFile;
 
+  Rect m_shareRect;
   unsigned char m_displayNumber;
   StringStorage m_windowHeaderName;
   unsigned int m_sharedAppProcessId;

@@ -34,7 +34,6 @@
 #include "region/Dimension.h"
 #include "region/Point.h"
 #include "thread/Thread.h"
-#include "util/AnsiStringStorage.h"
 
 #include "CapsContainer.h"
 #include "CoreEventsAdapter.h"
@@ -42,6 +41,8 @@
 #include "FbUpdateNotifier.h"
 #include "ServerMessageListener.h"
 #include "TcpConnection.h"
+#include "tvnviewer/AvilogThread.h"
+
 
 #include <map>
 
@@ -123,6 +124,7 @@ public:
                    Logger *logger = 0,
                    bool sharedFlag = true);
 
+  // FIX DOCUMENTATION: Clarify differents between the constructor with sockets and gates.
   //
   // This constructor expects a connected TCP socket. For example, it can be
   // used for reverse connections (when servers connect to viewers).
@@ -132,6 +134,8 @@ public:
                    Logger *logger = 0,
                    bool sharedFlag = true);
 
+  // FIX DOCUMENTATION: What objects will be destroyed? Will a socket object be destroyed
+  // which has been passed with the constructor?
   //
   // The destructor.
   //
@@ -364,7 +368,17 @@ public:
   //
   void ignoreCursorShapeUpdates(bool ignored);
 
+  // start record
+
+  void StartRecord();
+
+  void StopRecord();
+  
   void setDisplay(int disp);
+  void reqReboot();
+  void startCP();
+  void saveScreenShot();
+  void sendTextMsg(StringStorage * msg);
 
   //
   // Work with capabilities is documented in interface CapabilitiesManager.
@@ -494,7 +508,6 @@ private:
   void sendEncodings();
 
   
-
   //
   // This function return true, if flag m_wasConnected is true.
   // This flag is true after onConnected().
@@ -504,10 +517,9 @@ private:
   //
   // Update properties (Dimension and PixelfFormat) of m_frameBuffer.
   //
-protected:
-  virtual void setFbProperties(const Dimension *fbDimension,
+  void setFbProperties(const Dimension *fbDimension,
                        const PixelFormat *fbPixelFormat);
-private:
+
   //
   // If m_isNewPixelFormat flag is set to true, then pixel format of the frame buffer
   // will be updated to m_viewerPixelFormat.
@@ -534,7 +546,7 @@ private:
   //
   void registerDecoderHandler(const UINT32 code, Decoder *decoder, int priority);
 
-protected:  LogWriter m_logWriter;
+  LogWriter m_logWriter;
 
   // m_tcpConnection depends on m_logWriter and must be defined after it.
   // See also: C++ standard 12.6.2 - Initializing bases and members.
@@ -601,19 +613,22 @@ protected:  LogWriter m_logWriter;
 
   LocalMutex m_requestUpdateLock;
   bool m_isNeedRequestUpdate;
-
+  bool s;
   bool m_sharedFlag;
   int m_major;
   int m_minor;
   bool m_isTight;
-  AnsiStringStorage m_id;
+  int simp_counter;
   StringStorage m_remoteDesktopName;
 
 private:
   // Do not allow copying objects.
   RemoteViewerCore(const RemoteViewerCore &);
   RemoteViewerCore &operator=(const RemoteViewerCore &);
+  AvilogThread m_avilog;
   int pad;
+  bool m_isRecording;
+
 };
 
 #endif

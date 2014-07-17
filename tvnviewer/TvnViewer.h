@@ -124,7 +124,7 @@ protected:
   void runInstance(const StringStorage *hostName, const ConnectionConfig *config);
 
   // This method return true, if login dialog is visible.
-  virtual bool isVisibleLoginDialog() const;
+  bool isVisibleLoginDialog() const;
 
   bool onTimer(WPARAM idTimer);
 
@@ -135,7 +135,7 @@ protected:
 
   HACCEL m_hAccelTable;
 
-protected:
+private:
   void addInstance(ViewerInstance *viewerInstance);
 
   bool m_isListening;

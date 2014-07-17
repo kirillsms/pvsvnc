@@ -26,6 +26,7 @@
 
 #include "util/CommonHeader.h"
 #include "util/winhdr.h"
+#include "ft-common/WinFilePath.h"
 #include "NewFolderDialog.h"
 #include "FileRenameDialog.h"
 
@@ -212,7 +213,8 @@ void FileTransferMainDialog::onMessageReceived(UINT uMsg, WPARAM wParam, LPARAM 
       int state = static_cast<int>(wParam);
       int result = static_cast<int>(lParam);
       m_ftCore->onUpdateState(state, result);
-
+	  BringWindowToTop(m_ctrlThis.getWindow());
+	  
       setProgress(0.0);
       enableControls(true);
       break;
@@ -888,6 +890,11 @@ void FileTransferMainDialog::getPathToSelectedLocalFile(StringStorage *out)
 
   const TCHAR *filename = m_localFileListView.getSelectedFileInfo()->getFileName();
   pathToFile->appendString(filename);
+
+  WinFilePath wp(pathToFile->getString());
+  pathToFile->setString(wp.getString());
+  
+
 }
 
 void FileTransferMainDialog::getPathToCurrentRemoteFolder(StringStorage *out)

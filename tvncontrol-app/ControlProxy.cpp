@@ -61,8 +61,7 @@ TvnServerInfo ControlProxy::getServerInfo()
   ret.m_serviceFlag = m_gate->readUInt8() == 1;
 
   m_gate->readUTF8(&ret.m_statusText);
-  m_gate->readUTF8(&ret.m_repeater);
-  m_gate->readUTF8(&ret.m_repeaterStatus);
+
   return ret;
 }
 
@@ -149,6 +148,19 @@ void ControlProxy::shareDisplay(unsigned char displayNumber)
   AutoLock l(m_gate);
   ControlMessage *msg = createMessage(ControlProto::SHARE_DISPLAY_MSG_ID);
   msg->writeUInt8(displayNumber);
+  msg->send();
+}
+
+void ControlProxy::shareRect(const Rect *shareRect)
+{
+  AutoLock l(m_gate);
+  ControlMessage *msg = createMessage(ControlProto::SHARE_RECT_MSG_ID);
+
+  msg->writeInt32(shareRect->left);
+  msg->writeInt32(shareRect->top);
+  msg->writeInt32(shareRect->right);
+  msg->writeInt32(shareRect->bottom);
+
   msg->send();
 }
 

@@ -62,10 +62,7 @@
     <ClCompile Include="ZrleEncoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KonturRfbClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KonturRfbInitializer.cpp">
+    <ClCompile Include="TextChatHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -139,10 +136,10 @@
     <ClInclude Include="ZrleEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KonturRfbClient.h">
+    <ClInclude Include="TextChatHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KonturRfbInitializer.h">
+    <ClInclude Include="TextMsgListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

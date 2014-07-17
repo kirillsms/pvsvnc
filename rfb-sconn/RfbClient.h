@@ -27,8 +27,6 @@
 
 #include <list>
 #include "network/socket/SocketIPv4.h"
-#include "network/socket/SocketStream.h"
-
 #include "win-system/WindowsEvent.h"
 #include "thread/Thread.h"
 #include "network/RfbOutputGate.h"
@@ -41,7 +39,13 @@
 #include "ClientInputHandler.h"
 #include "ClientTerminationListener.h"
 #include "ClientInputEventListener.h"
+#include "TextChatHandler.h"
+
 #include "tvnserver-app/NewConnectionEvents.h"
+
+#include "tvnserver-app/ChatDialog.h"
+#include "tvnserver-app/FTStatusDialog.h"
+
 
 class ClientAuthListener;
 
@@ -65,7 +69,7 @@ public:
             bool isOutgoing, unsigned int id,
             const ViewPortState *constViewPort,
             const ViewPortState *dynViewPort,
-            LogWriter *log);
+            LogWriter *log, ChatDialog * chatDialog, FTStatusDialog * ftsDialog);
   virtual ~RfbClient();
 
   void disconnect();
@@ -94,11 +98,14 @@ public:
                   const CursorShape *cursorShape);
   void sendClipboard(const StringStorage *newClipboard);
 
+  void sendMsg(const StringStorage *msg);
+
+
 protected:
   virtual void execute();
   virtual void onTerminate();
 
-protected:
+private:
   // Calling this function makes the client manager enter (and leave) the
   // mutex associated with the client list, so it will have to wait until
   // other threads stop working with our object (such operations should be
@@ -115,7 +122,7 @@ protected:
   void setClientState(ClientState newState);
 
   Rect getViewPortRect(const Dimension *fbDimension);
-  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion,bool newViewpoint,const ViewPortState *dynViewPort);
+  virtual void onGetViewPort(Rect *viewRect, bool *shareApp, Region *shareAppRegion, bool newViewpoint,const ViewPortState *dynViewPort);
   void getViewPortInfo(const Dimension *fbDimension, Rect *resultRect,
                        bool *shareApp, Region *shareAppRegion);
 
@@ -123,6 +130,8 @@ protected:
   bool m_isMarkedOk;
   LocalMutex m_clientStateMut;
   ClientTerminationListener *m_extTermListener;
+  
+  
 
   SocketIPv4 *m_socket;
 
@@ -137,6 +146,11 @@ protected:
   ClientInputHandler *m_clientInputHandler;
   Desktop *m_desktop;
 
+  TextChatHandler *m_chatHandler;
+
+ ChatDialog * m_chatDialog; 
+ FTStatusDialog * m_ftsDialog;
+
   bool m_viewOnly;
   bool m_isOutgoing;
   bool m_viewOnlyAuth;
@@ -149,11 +163,6 @@ protected:
   unsigned int m_id;
 
   NewConnectionEvents *m_newConnectionEvents;
-
-  void *m_rfbInitializer;
-  SocketStream *m_sockStream;
-  RfbOutputGate *m_output;
-  RfbInputGate *m_input;
 };
 
 #endif // __RFBCLIENT_H__
