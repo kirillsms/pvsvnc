@@ -47,7 +47,7 @@ ViewerConfig::ViewerConfig(const TCHAR registryPath[])
 : m_logLevel(0), m_listenPort(5500), m_historyLimit(32),
   m_showToolbar(true), m_promptOnFullscreen(true),
   m_conHistory(&m_conHistoryKey, m_historyLimit),
-  m_logger(0),m_autoRecord(false)
+  m_logger(0),m_autoRecord(true)
 {
   StringStorage registryKey;
   registryKey.format(_T("%s\\History"), registryPath);
