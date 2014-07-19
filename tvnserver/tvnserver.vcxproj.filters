@@ -43,6 +43,9 @@
     <None Include="res\tightvnc.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\konturvnc.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tvnserver.rc">
