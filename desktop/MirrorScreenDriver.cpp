@@ -104,7 +104,7 @@ bool MirrorScreenDriver::grab(const Rect *rect)
   size_t count = croppedRect.getWidth() * m_frameBuffer.getBytesPerPixel();
   size_t stride = m_frameBuffer.getBytesPerRow();
 
-  for (size_t i = croppedRect.top; i < croppedRect.bottom; i++,
+  for (int i = croppedRect.top; i < croppedRect.bottom; ++i,
                                                            dstPtr += stride,
                                                            srcPtr += stride) {
     memcpy(dstPtr, srcPtr, count);

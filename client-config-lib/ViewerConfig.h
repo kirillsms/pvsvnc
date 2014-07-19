@@ -55,9 +55,9 @@ public:
   bool saveToStorage(SettingsManager *storage) const;
 
   // Sets port for incoming connection when client runs in daemoon mode
-  void setListenPort(int listenPort);
+  void setListenPort(UINT16 listenPort);
   // Returns listen port value
-  int getListenPort() const;
+  UINT16 getListenPort() const;
 
   // Returns log level in 0 - 9 range
   void setLogLevel(int logLevel);

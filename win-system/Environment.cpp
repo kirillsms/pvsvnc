@@ -220,7 +220,7 @@ SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, 1, &ret, 0);
 // enable animation
 
 ANIMATIONINFO animinf;
-UINT prevAnim;
+//UINT prevAnim;
 
 animinf.cbSize = sizeof(ANIMATIONINFO); 
 SystemParametersInfo(SPI_GETANIMATION,sizeof(ANIMATIONINFO),&animinf,0); 

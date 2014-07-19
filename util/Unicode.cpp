@@ -30,6 +30,7 @@ bool Unicode::isEnabled()
 {
 #ifdef _UNICODE
   return true;
-#endif
+#else
   return false;
+#endif
 }

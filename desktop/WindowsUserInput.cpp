@@ -114,8 +114,8 @@ void WindowsUserInput::setMouseEvent(const Point *newPos, UINT8 keyFlag)
   m_prevKeyFlag = keyFlag;
 
   // Normilize pointer position
-  UINT16 desktopWidth = GetSystemMetrics(SM_CXSCREEN);
-  UINT16 desktopHeight = GetSystemMetrics(SM_CYSCREEN);
+  int desktopWidth = GetSystemMetrics(SM_CXSCREEN);
+  int desktopHeight = GetSystemMetrics(SM_CYSCREEN);
   int fbOffsetX = GetSystemMetrics(SM_XVIRTUALSCREEN);
   int fbOffsetY = GetSystemMetrics(SM_YVIRTUALSCREEN);
   INT32 x = (INT32)((newPos->x + fbOffsetX) * 65535 / (desktopWidth - 1));
@@ -129,7 +129,7 @@ void WindowsUserInput::setMouseEvent(const Point *newPos, UINT8 keyFlag)
   input.mi.dy = y;
   input.mi.mouseData = mouseWheelValue;
   SendInput(1, &input, sizeof(INPUT));
-  DWORD error = GetLastError();
+  //DWORD error = GetLastError();
 }
 
 void WindowsUserInput::setNewClipboard(const StringStorage *newClipboard)

@@ -230,7 +230,7 @@ void ConfigurationDialog::onOkPressed()
 
   m_reverseConn.getText(&text);
   StringParser::parseInt(text.getString(), &intVal);
-  config->setListenPort(intVal);
+  config->setListenPort((UINT16)intVal);
 
   m_verbLvl.getText(&text);
   StringParser::parseInt(text.getString(), &intVal);

@@ -78,7 +78,7 @@ public:
   void newListeningConnection();
   void newConnection(const StringStorage *hostName, const ConnectionConfig *connectionConfig);
   void newConnection(const ConnectionData *conData, const ConnectionConfig *connectionConfig);
-  void startListening(int listeningPort);
+  void startListening(UINT16 listeningPort);
   void stopListening();
 
   // Inherited from WindowsApplication
@@ -112,7 +112,7 @@ public:
   static const int TIMER_DELETE_DEAD_INSTANCE_DELAY = 50;
 
 protected:
-  void startListeningServer(const int listeningPort);
+  void startListeningServer(const UINT16 listeningPort);
   void stopListeningServer();
   void restartListeningServer();
 

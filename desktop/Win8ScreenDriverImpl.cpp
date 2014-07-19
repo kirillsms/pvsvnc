@@ -120,7 +120,7 @@ void Win8ScreenDriverImpl::initDxgi()
         virtDeskRegion.addRect(&deskCoord);
       }
     }
-  } catch (WinDxRecoverableException &e) {
+  } catch (WinDxRecoverableException &) {
     m_log->debug(_T("Reached the end of dxgi output list with iOutput = %u"), iOutput);
     // End of output list.
   }

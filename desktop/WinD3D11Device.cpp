@@ -72,7 +72,7 @@ WinD3D11Device::WinD3D11Device(LogWriter *log)
   D3D_FEATURE_LEVEL featureLevel;
 
   // Create device
-  HRESULT hr;
+  HRESULT hr = S_OK;
   for (UINT iDriverType = 0; iDriverType < driverTypeCount; ++iDriverType) {
     m_log->debug(_T("Creating of (%u) driverType device"), iDriverType);
     hr = d3d11CreateDevice(0,

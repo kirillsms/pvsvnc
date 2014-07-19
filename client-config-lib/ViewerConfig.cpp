@@ -146,20 +146,13 @@ bool ViewerConfig::saveToStorage(SettingsManager *storage) const
   return saveAllOk;
 }
 
-void ViewerConfig::setListenPort(int listenPort)
+void ViewerConfig::setListenPort(UINT16 listenPort)
 {
   AutoLock l(&m_cs);
-
-  if (listenPort < 0) {
-    listenPort = 0;
-  } else if (listenPort > 65535) {
-    listenPort = 65535;
-  }
-
   m_listenPort = listenPort;
 }
 
-int ViewerConfig::getListenPort() const
+UINT16 ViewerConfig::getListenPort() const
 {
   AutoLock l(&m_cs);
   return m_listenPort;

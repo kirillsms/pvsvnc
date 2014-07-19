@@ -97,7 +97,7 @@ void ViewerInstance::stop()
 
 void ViewerInstance::start()
 {
-  Logger *logger = ViewerConfig::getInstance()->getLogger();
+  //Logger *logger = ViewerConfig::getInstance()->getLogger();
   m_viewerWnd.setRemoteViewerCore(&m_viewerCore);
 
 

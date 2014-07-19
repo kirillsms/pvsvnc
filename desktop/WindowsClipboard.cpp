@@ -108,7 +108,7 @@ void WindowsClipboard::readFromClipBoard(StringStorage *clipDest) const
 
 bool WindowsClipboard::wndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-  int fake = 3;
+  //int fake = 3;
   switch (message)
   {
   case WM_CREATE:

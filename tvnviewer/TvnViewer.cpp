@@ -66,7 +66,7 @@ TvnViewer::~TvnViewer()
   WindowsSocket::cleanup();
 }
 
-void TvnViewer::startListeningServer(const int listeningPort)
+void TvnViewer::startListeningServer(const UINT16 listeningPort)
 {
   try {
     if (m_conListener != 0) {
@@ -107,7 +107,7 @@ void TvnViewer::restartListeningServer()
   }
 }
 
-void TvnViewer::startListening(const int listeningPort)
+void TvnViewer::startListening(const UINT16 listeningPort)
 {
   if (m_isListening) {
     _ASSERT(true);

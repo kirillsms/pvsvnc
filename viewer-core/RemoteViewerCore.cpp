@@ -824,7 +824,6 @@ bmInfo.bmiColors[0].rgbBlue=255;
 
 // Allocate some memory and some pointers
 unsigned char * p24Img = new unsigned char[m_frameBuffer.getBufferSize()];
-BYTE *pTemp,*ptr;
 
 memcpy(p24Img,m_frameBuffer.getBuffer(),m_frameBuffer.getBufferSize());
 
