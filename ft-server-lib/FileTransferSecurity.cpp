@@ -43,9 +43,9 @@ FileTransferSecurity::~FileTransferSecurity()
 void FileTransferSecurity::beginMessageProcessing()
 {
   bool runAsService = Configurator::getInstance()->getServiceFlag();
-  bool runAsSysem   = Configurator::getInstance()->getSystemFlag();
+  bool runAsSystem  = Configurator::getInstance()->getSystemFlag();
   if(!is_impersonate){
-  if (!runAsService && !runAsSysem) {
+  if (!runAsService && !runAsSystem) {
     m_hasAccess = true;
   } else {
     try {
@@ -54,8 +54,6 @@ void FileTransferSecurity::beginMessageProcessing()
       if (m_desktop != NULL) {
         m_desktop->getCurrentUserInfo(&desktopName, &userName);
       }
-	  
-	  
 
       desktopName.toLowerCase();
 
@@ -65,7 +63,7 @@ void FileTransferSecurity::beginMessageProcessing()
       }
 
       impersonateAsLoggedUser();
-	  is_impersonate=true;
+	  is_impersonate = true;
       m_hasAccess = true;
     } catch (Exception &e) {
       m_log->error(_T("Access denied to the file transfer: %s"),

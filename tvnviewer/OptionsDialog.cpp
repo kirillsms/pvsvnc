@@ -23,6 +23,7 @@
 //
 
 #include "OptionsDialog.h"
+#define AUTOSCALE _T("Авто")
 
 OptionsDialog::OptionsDialog()
 : BaseDialog(IDD_OPTIONS),
@@ -126,7 +127,7 @@ BOOL OptionsDialog::onInitDialog()
 
   // FIXME: replaced literals to named constants
   TCHAR scaleComboText[8][20] = {_T("25"), _T("50"), _T("75"), _T("90"),
-                                 _T("100"), _T("125"), _T("150"), _T("Auto")};
+                                 _T("100"), _T("125"), _T("150"), AUTOSCALE};
   for (int i = 0; i < sizeof(scaleComboText)/sizeof(scaleComboText[0]); i++) {
       m_scale.addItem(static_cast<TCHAR FAR *>(scaleComboText[i]));
   }
@@ -342,7 +343,7 @@ void OptionsDialog::onScaleKillFocus()
   int scale;
 
   if (!StringParser::parseInt(scaleText.getString(), &scale)) {
-    if (scaleText.isEqualTo(_T("Auto"))) {
+    if (scaleText.isEqualTo(AUTOSCALE)) {
       return ;
     }
     scale = 100;
@@ -365,7 +366,7 @@ bool OptionsDialog::isInputValid()
 
   m_scale.getText(&scaleText);
 
-  if (scaleText.isEqualTo(_T("Auto"))) {
+  if (scaleText.isEqualTo(AUTOSCALE)) {
     return true;
   }
 

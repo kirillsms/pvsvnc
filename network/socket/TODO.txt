@@ -1,0 +1,1 @@
+Revert and restore KonturSocketIPv4

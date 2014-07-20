@@ -220,7 +220,7 @@ int SocketIPv4::send(const char *data, int size, int flags)
   result = ::send(m_socket, data, size, flags);
 
   if (result == -1) {
-    throw IOException(_T("Failed to send data to socket."));
+    throw IOException(_T("Ошибка отправки данных в сокет."));
   }
   
   return result;

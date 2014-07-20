@@ -120,9 +120,9 @@ void Win8ScreenDriverImpl::initDxgi()
         virtDeskRegion.addRect(&deskCoord);
       }
     }
-  } catch (WinDxRecoverableException &) {
+  } catch (WinDxRecoverableException &e) {
     m_log->debug(_T("Reached the end of dxgi output list with iOutput = %u"), iOutput);
-    // End of output list.
+	m_log->debug(_T("Error in Win8ScreenDriverImpl::initDxgi(): %s"), e.getMessage());
   }
 
   // Check that all outputs for the virtual screen are found (in case two or more
