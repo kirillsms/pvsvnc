@@ -229,6 +229,12 @@
     <None Include="res\tightvnc48.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\konturvnc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\konturvnc48.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tvnviewer.rc">
