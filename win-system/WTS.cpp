@@ -52,7 +52,7 @@ DWORD WTS::getActiveConsoleSessionId(LogWriter *log)
 
   return sessionId;
 
-  
+/*
   if (!m_initialized) {
     initialize(log);
   }
@@ -62,6 +62,7 @@ DWORD WTS::getActiveConsoleSessionId(LogWriter *log)
   }
 
   return m_WTSGetActiveConsoleSessionId();
+*/
 }
 
 void WTS::queryConsoleUserToken(HANDLE *token, LogWriter *log) throw(SystemException)

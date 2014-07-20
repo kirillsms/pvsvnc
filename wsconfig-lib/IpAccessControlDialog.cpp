@@ -331,7 +331,7 @@ void IpAccessControlDialog::onMoveDownButtonClick()
 
 void IpAccessControlDialog::onListViewSelChange()
 {
-  int si = m_list.getSelectedIndex();
+  //int si = m_list.getSelectedIndex();
   updateButtonsState();
 }
 

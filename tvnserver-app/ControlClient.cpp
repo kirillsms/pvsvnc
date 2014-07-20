@@ -282,7 +282,7 @@ void ControlClient::authMsgRcdv()
 
 void ControlClient::getClientsListMsgRcvd()
 {
-  UINT32 clientCount = 0;
+  //UINT32 clientCount = 0;
 
   RfbClientInfoList clients;
 
@@ -300,8 +300,8 @@ void ControlClient::getClientsListMsgRcvd()
 
 void ControlClient::getServerInfoMsgRcvd()
 {
-  bool acceptFlag = false;
-  bool serviceFlag = false;
+  //bool acceptFlag = false;
+  //bool serviceFlag = false;
 
   StringStorage logPath;
   StringStorage statusText;

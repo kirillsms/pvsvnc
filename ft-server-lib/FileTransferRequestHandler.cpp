@@ -236,7 +236,7 @@ void FileTransferRequestHandler::fileListRequested()
   UINT32 compressedSize = 0;
   UINT32 uncompressedSize = 0;
   UINT32 filesCount = 0;
-  UINT32 filesInfoDataSize = 0;
+  //UINT32 filesInfoDataSize = 0;
   const FileInfo *files = NULL;
 
   //
@@ -906,7 +906,7 @@ bool FileTransferRequestHandler::getDirectorySize(const TCHAR *pathname, UINT64 
 {
   UINT64 currentDirSize = 0;
   UINT32 filesCount = 0;
-  UINT32 dataSize = 0;
+  //UINT32 dataSize = 0;
 
   File folder(pathname);
 

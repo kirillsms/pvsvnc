@@ -120,8 +120,8 @@ void ZrleEncoder::sendRect(const Rect *rect,
                            const EncodeOptions *options)
 {
   m_rgbData.resize(0);
-  const PIXEL_T *buffer = static_cast<const PIXEL_T *>(clientFb->getBuffer());
-  
+  //const PIXEL_T *buffer = static_cast<const PIXEL_T *>(clientFb->getBuffer());
+
   Rect tileRect;
   for (tileRect.top = rect->top; tileRect.top < rect->bottom; tileRect.top += TILE_SIZE) {
 
@@ -484,7 +484,7 @@ void ZrleEncoder::copyPixels(const Rect *rect,
                              UINT8 *dst)
 {
   const int rectHeight = rect->getHeight();
-  const int rectWidth = rect->getWidth();
+  //const int rectWidth = rect->getWidth();
   const PIXEL_T *src = static_cast<const PIXEL_T *>(fb->getBufferPtr(rect->left, rect->top));
   const int fbStride = fb->getDimension().width;
   const size_t bytesPerRow = rect->getWidth() * m_bytesPerPixel;

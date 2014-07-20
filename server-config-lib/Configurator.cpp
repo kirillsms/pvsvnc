@@ -426,7 +426,7 @@ bool Configurator::saveIpAccessControlContainer(SettingsManager *storage)
   // Remember rules count
   size_t rulesCount = rules->size();
   // 1 rule can contain 34 character max
-  size_t maxStringBufferLength = 34 * 2 * rulesCount;
+  //size_t maxStringBufferLength = 34 * 2 * rulesCount;
   // Buffer that we need to write to storage
   StringStorage buffer(_T(""));
   // Variable to save temporary result from toString method

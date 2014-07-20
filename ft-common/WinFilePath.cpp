@@ -72,7 +72,7 @@ void WinFilePath::setString(const TCHAR *string)
     }
   }
   // desktop replacement
-TCHAR path[MAX_PATH + 1];
+//TCHAR path[MAX_PATH + 1];
 
 	StringStorage specFolder;
 	str.getSubstring(&specFolder,0,8);

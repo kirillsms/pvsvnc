@@ -50,7 +50,7 @@ HookInstaller::~HookInstaller()
 
 void HookInstaller::install(HWND targedWinHwnd)
 {
-  HINSTANCE hinst = GetModuleHandle(0);
+  //HINSTANCE hinst = GetModuleHandle(0);
 
   m_pSetHook = m_lib.getProcAddress(SET_HOOK_FUNCTION_NAME);
   m_pUnSetHook = m_lib.getProcAddress(UNSET_HOOK_FUNCTION_NAME);

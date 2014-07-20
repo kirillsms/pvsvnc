@@ -38,7 +38,7 @@ void WinCursorShapeUtils::winMonoShapeToRfb(const FrameBuffer *pixels,
   char *pixelsBuffer = (char *)pixels->getBuffer();
   char *pixel;
   int pixelSize = pixels->getBytesPerPixel();
-  int pixelCount = pixels->getBufferSize() / pixelSize;
+  //int pixelCount = pixels->getBufferSize() / pixelSize;
 
   int fbWidth = pixels->getDimension().width;
   int fbHeight = pixels->getDimension().height;

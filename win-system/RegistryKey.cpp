@@ -104,7 +104,7 @@ bool RegistryKey::deleteSubKeyTree(const TCHAR *subkey)
   RegistryKey key(this, subkey);
 
   size_t subkeys2Count = 0;
-  StringStorage *subkeys2Names = 0;
+  //StringStorage *subkeys2Names = 0;
 
   //
   // Delete subkeys of subkey

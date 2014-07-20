@@ -125,7 +125,7 @@ StringStorage WinClipboard::removeCR(const StringStorage *str)
   const TCHAR *endString = beginString + str->getLength() + 1; // start + lenght + '\0'
   vector<TCHAR> chars(beginString, endString);
   vector<TCHAR> newChars;
-  size_t countLF = 0;
+  //size_t countLF = 0;
   for (size_t i = 0; i < chars.size(); i++) {
     if (chars[i] != CR || i + 1 == chars.size() || chars[i+1] != LF) {
       newChars.push_back(chars[i]);

@@ -140,7 +140,7 @@ void AdministrationConfigDialog::updateUI()
   m_repeatControlAuth.check(m_config->getControlAuthAlwaysChecking());
   m_repeatControlAuth.setEnabled(m_useControlAuth.isChecked());
 
-  ConfigDialog *configDialog = (ConfigDialog *)m_parentDialog;
+  //ConfigDialog *configDialog = (ConfigDialog *)m_parentDialog;
 
   StringStorage logPath;
 

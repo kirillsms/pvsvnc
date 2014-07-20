@@ -61,7 +61,7 @@ void RemoteFilesDeleteOperation::start()
 
 void RemoteFilesDeleteOperation::onFileListReply(DataInputStream *input)
 {
-  FileInfoList *current = m_toDelete;
+  //FileInfoList *current = m_toDelete;
 
   //
   // Current file is directory so, we can remove it only

@@ -93,31 +93,25 @@ void ChatDialog::initControls()
 
 LRESULT CALLBACK ChatDialog::subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	ChatDialog *_this = reinterpret_cast<ChatDialog *>(GetWindowLongPtr(wnd, GWLP_USERDATA));
 
-
-
-   ChatDialog *_this = reinterpret_cast<ChatDialog *>(GetWindowLongPtr(wnd, GWLP_USERDATA));
-
-
-   switch (msg)
-   {
-	
-    case WM_SYSKEYDOWN:
+	switch (msg) {
+	case WM_SYSKEYDOWN:
 	case WM_SYSKEYUP:
-    case WM_KEYUP:
-    case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_KEYDOWN:
 	case WM_CHAR:
 	case WM_UNICHAR:
 		if(wParam==VK_RETURN){
-			 if (! (GetKeyState(VK_SHIFT) & 0x8000 ) ){
-			  _this->Send();
-			  return 0;
-			 }
+			if (! (GetKeyState(VK_SHIFT) & 0x8000 ) ){
+				_this->Send();
+				return 0;
+			}
 		}
-    default:
-         return CallWindowProc(_this->oldEditProc, wnd, msg, wParam, lParam);
-   }
-   return 0;
+	default:
+		return CallWindowProc(_this->oldEditProc, wnd, msg, wParam, lParam);
+	}
+	//return 0;
 }
 
 

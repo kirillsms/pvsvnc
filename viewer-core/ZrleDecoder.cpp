@@ -240,7 +240,7 @@ void ZrleDecoder::readPackedPaletteTile(DataInputStream *input,
   for (int y = 0; y < height; y++) {
     // bit lenght of UINT8
     unsigned char offset = 8;
-    int index = 0;
+    //int index = 0;
     // FIXME: optimization. Read by line.
     int entryByIndex = input->readUInt8();
 

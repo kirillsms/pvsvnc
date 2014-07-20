@@ -73,7 +73,7 @@ void CurrentConsoleProcess::start()
              (unsigned int)sti.dwFlags);
 
   HANDLE procHandle = GetCurrentProcess();
-  PVOID                lpEnvironment = NULL;
+  //PVOID                lpEnvironment = NULL;
   HANDLE token, userToken, tmpToken;
 
   try {

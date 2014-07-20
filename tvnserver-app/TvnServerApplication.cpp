@@ -75,7 +75,7 @@ StringStorage firstKey(_T(""));
     
   // Reject 2 instances of TightVNC server application.
 
-  GlobalMutex *appInstanceMutex;
+  //GlobalMutex *appInstanceMutex;
 
   /*try {
     appInstanceMutex = new GlobalMutex(

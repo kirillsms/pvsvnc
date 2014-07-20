@@ -59,7 +59,7 @@ bool FrameBuffer::clone(const FrameBuffer *srcFrameBuffer)
 
 void FrameBuffer::setColor(UINT8 red, UINT8 green, UINT8 blue)
 {
-  size_t sizeInPixels = m_dimension.area();
+  //size_t sizeInPixels = m_dimension.area();
   int pixelSize = m_pixelFormat.bitsPerPixel / 8;
   UINT32 redPix = (red * m_pixelFormat.redMax / 255) <<
                   m_pixelFormat.redShift;

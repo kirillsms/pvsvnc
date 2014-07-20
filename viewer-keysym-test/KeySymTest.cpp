@@ -86,7 +86,7 @@ int KeySymTest::run()
         changeKbdLayout((HKL)hkbdLayout);
         Sleep(500);
       } else {
-        unsigned int virtKeyInt, downInt;
+        unsigned int virtKeyInt = 0, downInt = 0;
         bool validWord = StringParser::parseUInt(word1.getString(), &virtKeyInt);
         validWord = validWord &&
                     StringParser::parseUInt(word2.getString(), &downInt);

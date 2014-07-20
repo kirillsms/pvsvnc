@@ -300,7 +300,7 @@ void TightDecoder::drawPalette(FrameBuffer *fb,
 {
   // TODO: removed duplicate code (draw Tight bytes)
   int width = dstRect->getWidth();
-  int height = dstRect->getHeight();
+  //int height = dstRect->getHeight();
 
   int bytesPerPixel = fb->getBytesPerPixel();
 
@@ -339,7 +339,7 @@ void TightDecoder::drawTightBytes(FrameBuffer *fb,
 {
   // TODO: removed duplicate code (zrle)
   int width = dstRect->getWidth();
-  int height = dstRect->getHeight();
+  //int height = dstRect->getHeight();
 
   int bytesPerPixel = fb->getBytesPerPixel();
 
@@ -359,7 +359,7 @@ void TightDecoder::drawJpegBytes(FrameBuffer *fb,
 {
   // TODO: removed duplicate code (draw tight bytes)
   int width = dstRect->getWidth();
-  int height = dstRect->getHeight();
+  //int height = dstRect->getHeight();
 
   int fbBytesPerPixel = fb->getBytesPerPixel();
   int bytesPerCPixel = 3;

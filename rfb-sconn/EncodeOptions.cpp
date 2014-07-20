@@ -57,7 +57,7 @@ void EncodeOptions::setEncodings(std::vector<int> *list)
   reset();
   bool encoderWasSet = false;
 
-  size_t numCodes = list->size();
+  //size_t numCodes = list->size();
   std::vector<int>::const_iterator i;
   for (i = list->begin(); i != list->end(); i++) {
     int code = *i;
