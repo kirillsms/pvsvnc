@@ -98,7 +98,7 @@ void LoginDialog::onConnect()
 
   if(StringParser::parseInt(m_serverHost.getString(), &is_port)){
   if(is_port>1 && is_port<65535){
-  m_serverHost.format(_T("vnc.inural.ru::%d"), is_port);
+  m_serverHost.format(_T("vnc.kontur.ru::%d"), is_port);
   }
   }
 
