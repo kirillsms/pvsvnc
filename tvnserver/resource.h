@@ -12,8 +12,8 @@
 #define IDD_EDIT_IP_ACESS_CONTROL       109
 #define IDD_CHANGE_PASSWORD             111
 #define IDD_OUTGOING_CONN               113
+#define IDI_CONNECTED                   114
 #define IDI_IDLE                        115
-#define IDI_CONNECTED                   117
 #define IDI_DISABLED                    119
 #define IDD_CONTROL_AUTH                123
 #define IDD_ABOUT_DIALOG                125
