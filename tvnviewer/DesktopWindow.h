@@ -85,6 +85,10 @@ public:
   // Set function for m_winKeyIgnore.
   void setWinKeyIgnore(bool winKeyIgnore) { m_rfbKeySym->setWinKeyIgnore(winKeyIgnore); }
 
+    void saveScreenshot();
+
+
+
 protected:
   //
   // Overrides RfbKeySymListener::onRfbKeySymEvent().
@@ -118,6 +122,7 @@ protected:
   void sendKeyboardEvent(bool downFlag, UINT32 key);
   void sendPointerEvent(UINT8 buttonMask, const Point *position);
   void sendCutTextEvent(const StringStorage *cutText);
+
 
   LogWriter *m_logWriter;
 

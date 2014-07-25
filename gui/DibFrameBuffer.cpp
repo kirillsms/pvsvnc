@@ -191,6 +191,12 @@ void DibFrameBuffer::blitTransparentToDibSection(const Rect *rect)
   m_dibSection->blitTransparentToDibSection(rect);
 }
 
+void DibFrameBuffer::saveScreenshot()
+{
+  m_dibSection->saveScreenshot(m_fb.getDimension().height,m_fb.getDimension().width, m_fb.getBitsPerPixel());
+}
+
+
 void DibFrameBuffer::blitFromDibSection(const Rect *rect)
 {
   checkDibValid();

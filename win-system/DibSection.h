@@ -68,11 +68,15 @@ public:
   // This function throwing an exception on a failure.
   void blitFromDibSection(const Rect *rect);
 
+  void saveScreenshot(int h, int w, int p);
+
   // This function copies with strech a block of bits from the DIB section to the source DC
   // (that has been used to create the compatible DIB section).
   // Note that this function does not copy any transparent windows.
   // This function throwing an exception on a failure.
   void stretchFromDibSection(const Rect *srcRect, const Rect *dstRect);
+
+  
 
 private:
   // Opens a new DIB section.

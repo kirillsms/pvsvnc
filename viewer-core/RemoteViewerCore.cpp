@@ -58,13 +58,9 @@
 
 #include "fb-update-sender/UpdSenderMsgDefs.h"
 
-#include "atlimage.h"
-
-#include "win-system/Environment.h"
-
 #include <algorithm>
-
 #include <client-config-lib/ViewerConfig.h>
+
 
 RemoteViewerCore::RemoteViewerCore(Logger *logger)
 : m_logWriter(logger),
@@ -791,63 +787,6 @@ void RemoteViewerCore::sendTextMsg(StringStorage * msg){
   m_output->writeUInt32(length);
   m_output->writeFully(msg->getString(), length);
   m_output->flush();
-
-
-}
-
-
-
-
-void RemoteViewerCore::saveScreenShot(){
-
-BITMAPINFOHEADER bmiHeader;
-
-
-Dimension l_dimension = m_frameBuffer.getDimension();
-
-
-// Create the header info
-
-ZeroMemory(&bmiHeader,sizeof(bmiHeader));
-bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-bmiHeader.biBitCount = m_frameBuffer.getBitsPerPixel();
-bmiHeader.biWidth = m_frameBuffer.getDimension().width;
-bmiHeader.biHeight = -m_frameBuffer.getDimension().height;
-bmiHeader.biSizeImage = m_frameBuffer.getBufferSize();
-bmiHeader.biPlanes = 1;
-bmiHeader.biCompression = BI_RGB;
-
-
-BITMAPINFO bmInfo;
-bmInfo.bmiHeader = bmiHeader;
-bmInfo.bmiColors[0].rgbBlue=255;
-
-// Allocate some memory and some pointers
-unsigned char * p24Img = new unsigned char[m_frameBuffer.getBufferSize()];
-
-memcpy(p24Img,m_frameBuffer.getBuffer(),m_frameBuffer.getBufferSize());
-
-// Create the CImage
-CImage im;
-im.Create(l_dimension.width, l_dimension.height, m_frameBuffer.getBitsPerPixel(), NULL);
-
-HDC dc = im.GetDC();
-SetDIBitsToDevice(dc, 0,0,l_dimension.width,l_dimension.height,0,0, 0, l_dimension.height, p24Img, &bmInfo, DIB_RGB_COLORS);
-im.ReleaseDC();
-
-
-delete[] p24Img;
-
-StringStorage specialFolder(_T(""));
-StringStorage finalpath;
-
-Environment::getSpecialFolderPath(Environment::USERDESKTOP_DATA_SPECIAL_FOLDER, &specialFolder);
-
-SYSTEMTIME lt;    
-GetLocalTime(&lt);
-finalpath.format(_T("%s\\screenshot-%04d-%02d-%02d_%02d-%02d-%02d.jpg"),specialFolder.getString(),lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
-
-im.Save(finalpath.getString());
 
 
 }

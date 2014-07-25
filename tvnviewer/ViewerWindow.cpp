@@ -675,7 +675,7 @@ void ViewerWindow::remoteCP()
 
 void ViewerWindow::takeScreenShot()
 {
-	m_viewerCore->saveScreenShot();
+	m_dsktWnd.saveScreenshot();
 }
 
 

@@ -22,7 +22,7 @@ void AvilogThread::execute()
 	while(!isTerminating())
 	{
 		
-		if(!m_isRecord){
+		if(!m_isRecord || m_frame->getBitsPerPixel()<16){
 			sleep(500);
 			continue;
 		}
@@ -122,6 +122,7 @@ void AvilogThread::UpdateAvilog()
 		bmiHeader.biSizeImage = m_frame->getBufferSize();
 		bmiHeader.biPlanes = 1;
 		bmiHeader.biCompression = BI_RGB;
+
 
 		if(m_tempbuffer) 
 			delete[] m_tempbuffer;

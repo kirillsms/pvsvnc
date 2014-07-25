@@ -377,7 +377,6 @@ public:
   void setDisplay(int disp);
   void reqReboot();
   void startCP();
-  void saveScreenShot();
   void sendTextMsg(StringStorage * msg);
 
   //

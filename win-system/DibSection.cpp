@@ -25,6 +25,14 @@
 #include "DibSection.h"
 #include "win-system/SystemException.h"
 
+#include "C:\Program Files\Microsoft Visual Studio 10.0\VC\include\process.h"
+
+#include "win-system/Environment.h"
+
+
+
+#include "atlimage.h"
+
 DibSection::DibSection(const PixelFormat *pf, const Dimension *dim, HWND compatibleWin)
 : m_isOwnTargetDC(false),
   m_targetDC(0),
@@ -92,8 +100,29 @@ void DibSection::blitToDibSection(const Rect *rect, DWORD flags)
   }
 }
 
+void DibSection::saveScreenshot(int h, int w, int p)
+{
+
+CImage im;
+im.Create(w, h, 16, NULL);
+
+HDC dc = im.GetDC();
+BitBlt(dc, 0, 0, w, h, m_memDC, 0,0,SRCCOPY);
+im.ReleaseDC();
+
+StringStorage specialFolder(_T(""));
+StringStorage finalpath;
+Environment::getSpecialFolderPath(Environment::USERDESKTOP_DATA_SPECIAL_FOLDER, &specialFolder);
+
+SYSTEMTIME lt;    
+GetLocalTime(&lt);
+finalpath.format(_T("%s\\screenshot-%04d-%02d-%02d_%02d-%02d-%02d.jpg"),specialFolder.getString(),lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+im.Save(finalpath.getString());
+}
+
 void DibSection::blitFromDibSection(const Rect *rect, DWORD flags)
 {
+
   if (BitBlt(m_targetDC, rect->left + m_srcOffsetX, rect->top + m_srcOffsetY,
              rect->getWidth(), rect->getHeight(),
              m_memDC, rect->left, rect->top, flags) == 0) {

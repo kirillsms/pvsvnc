@@ -485,6 +485,12 @@ bool DesktopWindow::onDestroy()
   return true;
 }
 
+void DesktopWindow::saveScreenshot()
+{
+  m_framebuffer.saveScreenshot();
+}
+
+
 void DesktopWindow::updateFramebuffer(const FrameBuffer *framebuffer,
                                      const Rect *dstRect)
 {
@@ -673,6 +679,8 @@ void DesktopWindow::sendKey(WCHAR key, bool pressed)
 void DesktopWindow::sendCtrlAltDel()
 {
   m_rfbKeySym->sendCtrlAltDel();
+
+	
 }
 
 void DesktopWindow::sendKeyboardEvent(bool downFlag, UINT32 key)
