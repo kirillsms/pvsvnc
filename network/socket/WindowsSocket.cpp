@@ -29,13 +29,13 @@ bool WindowsSocket::m_isStarted = false;
 void WindowsSocket::startup(BYTE loVer, BYTE hiVer)
 {
   if (m_isStarted) {
-    throw Exception(_T("WindowsSocket already initialized."));
+    throw Exception(_T("WindowsSocket уже проинициализировано."));
   }
 
   WSAData wsaData;
 
   if (WSAStartup(MAKEWORD(loVer, hiVer), &wsaData) != 0) {
-    throw Exception(_T("Failed to initialize WindowsSocket."));
+    throw Exception(_T("Ќе удалось инициализировать WindowsSocket."));
   }
 
   m_isStarted = true;
@@ -44,12 +44,12 @@ void WindowsSocket::startup(BYTE loVer, BYTE hiVer)
 void WindowsSocket::cleanup()
 {
   if (!m_isStarted) {
-    throw Exception(_T("WindowsSocket don't initialized."));
+    throw Exception(_T("WindowsSocket не был инициализирован."));
   }
 
   m_isStarted = false;
 
   if (WSACleanup() == SOCKET_ERROR) {
-    throw Exception(_T("Failed to deinitialize WindowsSocket."));
+    throw Exception(_T("Ќе удалось корректно завершить работу с WindowsSocket."));
   }
 }

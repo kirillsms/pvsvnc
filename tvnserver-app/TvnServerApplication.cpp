@@ -106,10 +106,10 @@ StringStorage firstKey(_T(""));
   } catch (Exception &e) {
     // FIXME: Move string to resource
     StringStorage message;
-    message.format(_T("Couldn't run the server: %s"), e.getMessage());
+    message.format(_T("Не удается запустить сервер KonturVNC: %s"), e.getMessage());
     MessageBox(0,
                message.getString(),
-               _T("Server error"), MB_OK | MB_ICONEXCLAMATION);
+               _T("KonturVNC - Ошибка сервера"), MB_OK | MB_ICONEXCLAMATION);
     return 1;
   }
 }

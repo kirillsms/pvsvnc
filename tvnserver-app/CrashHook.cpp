@@ -96,8 +96,7 @@ LONG WINAPI CrashHook::topLevelExceptionFilter(_EXCEPTION_POINTERS *pExceptionIn
                                            ProductNames::PRODUCT_NAME);
 
   if (guiEnabled && MessageBox(0,
-                               _T("Apllication crashing. Do you")
-                               _T(" want save debug information?"),
+                               _T("Программа сломалась. Хотите сохранить информацию, полезную для разработчиков программы?"),
                                ProductNames::PRODUCT_NAME,
                                MB_YESNO)
                                != IDYES)
@@ -127,7 +126,7 @@ LONG WINAPI CrashHook::topLevelExceptionFilter(_EXCEPTION_POINTERS *pExceptionIn
                          FILE_ATTRIBUTE_NORMAL,
                          0);
     if (hFile == INVALID_HANDLE_VALUE) {
-      throw Exception(_T("Cannot create file to save a debug information"));
+      throw Exception(_T("Не удалось создать файл для сохранения отладочной информации"));
     }
 
     _MINIDUMP_EXCEPTION_INFORMATION exInfo;
@@ -144,12 +143,11 @@ LONG WINAPI CrashHook::topLevelExceptionFilter(_EXCEPTION_POINTERS *pExceptionIn
                                     0,
                                     0);
     if (result == 0) {
-      throw Exception(_T("Cannot create the crash dump file"));
+      throw Exception(_T("Не удалось создать файл с отладочной информацией"));
     }
     if (guiEnabled) {
       StringStorage succMess;
-      succMess.format(_T("The debug information has been successfully")
-                      _T(" saved to the %s file"), dumpPath.getString());
+      succMess.format(_T("Отладочная информация успешно сохранена в файле %s"), dumpPath.getString());
       MessageBox(0, succMess.getString(), ProductNames::PRODUCT_NAME, MB_OK);
     }
     m_notifier->onCrash(&dumpPath);

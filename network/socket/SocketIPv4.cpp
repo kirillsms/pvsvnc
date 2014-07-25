@@ -234,12 +234,12 @@ int SocketIPv4::recv(char *buffer, int size, int flags)
 
   // Connection has been gracefully closed.
   if (result == 0) {
-    throw IOException(_T("Connection has been gracefully closed"));
+    throw IOException(_T("Соединение было закрыто."));
   }
 
   // SocketIPv4 error.
   if (result == SOCKET_ERROR) {
-    throw IOException(_T("Failed to recv data from socket."));
+    throw IOException(_T("Не удалось получить данные из сети."));
   }
 
   return result;

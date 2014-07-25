@@ -41,13 +41,13 @@ void getLocalIPAddrString(char *buffer, int buflen)
   char namebuf[256];
 
   if (gethostname(namebuf, 256) != 0) {
-    strncpy(buffer, "Host name unavailable", buflen);
+    strncpy(buffer, "Имя компьютера недоступно", buflen);
     return;
   };
 
   HOSTENT *ph = gethostbyname(namebuf);
   if (!ph) {
-    strncpy(buffer, "IP address unavailable", buflen);
+    strncpy(buffer, "IP-адрес недоступен", buflen);
     return;
   };
 
@@ -78,7 +78,7 @@ SocketAddressIPv4::SocketAddressIPv4(struct sockaddr_in addr)
   m_port = 0;
 
   if (addr.sin_family != AF_INET) {
-    throw SocketException(_T("The specified m_addr is not AF_INET family m_addr!"));
+    throw SocketException(_T("Указанный адрес m_addr не принадлежит семейству AF_INET!"));
   }
 
   m_addr.s_addr = ntohl(addr.sin_addr.s_addr);

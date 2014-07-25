@@ -24,7 +24,7 @@ void ChatDialog::addMsg(StringStorage msg)
 
 	//add time stamp
 
-  StringStorage timeString(_T("[Temporary unavaliable]"));
+  StringStorage timeString(_T("[Временно недоступно]"));
   SYSTEMTIME st;
   DateTime dt;
   dt = DateTime::now();

@@ -80,7 +80,7 @@ DesktopServerApplication::DesktopServerApplication(HINSTANCE appInstance,
                                            startTime).getTime(),
                                      0);
       if (timeForWait == 0) {
-        throw Exception(_T("The desktop server time out expired"));
+        throw Exception(_T("Истекло время ожидания ответа сервера"));
       }
     }
 
