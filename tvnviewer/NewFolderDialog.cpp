@@ -90,8 +90,8 @@ void NewFolderDialog::onOkButtonClick()
 
   if (fileName.isEmpty() || (fileName.findOneOf(_T("\\/")) != -1)) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("File name cannot be empty and cannot contain '/' or '\\' characters."),
-               _T("Incorrect File Name"),
+               _T("Имя файла не может быть пустым или содержать символы '/' или '\\'."),
+               _T("KonturVNC - Неверное имя файла"),
                MB_OK | MB_ICONWARNING);
     m_fileNameTextBox.setFocus();
     return ;

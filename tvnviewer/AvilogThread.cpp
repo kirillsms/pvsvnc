@@ -31,7 +31,7 @@ void AvilogThread::execute()
 		AutoLock mutex(&m_mutex);
 		if(!m_avilog)
 		{
-			SYSTEMTIME lt;    
+			SYSTEMTIME lt;
 			GetLocalTime(&lt);
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
 			_sntprintf_s(str, sizeof str, _T("%04d-%02d-%02d_%02d-%02d-%02d"), lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);

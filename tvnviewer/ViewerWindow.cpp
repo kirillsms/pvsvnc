@@ -690,11 +690,11 @@ if(displayCount!=0){
 HMENU hMenu = CreateMenu();
 
 HMENU hMenuPopup = CreateMenu();
-AppendMenu(hMenuPopup, MF_STRING, 100, _T("All screens"));
+AppendMenu(hMenuPopup, MF_STRING, 100, _T("Все экраны"));
 
 for (int i=1; i<=displayCount;i++){
 StringStorage str;
-str.format(_T("Display %d"),i);
+str.format(_T("Экран %d"),i);
 AppendMenu(hMenuPopup, MF_STRING, 100+i, str.getString());
 }
 
@@ -1171,7 +1171,7 @@ bool ViewerWindow::onError()
 {
   int ret;
   StringStorage error;
-  error.format(_T("Error in %s: %s"), ProductNames::VIEWER_PRODUCT_NAME, m_error.getMessage());
+  error.format(_T("Ошибка в %s: %s"), ProductNames::VIEWER_PRODUCT_NAME, m_error.getMessage());
    ret = MessageBox(getHWnd(),
              error.getString(),
              formatWindowName().getString(),

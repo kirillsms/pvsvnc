@@ -233,8 +233,8 @@ bool FileTransferMainDialog::tryClose()
     return true;
   }
   if (MessageBox(m_ctrlThis.getWindow(),
-                 _T("Do you want to close file transfers and terminate current operation?"),
-                 _T("TightVNC File Transfers"),
+                 _T("Вы хотите отменить текущую операцию передачи файлов?"),
+                 _T("KonturVNC - Передача файлов"),
                  MB_YESNO | MB_ICONQUESTION) == IDYES) {
     // Set flag
     m_isClosing = true;
@@ -254,7 +254,7 @@ void FileTransferMainDialog::onCancelOperationButtonClick()
 {
   if (!m_ftCore->isNothingState()) {
   // Logging
-    StringStorage message(_T("Operation have been canceled by user"));
+    StringStorage message(_T("Операция была отменена пользователем"));
     insertMessageIntoComboBox(message.getString());
 
     // Terminate current operation
@@ -271,8 +271,8 @@ void FileTransferMainDialog::onRenameRemoteButtonClick()
 
   if (fileInfo == NULL) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No file selected."),
-               _T("Rename File"), MB_OK | MB_ICONWARNING);
+               _T("Нужно выбрать файл."),
+               _T("KonturVNC - Переименование файла"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -318,8 +318,8 @@ void FileTransferMainDialog::onRemoveRemoteButtonClick()
 
   if (siCount == 0) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No files selected."),
-               _T("Delete Files"), MB_OK | MB_ICONWARNING);
+               _T("Файлы не выбраны."),
+               _T("KonturVNC - Удаление файлов"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -333,8 +333,8 @@ void FileTransferMainDialog::onRemoveRemoteButtonClick()
   }
 
   if (MessageBox(m_ctrlThis.getWindow(),
-                 _T("Do you wish to delete the selected files?"),
-                 _T("Delete Files"),
+                 _T("Вы уверены, что хотите удалить выбранные файлы?"),
+                 _T("KonturVNC - Удаление файлов"),
                  MB_YESNO | MB_ICONQUESTION) != IDYES) {
     delete[] indexes;
     delete[] filesInfo;
@@ -361,8 +361,8 @@ void FileTransferMainDialog::onRenameLocalButtonClick()
 
   if (fileInfo == NULL) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No file selected."),
-               _T("Rename File"), MB_OK | MB_ICONWARNING);
+               _T("Нужно выбрать файл."),
+               _T("KonturVNC - Переименование файла"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -396,7 +396,7 @@ void FileTransferMainDialog::onRenameLocalButtonClick()
 
     StringStorage message;
 
-    message.format(_T("Renaming local file '%s' to '%s'"),
+    message.format(_T("Переименование локал. файла '%s' в '%s'"),
                    pathToOldFile.getString(), pathToNewFile.getString());
 
     insertMessageIntoComboBox(message.getString());
@@ -405,7 +405,7 @@ void FileTransferMainDialog::onRenameLocalButtonClick()
     File oldFile(pathToOldFile.getString());
 
     if (!oldFile.renameTo(pathToNewFile.getString())) {
-      message.format(_T("Error: failed to rename local '%s' file"),
+      message.format(_T("Ошибка: не удалось переименовать файл '%s'"),
                      pathToOldFile.getString());
 
       insertMessageIntoComboBox(message.getString());
@@ -424,8 +424,8 @@ void FileTransferMainDialog::onMkDirLocalButtonClick()
   // Not allow user to create folders in our "fake" root folder
   if (pathToFile.isEmpty()) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("It's not allowed to create new folder here."),
-               _T("New Folder"), MB_OK | MB_ICONWARNING);
+               _T("Нет прав или возможности создать тут новую папку."),
+               _T("KonturVNC - Создание папки"), MB_OK | MB_ICONWARNING);
   }
 
   NewFolderDialog folderDialog(&m_ctrlThis);
@@ -442,7 +442,7 @@ void FileTransferMainDialog::onMkDirLocalButtonClick()
     // Logging
     StringStorage message;
 
-    message.format(_T("Creating local folder '%s'"), pathToFile.getString());
+    message.format(_T("Создание локал. папки '%s'"), pathToFile.getString());
 
     insertMessageIntoComboBox(message.getString());
 
@@ -451,7 +451,7 @@ void FileTransferMainDialog::onMkDirLocalButtonClick()
 
     // Failed to create local folder
     if (pathToFile.isEmpty() || !file.mkdir()) {
-      message.format(_T("Error: failed to create local folder '%s'"),
+      message.format(_T("Ошибка: не удалось создать локал. папку '%s'"),
                      pathToFile.getString());
 
       insertMessageIntoComboBox(message.getString());
@@ -467,8 +467,8 @@ void FileTransferMainDialog::onRemoveLocalButtonClick()
 
   if (siCount == 0) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No files selected."),
-               _T("Delete Files"), MB_OK | MB_ICONWARNING);
+               _T("Файлы не выбраны."),
+               _T("KonturVNC - Удаление файлов"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -482,8 +482,8 @@ void FileTransferMainDialog::onRemoveLocalButtonClick()
   }
 
   if (MessageBox(m_ctrlThis.getWindow(),
-                 _T("Do you wish to delete the selected files?"),
-                 _T("Delete Files"),
+                 _T("Вы уверены, что хотите удалить выбранные файлы?"),
+                 _T("KonturVNC - Удаление файлов"),
                  MB_YESNO | MB_ICONQUESTION) != IDYES) {
     delete[] indexes;
     delete[] filesInfo;
@@ -511,8 +511,8 @@ void FileTransferMainDialog::onUploadButtonClick()
 
   if (siCount == 0) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No files selected."),
-               _T("Upload Files"), MB_OK | MB_ICONWARNING);
+               _T("Файлы не выбраны."),
+               _T("KonturVNC - Отправка файлов"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -526,8 +526,8 @@ void FileTransferMainDialog::onUploadButtonClick()
   }
 
   if (MessageBox(m_ctrlThis.getWindow(),
-                 _T("Do you wish to upload the selected files?"),
-                 _T("Upload Files"),
+                 _T("Вы уверены, что хотите отправить выбранные файлы?"),
+                 _T("KonturVNC - Отправка файлов"),
                  MB_YESNO | MB_ICONQUESTION) != IDYES) {
     delete[] indexes;
     delete[] filesInfo;
@@ -556,8 +556,8 @@ void FileTransferMainDialog::onDownloadButtonClick()
 
   if (siCount == 0) {
     MessageBox(m_ctrlThis.getWindow(),
-               _T("No files selected."),
-               _T("Download Files"), MB_OK | MB_ICONWARNING);
+               _T("Файлы не выбраны."),
+               _T("KonturVNC - Загрузка файлов"), MB_OK | MB_ICONWARNING);
     return ;
   }
 
@@ -571,8 +571,8 @@ void FileTransferMainDialog::onDownloadButtonClick()
   }
 
   if (MessageBox(m_ctrlThis.getWindow(),
-                 _T("Do you wish to download the selected files?"),
-                 _T("Download Files"),
+                 _T("Вы уверены, что хотите скачать выбранные файлы?"),
+                 _T("KonturVNC - Загрузка файлов"),
                  MB_YESNO | MB_ICONQUESTION) != IDYES) {
     delete[] indexes;
     delete[] filesInfo;
@@ -798,8 +798,7 @@ void FileTransferMainDialog::initControls()
 
 void FileTransferMainDialog::raise(Exception &ex)
 {
-  MessageBox(m_ctrlThis.getWindow(), ex.getMessage(),
-             _T("Exception"), MB_OK | MB_ICONERROR);
+  MessageBox(m_ctrlThis.getWindow(), ex.getMessage(), _T("Ошибка"), MB_OK | MB_ICONERROR);
   throw ex;
 }
 
@@ -838,8 +837,7 @@ void FileTransferMainDialog::tryListLocalFolder(const TCHAR *pathToFile)
   } catch (...) {
     StringStorage message;
 
-    message.format(_T("Error: failed to get file list in local folder '%s'"),
-                   pathToFile);
+    message.format(_T("Ошибка: не удается получить список файлов из локал. папки '%s'"), pathToFile);
 
     insertMessageIntoComboBox(message.getString());
     return;

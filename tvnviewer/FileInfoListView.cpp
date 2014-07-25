@@ -52,9 +52,9 @@ void FileInfoListView::setWindow(HWND hwnd)
 {
   ListView::setWindow(hwnd);
 
-  ListView::addColumn(0, _T("Name"), 135);
-  ListView::addColumn(1, _T("Size"), 80, LVCFMT_RIGHT);
-  ListView::addColumn(2, _T("Modified"), 115);
+  ListView::addColumn(0, _T("Имя"), 135);
+  ListView::addColumn(1, _T("Размер"), 80, LVCFMT_RIGHT);
+  ListView::addColumn(2, _T("Изменен"), 115);
 
   setFullRowSelectStyle(true);
 
@@ -79,7 +79,7 @@ void FileInfoListView::addItem(int index, FileInfo *fileInfo)
 
   ListView::addItem(index, filename, (LPARAM)fileInfo, imageIndex);
 
-  StringStorage sizeString(_T("<Folder>"));
+  StringStorage sizeString(_T("<Папка>"));
   StringStorage modTimeString(_T(""));
 
   if (!fileInfo->isDirectory()) {
