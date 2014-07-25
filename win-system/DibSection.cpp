@@ -25,11 +25,9 @@
 #include "DibSection.h"
 #include "win-system/SystemException.h"
 
-#include "C:\Program Files\Microsoft Visual Studio 10.0\VC\include\process.h"
+#include <include/process.h>
 
 #include "win-system/Environment.h"
-
-
 
 #include "atlimage.h"
 
