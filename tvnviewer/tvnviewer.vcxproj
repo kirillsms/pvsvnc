@@ -300,7 +300,7 @@
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;comctl32.lib;Secur32.lib;$(WindowsSdkDir)Lib\WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
