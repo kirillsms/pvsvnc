@@ -251,6 +251,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <StringPooling>true</StringPooling>
+      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <PreLinkEvent>
       <Message>Updating BuildTime</Message>

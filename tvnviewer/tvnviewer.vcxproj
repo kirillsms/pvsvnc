@@ -298,6 +298,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
+      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>

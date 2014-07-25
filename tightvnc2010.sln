@@ -66,6 +66,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcp-dispatcher", "tcp-dispatcher\tcp-dispatcher.vcxproj", "{9A7033FA-6263-425D-83BF-A1D9F48BA997}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tvnviewer", "tvnviewer\tvnviewer.vcxproj", "{082F71AD-CDF6-44DE-84F7-9D2D16784B23}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683} = {CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "viewer-core", "viewer-core\viewer-core.vcxproj", "{3EA91983-D9EB-4369-8167-130122BFDF07}"
 EndProject
@@ -79,10 +82,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avilog", "avilog\avilogv11.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Release|Win32 = Release|Win32
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-		Release|Mixed Platforms = Release|Mixed Platforms
 		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
@@ -91,6 +90,10 @@ Global
 		DebugNoUnicode|Win32 = DebugNoUnicode|Win32
 		DebugNoUnicode|x64 = DebugNoUnicode|x64
 		DebugNoUnicode|x86 = DebugNoUnicode|x86
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 		ReleaseNoUnicode|Mixed Platforms = ReleaseNoUnicode|Mixed Platforms
 		ReleaseNoUnicode|Win32 = ReleaseNoUnicode|Win32
 		ReleaseNoUnicode|x64 = ReleaseNoUnicode|x64
