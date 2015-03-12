@@ -73,6 +73,7 @@ protected:
   static const TCHAR MOUSE_SWAP[];
   static const TCHAR JPEG_IMAGE_QUALITY[];
   static const TCHAR COMPRESSION_LEVEL[];
+  static const TCHAR VPATH[];
 
   static const TCHAR YES[];
   static const TCHAR NO[];
@@ -118,6 +119,7 @@ private:
   void parseCopyRect();
   void parseViewOnly();
   void parseJpegImageQuality();
+  void parseVPath();
   bool parseHost();
 };
 

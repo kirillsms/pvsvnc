@@ -50,6 +50,7 @@ const TCHAR ViewerCmdLine::MOUSE_LOCAL[] = _T("mouselocal");
 const TCHAR ViewerCmdLine::MOUSE_SWAP[] = _T("mouseswap");
 const TCHAR ViewerCmdLine::JPEG_IMAGE_QUALITY[] = _T("jpegimagequality");
 const TCHAR ViewerCmdLine::COMPRESSION_LEVEL[] = _T("compressionlevel");
+const TCHAR ViewerCmdLine::VPATH[] = _T("videopath");
 
 
 const TCHAR ViewerCmdLine::YES[] = _T("yes");
@@ -122,7 +123,8 @@ void ViewerCmdLine::parse()
     MOUSE_LOCAL,
     MOUSE_SWAP,
     JPEG_IMAGE_QUALITY,
-    COMPRESSION_LEVEL
+    COMPRESSION_LEVEL,
+	VPATH
   };
 
   if (!processCmdLine(&options[0], sizeof(options) / sizeof(CmdLineOption))) {
@@ -147,7 +149,9 @@ void ViewerCmdLine::parse()
 
   if (isPresent(ViewerCmdLine::OPTIONS_FILE)) {
     parseOptionsFile();
-  } else if (isPresent(ViewerCmdLine::LISTEN)) {
+  }else if (isPresent(ViewerCmdLine::VPATH)){
+	parseVPath();
+  }else if (isPresent(ViewerCmdLine::LISTEN)) {
       *m_isListening = true;
   } else if (!parseHost()) {
       throw CommandLineFormatException(StringTable::getString(IDS_ERROR_COMMAND_LINE));
@@ -166,6 +170,7 @@ void ViewerCmdLine::parse()
   parseCopyRect();
   parseViewOnly();
   parseJpegImageQuality();
+  
 }
 
 void ViewerCmdLine::onHelp()
@@ -235,6 +240,13 @@ void ViewerCmdLine::parseOptionsFile()
   
   sm.setApplicationName(_T("options"));
   m_conConf->loadFromStorage(&sm);
+}
+
+void ViewerCmdLine::parseVPath()
+{
+  if (isPresent(VPATH)) {
+	m_config->setPathToVLogFile(m_options[VPATH]);
+  }
 }
 
 void ViewerCmdLine::parsePassword()
