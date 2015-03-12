@@ -95,6 +95,12 @@ public:
   // Returns "show toolbar" flag
   bool isAutoRecord() const;
 
+  
+  void askComment(bool ask);
+  bool isAskComment() const;
+
+
+
 
   // Returns path to log file if file is avaliable to write,
   // returns NULL otherwise
@@ -128,6 +134,7 @@ protected:
   bool m_promptOnFullscreen;
 
   bool m_autoRecord;
+  bool m_askComment;
   // Log file
   StringStorage m_pathToLogFile;
   StringStorage m_pathToVLogFile;

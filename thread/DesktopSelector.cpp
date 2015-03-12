@@ -27,7 +27,7 @@
 
 HDESK DesktopSelector::getInputDesktop()
 {
-  return OpenInputDesktop(0, TRUE,
+	return OpenInputDesktop(0, TRUE,
                           DESKTOP_CREATEMENU |
                           DESKTOP_CREATEWINDOW |
                           DESKTOP_ENUMERATE |

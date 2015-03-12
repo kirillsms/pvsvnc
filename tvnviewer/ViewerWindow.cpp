@@ -1177,7 +1177,7 @@ bool ViewerWindow::onError()
              formatWindowName().getString(),
                MB_RETRYCANCEL | MB_ICONERROR);
 
-   if(ret == 4){
+   if(ret == IDRETRY){
         m_requiresReconnect = true;
         ConnectionData *connectionData = new ConnectionData(*m_conData);
         ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
@@ -1186,7 +1186,7 @@ bool ViewerWindow::onError()
                                    (LPARAM)connectionConfig);
 
 
-  }else if(ret == 2){
+  }else{
 	  commandNewConnection();
   }
 

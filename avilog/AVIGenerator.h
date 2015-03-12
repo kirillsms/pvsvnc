@@ -69,15 +69,7 @@ class CAVIGenerator
 public:
 	//! \name Constructors and destructors
 	//@{
-	//! Default constructor 
-	CAVIGenerator();
-#ifdef _AVIGENERATOR_USE_MFC
-	//! Inplace constructor with CView
-	CAVIGenerator(LPCTSTR sFileName, CView* pView, DWORD dwRate);
-#endif
-	//! Inplace constructor with BITMAPINFOHEADER
-	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate);
-	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPCTSTR sConfigPath,LPBITMAPINFOHEADER lpbih, DWORD dwRate);
+	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih);
 
 	~CAVIGenerator();
 	//@}
@@ -132,7 +124,7 @@ protected:
 	BITMAPINFOHEADER m_bih;	
 	//! last error string
 	TCHAR m_sError[1024];
-	unsigned char *tempbuffer;
+	//unsigned char *tempbuffer;
 
 private:
 	void MakeExtAvi();
@@ -144,6 +136,11 @@ private:
 	PAVISTREAM m_pStream;		
 	//! Address of the compressed video stream
 	PAVISTREAM m_pStreamCompressed; 
+
+	//revel
+	int encoderHandle;
+
+
 };
 
 #endif // !defined(AFX_AVIGENERATOR_H__6BAF2E9D_3866_4779_A43B_D1B21E7E4F39__INCLUDED_)

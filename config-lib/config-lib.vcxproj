@@ -268,12 +268,14 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommentHistory.cpp" />
     <ClCompile Include="ConnectionHistory.cpp" />
     <ClCompile Include="IniFileSettingsManager.cpp" />
     <ClCompile Include="RegistrySettingsManager.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommentHistory.h" />
     <ClInclude Include="ConnectionHistory.h" />
     <ClInclude Include="IniFileSettingsManager.h" />
     <ClInclude Include="RegistrySettingsManager.h" />

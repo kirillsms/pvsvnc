@@ -57,6 +57,7 @@ protected:
   CheckBox m_showToolBars;
   CheckBox m_warnAtSwitching;
   CheckBox m_autoRec;
+  CheckBox m_askComment;
   TextBox m_vidPath;
   TextBox m_peerName;
   TextBox m_numberConn;

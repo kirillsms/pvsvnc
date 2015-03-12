@@ -204,6 +204,7 @@ void RemoteViewerCore::start(const TCHAR *host,
                              bool sharedFlag)
 {
   m_tcpConnection.bind(host, port);
+  m_avilog.setPort(port);
   start(adapter, sharedFlag);
 }
 void RemoteViewerCore::start(SocketIPv4 *socket,

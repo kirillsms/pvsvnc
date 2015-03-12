@@ -347,6 +347,7 @@
     <ClCompile Include="StringTable.cpp" />
     <ClCompile Include="Unicode.cpp" />
     <ClCompile Include="UnicodeStringStorage.cpp" />
+    <ClCompile Include="urlencode.cpp" />
     <ClCompile Include="Utf8StringStorage.cpp" />
     <ClCompile Include="VncPassCrypt.cpp" />
     <ClCompile Include="ZLibBase.cpp" />
@@ -382,6 +383,7 @@
     <ClInclude Include="StringVector.h" />
     <ClInclude Include="Unicode.h" />
     <ClInclude Include="UnicodeStringStorage.h" />
+    <ClInclude Include="URLEncode.h" />
     <ClInclude Include="Utf8StringStorage.h" />
     <ClInclude Include="VncPassCrypt.h" />
     <ClInclude Include="winhdr.h" />

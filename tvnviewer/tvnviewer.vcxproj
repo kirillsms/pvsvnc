@@ -247,10 +247,10 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;$(WindowsSdkDir)Lib\WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;$(WindowsSdkDir)Lib\WinMM.Lib;C:\Users\test\Desktop\revel-1.1.0\lib\revel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
@@ -301,7 +301,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;C:\Users\test\Desktop\revel-1.1.0\lib\revel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -344,6 +344,7 @@
     <ClCompile Include="AvilogThread.cpp" />
     <ClCompile Include="BuildTime.cpp" />
     <ClCompile Include="ClientChatDialog.cpp" />
+    <ClCompile Include="CommentDialog.cpp" />
     <ClCompile Include="ConfigurationDialog.cpp" />
     <ClCompile Include="ConnectionData.cpp" />
     <ClCompile Include="ConnectionListener.cpp" />
@@ -375,6 +376,7 @@
     <ClInclude Include="AuthenticationDialog.h" />
     <ClInclude Include="BuildTime.h" />
     <ClInclude Include="ClientChatDialog.h" />
+    <ClInclude Include="CommentDialog.h" />
     <ClInclude Include="ConfigurationDialog.h" />
     <ClInclude Include="ConnectionData.h" />
     <ClInclude Include="ConnectionListener.h" />

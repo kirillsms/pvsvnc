@@ -26,6 +26,8 @@
 
 #include "viewer-core/RemoteViewerCore.h"
 #include "viewer-core/FileTransferCapability.h"
+#include "CommentDialog.h"
+
 
 ViewerInstance::ViewerInstance(WindowsApplication *application,
                                ConnectionData *condata,
@@ -38,8 +40,15 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger())
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()),m_ssender(&m_condata)
 {
+
+	if(ViewerConfig::getInstance()->isAskComment()){
+	 CommentDialog comDialog;
+	 comDialog.showModal();
+	 m_ssender.setComment(comDialog.getComment());
+	}
+
 }
 
 ViewerInstance::ViewerInstance(WindowsApplication *application,
@@ -54,8 +63,14 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger())
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()), m_ssender(&m_condata)
 {
+	if(ViewerConfig::getInstance()->isAskComment()){
+	 CommentDialog comDialog;
+	 comDialog.showModal();
+	 m_ssender.setComment(comDialog.getComment());
+	}
+
 }
 
 
@@ -66,6 +81,7 @@ ViewerInstance::~ViewerInstance()
     m_socket->close();
   }
 
+ 
   m_viewerCore.stop();
   m_viewerCore.waitTermination();
 

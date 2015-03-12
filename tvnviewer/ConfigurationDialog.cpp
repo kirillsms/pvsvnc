@@ -122,6 +122,7 @@ BOOL ConfigurationDialog::onInitDialog()
   setControlById(m_vidPath,IDC_VIDPATH);
   setControlById(m_peerName,IDC_PEERNAME);
   setControlById(m_autoRec,IDC_AUTOREC);
+  setControlById(m_askComment,IDC_ACOMMENT);
   setControlById(m_showToolBars, IDC_CSHOWTOOLBARS); 
   setControlById(m_warnAtSwitching, IDC_CWARNATSW);
   setControlById(m_numberConn, IDC_ENUMCON);
@@ -179,7 +180,7 @@ void ConfigurationDialog::updateControlValues()
   sPeerName.format(_T("%s"), config->getPeerName());
   m_peerName.setText(sPeerName.getString());
 
-
+  m_askComment.check(config->isAskComment());
 
 }
 
@@ -248,6 +249,7 @@ void ConfigurationDialog::onOkPressed()
   config->showToolbar(m_showToolBars.isChecked());
   config->promptOnFullscreen(m_warnAtSwitching.isChecked());
   config->autoRecord(m_autoRec.isChecked());
+  config->askComment(m_askComment.isChecked());
   
   StringStorage vPath;
   m_vidPath.getText(&vPath);

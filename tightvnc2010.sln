@@ -80,6 +80,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpeg-turbo", "libjpeg-tu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avilog", "avilog\avilogv11.vcxproj", "{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librevel", "revel-1.1.0\VC7\librevel.vcxproj", "{1B0CBE45-E581-44AE-8834-BF659759E3B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -1122,6 +1124,32 @@ Global
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.ReleaseNoUnicode|x64.ActiveCfg = Release|x64
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.ReleaseNoUnicode|x64.Build.0 = Release|x64
 		{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}.ReleaseNoUnicode|x86.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|Win32.Build.0 = Debug|Win32
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|x64.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|x64.Build.0 = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Debug|x86.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|Mixed Platforms.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|Mixed Platforms.Build.0 = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|Win32.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|x64.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|x64.Build.0 = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.DebugNoUnicode|x86.ActiveCfg = Debug|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|Mixed Platforms.Build.0 = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|Win32.ActiveCfg = Release|Win32
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|Win32.Build.0 = Release|Win32
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|x64.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|x64.Build.0 = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.Release|x86.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|Mixed Platforms.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|Mixed Platforms.Build.0 = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|Win32.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x64.ActiveCfg = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x64.Build.0 = Release|x64
+		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

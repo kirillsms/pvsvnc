@@ -27,6 +27,7 @@
 
 #include "ViewerWindow.h"
 #include "network/socket/SocketIPv4.h"
+#include "log-writer/StatSender.h"
 
 #include "ViewerVncAuthHandler.h"
 
@@ -64,6 +65,8 @@ protected:
   FileTransferCapability m_fileTransfer;
   TextCapability m_textCap;
   SocketIPv4 *m_socket;
+  StatSender m_ssender;
+
 };
 
 #endif

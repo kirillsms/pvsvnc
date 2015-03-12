@@ -3,7 +3,7 @@
 
 
 AvilogThread::AvilogThread(const FrameBuffer *buff, bool isAutoStart):
-	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex(),crect(0,0,0,0),m_isRecord(isAutoStart)
+	m_avilog(0),m_buffer(0),m_bufferLen(0),m_tempbuffer(0),m_mutex(),crect(0,0,0,0),m_isRecord(isAutoStart),m_port(0)
 {
 	m_frame = buff;
 	ZeroMemory(&bmiHeader,sizeof(bmiHeader));
@@ -34,14 +34,15 @@ void AvilogThread::execute()
 			SYSTEMTIME lt;
 			GetLocalTime(&lt);
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
-			_sntprintf_s(str, sizeof str, _T("%04d-%02d-%02d_%02d-%02d-%02d"), lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
+			_sntprintf_s(str, sizeof str, _T("%d.%04d-%02d-%02d_%02d-%02d-%02d"), m_port, lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
 			_tcscat_s(str,_T("_vnc.avi"));
 
-			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),ViewerConfig::getInstance()->getPathToLogFile(),&bmiHeader,1);
+			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),&bmiHeader);
 
 			m_avilog->SetRate(10);
 
 			HRESULT hr = m_avilog->InitEngine();
+			//HRESULT hr = 0;
 			if (FAILED(hr))
 			{
 				m_avilog->ReleaseEngine(); 
@@ -146,4 +147,10 @@ if(m_avilog){
 		crect.setRect(&cursorpos);
 	}
 }
+}
+
+void AvilogThread::setPort(int port)
+{
+m_port = port;
+
 }

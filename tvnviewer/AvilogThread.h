@@ -13,6 +13,7 @@ public:
 	~AvilogThread();
 	void UpdateAvilog();
 	void SetCursorPos(Rect cursorpos);
+	void setPort(int port);
 
 	GlobalMutex m_mutex;
 	bool m_isRecord;
@@ -26,6 +27,6 @@ protected:
 	size_t m_bufferLen;
 	BITMAPINFOHEADER  bmiHeader;
 	Rect crect;	
-	
+	int m_port;
 	CAVIGenerator *m_avilog;
 };

@@ -92,6 +92,9 @@
     <ClCompile Include="BrokenHandleException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="urlencode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnsiStringStorage.h">
@@ -194,6 +197,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BrokenHandleException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="URLEncode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

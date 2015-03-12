@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="encoders">
+      <UniqueIdentifier>{761fe85d-ed37-416a-8b94-e35115c8245a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{f8067215-24d1-4e84-9cae-a41664a377bc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\XvidEncoder.cpp">
+      <Filter>encoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\avilib.c" />
+    <ClCompile Include="..\src\BaseEncoder.cpp" />
+    <ClCompile Include="..\src\revelcore.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\XvidEncoder.h">
+      <Filter>encoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\avilib.h" />
+    <ClInclude Include="..\src\BaseEncoder.h" />
+    <ClInclude Include="..\include\revel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Authors">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\News">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\Readme">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\Thanks">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\Todo">
+      <Filter>docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

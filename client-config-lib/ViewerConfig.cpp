@@ -47,7 +47,7 @@ ViewerConfig::ViewerConfig(const TCHAR registryPath[])
 : m_logLevel(0), m_listenPort(5500), m_historyLimit(32),
   m_showToolbar(true), m_promptOnFullscreen(true),
   m_conHistory(&m_conHistoryKey, m_historyLimit),
-  m_logger(0),m_autoRecord(true)
+  m_logger(0),m_autoRecord(true),m_askComment(false)
 {
   StringStorage registryKey;
   registryKey.format(_T("%s\\History"), registryPath);
@@ -65,7 +65,7 @@ ViewerConfig::ViewerConfig(const TCHAR registryPath[])
   GetUserName(name,&nameSize);
   m_userName.setString(name);
   }
-
+  
   
   StringStorage fullName(m_userName.getString());
   StringStorage nameParts[5];
@@ -110,6 +110,7 @@ bool ViewerConfig::loadFromStorage(SettingsManager *storage)
 
   TEST_FAIL(storage->getBoolean(_T("NoToolbar"), &m_showToolbar), loadAllOk);
   TEST_FAIL(storage->getBoolean(_T("AutoRecord"), &m_autoRecord), loadAllOk);
+  TEST_FAIL(storage->getBoolean(_T("AskComment"), &m_askComment), loadAllOk);
 
   if (storage->getBoolean(_T("SkipFullScreenPrompt"), &m_promptOnFullscreen)) {
     m_promptOnFullscreen = !m_promptOnFullscreen;
@@ -138,6 +139,7 @@ bool ViewerConfig::saveToStorage(SettingsManager *storage) const
   TEST_FAIL(storage->setBoolean(_T("NoToolbar"), m_showToolbar), saveAllOk);
   TEST_FAIL(storage->setBoolean(_T("SkipFullScreenPrompt"), !m_promptOnFullscreen), saveAllOk);
   TEST_FAIL(storage->setBoolean(_T("AutoRecord"), m_autoRecord), saveAllOk);
+  TEST_FAIL(storage->setBoolean(_T("AskComment"), m_askComment), saveAllOk);
   
   TEST_FAIL(storage->setString(_T("VideoPath"),m_pathToVLogFile.getString()),saveAllOk);
   TEST_FAIL(storage->setString(_T("PeerName"),m_peerName.getString()),saveAllOk);
@@ -220,6 +222,20 @@ bool ViewerConfig::isToolbarShown() const
   return m_showToolbar;
 }
 
+
+
+
+void ViewerConfig::askComment(bool Ask)
+{
+  AutoLock l(&m_cs);
+  m_askComment = Ask;
+}
+
+bool ViewerConfig::isAskComment() const
+{
+  AutoLock l(&m_cs);
+  return m_askComment;
+}
 
 void ViewerConfig::autoRecord(bool Rec)
 {
