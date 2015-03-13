@@ -245,7 +245,7 @@ void ViewerCmdLine::parseOptionsFile()
 void ViewerCmdLine::parseVPath()
 {
   if (isPresent(VPATH)) {
-	m_config->setPathToVLogFile(m_options[VPATH]);
+	m_config->setFullPathToVLogFile(m_options[VPATH]);
   }
 }
 

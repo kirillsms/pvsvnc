@@ -22,6 +22,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "avilib.h"
 #include "revel.h"
+#include <Windows.h>
+#include <Vfw.h>
 #include <string>
 
 class Revel_BaseEncoder
@@ -80,6 +82,14 @@ protected:
     std::string m_outFilename; /**< Filename of output movie. */
     avi_t *m_outFile; /**< Output movie object. */
     bool m_isEncoding; /**< True while encoding is in progress (i.e. between calls to EncodeStart() and EncodeEnd() */
+
+	
+	int avierr;
+	PAVIFILE myAVIFile;
+	PAVISTREAM myAVIStream;
+	AVISTREAMINFO myAVIStreamInfo;
+	BITMAPINFOHEADER myBitmapInfoHeader;
+	int output_frame;
 
 private:
     // operator= and copy constructor are disallowed for this class.

@@ -131,7 +131,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>C:\Users\test\Desktop\xvidcore\build\win32\Release\libxvidcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\lib\libxvidcoreR.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)revel.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>

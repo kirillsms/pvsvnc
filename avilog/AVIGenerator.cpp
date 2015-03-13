@@ -15,6 +15,14 @@ CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER
 		SetBitmapHeader(lpbih);
 }
 
+CAVIGenerator::CAVIGenerator(LPCTSTR sFileName, LPBITMAPINFOHEADER lpbih)
+:m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL), released(false),m_dwRate(10)
+{
+		_tcscpy_s(m_sFile,sFileName);
+		MakeExtAvi();
+		SetBitmapHeader(lpbih);
+}
+
 
 CAVIGenerator::~CAVIGenerator()
 {
@@ -38,7 +46,7 @@ HRESULT CAVIGenerator::InitEngine()
     revParams.width = m_bih.biWidth;
     revParams.height =m_bih.biHeight;
     revParams.frameRate = 10.0f;
-    revParams.quality = 1.0f;
+    revParams.quality = 0.5f;
     revParams.codec = REVEL_CD_XVID;
     revParams.hasAudio = 0;
 
@@ -110,6 +118,7 @@ HRESULT CAVIGenerator::AddFrame(BYTE *bmBits)
 	frame.pixels = new int[m_bih.biWidth*m_bih.biHeight];
 	
 	memcpy(frame.pixels, bmBits, m_bih.biSizeImage);
+	
     int frameSize;
     revError = Revel_EncodeFrame(encoderHandle, &frame, &frameSize);
     if (revError != REVEL_ERR_NONE)

@@ -170,7 +170,7 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 	xvid_enc_create.version = XVID_VERSION;
 	xvid_enc_create.width = m_params.width;
 	xvid_enc_create.height = m_params.height;
-	xvid_enc_create.profile = XVID_PROFILE_AS_L4;
+	xvid_enc_create.profile = XVID_PROFILE_AS_L0;
 
 
 	// init plugins
@@ -180,6 +180,7 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 	zones[0].base=100;
 	zones[0].mode=XVID_ZONE_WEIGHT;
 	zones[0].increment=100;
+	
 
     xvid_enc_create.zones = zones;
     xvid_enc_create.num_zones = NUM_ZONES;
@@ -191,7 +192,7 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 
 	memset(&single, 0, sizeof(xvid_plugin_single_t));
 	single.version = XVID_VERSION;
-	single.bitrate = 700 * 1000 / 8;
+	single.bitrate = 500 * 1000;
 	single.reaction_delay_factor = 16;
 	single.averaging_period = 100;
 	single.buffer = 100;
@@ -210,7 +211,7 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 
     xvid_enc_create.fincr = 1;
 	xvid_enc_create.fbase = 10;
-    xvid_enc_create.max_key_interval = 30; //xvid_enc_create.fbase * 10;
+    xvid_enc_create.max_key_interval = xvid_enc_create.fbase * 10;
 
     xvid_enc_create.max_bframes = 2	;
 	xvid_enc_create.bquant_ratio = 150;
@@ -218,7 +219,7 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 
 	
     xvid_enc_create.frame_drop_ratio = 0;
-    xvid_enc_create.global = 3; // 0;
+    xvid_enc_create.global = 0; 
 
 	xvid_enc_create.min_quant[0] = 1;
 	xvid_enc_create.max_quant[0] = 31;
@@ -312,7 +313,7 @@ Revel_Error Revel_XvidEncoder::EncodeFrame(const Revel_VideoFrame& frame,
 	// Set up motion estimation flags
 	
 	
-	xvid_enc_frame.motion =  13396; //motion_presets[quality];
+	xvid_enc_frame.motion =  motion_presets[quality];
 	xvid_enc_frame.vol_flags = 0;
 	xvid_enc_frame.vop_flags = 398;
 
@@ -326,9 +327,16 @@ Revel_Error Revel_XvidEncoder::EncodeFrame(const Revel_VideoFrame& frame,
 	// Encode the frame
 	int frameBytes = xvid_encore(m_xvidEncoderHandle, XVID_ENC_ENCODE,
         &xvid_enc_frame, &xvid_enc_stats);
+	int key = (xvid_enc_frame.out_flags & XVID_KEYFRAME);
 
     // Write the frame to the output stream.
-    AVI_write_frame(m_outFile, m_frameBuffer, frameBytes);
+    //AVI_write_frame(m_outFile, m_frameBuffer, frameBytes);
+
+	if (AVIStreamWrite(myAVIStream, output_frame, 1, m_frameBuffer, frameBytes, key ? AVIIF_KEYFRAME : 0, NULL, NULL)) {
+		//error
+	}
+
+	output_frame++;
     m_totalOutBytes += frameBytes;
     if (frameSize != NULL)
         *frameSize = frameBytes;

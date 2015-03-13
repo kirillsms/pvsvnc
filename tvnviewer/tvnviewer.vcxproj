@@ -247,7 +247,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;$(WindowsSdkDir)Lib\WinMM.Lib;C:\Users\test\Desktop\revel-1.1.0\lib\revel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;$(WindowsSdkDir)Lib\WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>

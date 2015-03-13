@@ -70,6 +70,7 @@ public:
 	//! \name Constructors and destructors
 	//@{
 	CAVIGenerator(LPCTSTR sFileName, LPCTSTR sPath,LPBITMAPINFOHEADER lpbih);
+	CAVIGenerator(LPCTSTR sFileName, LPBITMAPINFOHEADER lpbih);
 
 	~CAVIGenerator();
 	//@}

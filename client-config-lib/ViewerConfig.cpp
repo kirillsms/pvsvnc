@@ -267,10 +267,23 @@ const TCHAR *ViewerConfig::getPathToLogFile() const
   return m_pathToLogFile.getString();
 }
 
+const TCHAR *ViewerConfig::getFullPathToVLogFile() const
+{
+  AutoLock l(&m_cs);
+  return m_fullpathToVLogFile.getString();
+}
+
+
 const void ViewerConfig::setPathToVLogFile(StringStorage vPath)
 {
 	m_pathToVLogFile.setString(vPath.getString());
 }
+
+const void ViewerConfig::setFullPathToVLogFile(StringStorage vPath)
+{
+	m_fullpathToVLogFile.setString(vPath.getString());
+}
+
 
 const TCHAR *ViewerConfig::getPathToVLogFile() const
 {

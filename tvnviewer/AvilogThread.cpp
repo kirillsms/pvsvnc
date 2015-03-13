@@ -34,10 +34,16 @@ void AvilogThread::execute()
 			SYSTEMTIME lt;
 			GetLocalTime(&lt);
 			TCHAR str[MAX_PATH + 32]; // 29 January 2008 jdp 
+			if(_tcslen(ViewerConfig::getInstance()->getFullPathToVLogFile())>0){
+			_tcscpy_s(str,ViewerConfig::getInstance()->getFullPathToVLogFile());
+			m_avilog = new CAVIGenerator(str,&bmiHeader);
+			}else{
 			_sntprintf_s(str, sizeof str, _T("%d.%04d-%02d-%02d_%02d-%02d-%02d"), m_port, lt.wYear,lt.wMonth,lt.wDay,lt.wHour, lt.wMinute,lt.wSecond);
 			_tcscat_s(str,_T("_vnc.avi"));
-
 			m_avilog = new CAVIGenerator(str,ViewerConfig::getInstance()->getPathToVLogFile(),&bmiHeader);
+			}
+
+			
 
 			m_avilog->SetRate(10);
 

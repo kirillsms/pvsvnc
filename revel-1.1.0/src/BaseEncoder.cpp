@@ -53,7 +53,7 @@ void Revel_BaseEncoder::Reset(void)
     m_outFilename = "";
 
     memset(&m_params, 0, sizeof(Revel_Params));
-
+	output_frame = 0;
     m_totalOutBytes = 0;
     m_isEncoding = false;
 }
@@ -61,6 +61,8 @@ void Revel_BaseEncoder::Reset(void)
 Revel_Error Revel_BaseEncoder::EncodeStart(const string& filename,
                                            const Revel_Params& params)
 {
+
+
     if (m_isEncoding)
         return REVEL_ERR_BUSY;
 
@@ -71,6 +73,51 @@ Revel_Error Revel_BaseEncoder::EncodeStart(const string& filename,
         return REVEL_ERR_PARAMS;
     }
     m_params = params;
+
+	AVIFileInit();
+	output_frame = 0;
+	FILE *scrub;
+	if ((scrub = fopen(const_cast<char*>(filename.c_str()), "w+b")) == NULL) {
+	        Reset();
+			return REVEL_ERR_FILE;
+				}
+				else
+					fclose(scrub);
+
+	memset(&myAVIStreamInfo, 0, sizeof(AVISTREAMINFO));
+	myAVIStreamInfo.fccType = streamtypeVIDEO;
+	myAVIStreamInfo.fccHandler = MAKEFOURCC('x', 'v', 'i', 'd');
+	myAVIStreamInfo.dwScale = 1;
+	myAVIStreamInfo.dwRate = params.frameRate;
+	myAVIStreamInfo.dwLength = -1;
+	myAVIStreamInfo.dwQuality = 10000;
+	SetRect(&myAVIStreamInfo.rcFrame, 0, 0, params.width, params.height);
+
+	if ((avierr=AVIFileOpen(&myAVIFile, const_cast<char*>(filename.c_str()), OF_CREATE|OF_WRITE, NULL))) {
+		Reset();
+		return REVEL_ERR_FILE;
+	}
+
+	if ((avierr=AVIFileCreateStream(myAVIFile, &myAVIStream, &myAVIStreamInfo))) {
+		Reset();
+		return REVEL_ERR_FILE;
+	}
+	
+	memset(&myBitmapInfoHeader, 0, sizeof(BITMAPINFOHEADER));
+	myBitmapInfoHeader.biHeight = params.height;
+	myBitmapInfoHeader.biWidth = params.width;
+	myBitmapInfoHeader.biPlanes = 1;
+	myBitmapInfoHeader.biSize = sizeof(BITMAPINFOHEADER);
+	myBitmapInfoHeader.biCompression = MAKEFOURCC('X', 'V', 'I', 'D');
+	myBitmapInfoHeader.biBitCount = 12;
+	myBitmapInfoHeader.biSizeImage = 6*params.width*params.height;
+	
+	if ((avierr=AVIStreamSetFormat(myAVIStream, 0, &myBitmapInfoHeader, sizeof(BITMAPINFOHEADER)))) {
+		Reset();
+		return REVEL_ERR_FILE;
+	}
+
+	/*
 
     // Create output file
     m_outFile = AVI_open_output_file(const_cast<char*>(filename.c_str()));
@@ -99,7 +146,7 @@ Revel_Error Revel_BaseEncoder::EncodeStart(const string& filename,
     {
         AVI_set_audio(m_outFile, 0, 44100, 16, WAVE_FORMAT_UNKNOWN);
     }
-
+	*/
     // Allocate frame buffer
     m_frameBuffer = new char[params.width*params.height*4];
     if (m_frameBuffer == NULL)
@@ -167,8 +214,13 @@ Revel_Error Revel_BaseEncoder::EncodeEnd(int *totalSize)
 {
     if (!m_isEncoding)
         return REVEL_ERR_BUSY;
-    int aviErr = 0;
-    if (m_outFile != NULL)
+    //int aviErr = 0;
+	if (myAVIStream) AVIStreamRelease(myAVIStream);
+	if (myAVIFile) AVIFileRelease(myAVIFile);
+
+	AVIFileExit();
+	Reset();
+    /*if (m_outFile != NULL)
     {
         aviErr = AVI_close(m_outFile);
         m_outFile = NULL;
@@ -179,6 +231,6 @@ Revel_Error Revel_BaseEncoder::EncodeEnd(int *totalSize)
     Reset();
  
     if (aviErr != 0)
-        return REVEL_ERR_FILE;
+        return REVEL_ERR_FILE;*/
     return REVEL_ERR_NONE;
 }

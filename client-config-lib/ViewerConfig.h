@@ -108,7 +108,11 @@ public:
 
    const TCHAR *getPathToVLogFile() const;
    
+   const TCHAR *getFullPathToVLogFile() const;
+
    const void setPathToVLogFile(StringStorage vPath);
+   
+   const void setFullPathToVLogFile(StringStorage vPath);
 
      const TCHAR *getUserName() const;
 
@@ -138,6 +142,7 @@ protected:
   // Log file
   StringStorage m_pathToLogFile;
   StringStorage m_pathToVLogFile;
+  StringStorage m_fullpathToVLogFile;
   StringStorage m_userName;
   StringStorage m_peerName;
   StringStorage m_logName;
