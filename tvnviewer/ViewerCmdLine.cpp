@@ -149,13 +149,12 @@ void ViewerCmdLine::parse()
 
   if (isPresent(ViewerCmdLine::OPTIONS_FILE)) {
     parseOptionsFile();
-  }else if (isPresent(ViewerCmdLine::VPATH)){
-	parseVPath();
   }else if (isPresent(ViewerCmdLine::LISTEN)) {
       *m_isListening = true;
   } else if (!parseHost()) {
       throw CommandLineFormatException(StringTable::getString(IDS_ERROR_COMMAND_LINE));
   }
+  parseVPath();
   parsePassword();
   parseEncoding();
   parseMouseShape();
