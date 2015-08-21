@@ -196,6 +196,9 @@ void ViewerWindow::enableUserElements()
   }else{
   m_toolbar.checkButton(IDS_TB_REC, false);
   }
+
+  m_toolbar.enableButton(IDS_TB_P2P,false);
+
 }
 
 bool ViewerWindow::viewerCoreSettings()
@@ -672,6 +675,27 @@ void ViewerWindow::remoteCP()
 	m_viewerCore->startCP();
 }
 
+void ViewerWindow::beginP2P()
+{
+	LRESULT iState = m_toolbar.getState(IDS_TB_P2P);
+  
+  if (iState) {
+    if (iState == TBSTATE_ENABLED) {
+		m_toolbar.checkButton(IDS_TB_P2P, true);
+		//m_toolbar.enableButton(IDS_TB_P2P, false);
+		//m_viewerCore->stopUpdating(true);
+		//m_viewerCore->beginNeg();
+		m_viewerCore->enableP2P(true);
+	}
+	else{
+		m_toolbar.checkButton(IDS_TB_P2P, false);
+		m_viewerCore->enableP2P(false);
+
+	}
+  }
+
+	
+}
 
 void ViewerWindow::takeScreenShot()
 {
@@ -886,7 +910,9 @@ bool ViewerWindow::onCommand(WPARAM wParam, LPARAM lParam)
 	case IDS_TB_CHAT:
 		showChatDialog();
 		return true;
-
+	case IDS_TB_P2P:
+		beginP2P();
+		return true;
   }
   return false;
 }
@@ -1260,6 +1286,18 @@ Rect ViewerWindow::calculateDefaultSize()
                      (heightDesktop - totalHeight) / 2);
   }
   return defaultRect;
+}
+
+void ViewerWindow::onP2pSuccess()
+{
+	m_toolbar.enableButton(IDS_TB_P2P, true);
+	//m_viewerCore->stopUpdating(false);
+}
+
+void ViewerWindow::onP2pFailed()
+{
+	m_toolbar.checkButton(IDS_TB_P2P, false);
+	//m_viewerCore->stopUpdating(false);
 }
 
 void ViewerWindow::onConnected(RfbOutputGate *output)

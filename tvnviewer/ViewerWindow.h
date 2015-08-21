@@ -46,11 +46,15 @@
 
 #include "viewer-core/TextCapability.h"
 
+#include "viewer-core/SdpCapability.h"
+
 #include "rfb-sconn/TextMsgListener.h"
+
+#include "p2p/P2pEventListener.h"
 
 class ViewerWindow : public BaseWindow,
                      public CoreEventsAdapter,
-                     private HookEventListener, public TextMsgListener
+                     private HookEventListener, public TextMsgListener, public P2pEventListener
 {
 public:
   ViewerWindow(WindowsApplication *application,
@@ -73,6 +77,8 @@ public:
   bool isStopped() const;
 
   virtual void onTextMsg(StringStorage * msg);
+  virtual void onP2pSuccess();
+  virtual void onP2pFailed();
 
   static const int WM_USER_ERROR = WM_USER + 1;
   static const int WM_USER_STOP = WM_USER + 2;
@@ -122,6 +128,7 @@ protected:
   void commandRec();
   void showDisp();
   void remoteCP();
+  void beginP2P();
   void remoteReboot();
   void takeScreenShot();
   void commandScaleAuto();
@@ -138,7 +145,7 @@ protected:
   void onFrameBufferPropChange(const FrameBuffer *fb);
   void onCutText(const StringStorage *cutText);
 
-  
+
 
   int translateAccelToTB(int val);
   void applyScreenChanges(bool isFullScreen);

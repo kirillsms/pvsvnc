@@ -22,6 +22,7 @@
 //-------------------------------------------------------------------------
 //
 
+
 #include "client-config-lib/ViewerConfig.h"
 #include "log-writer/LogWriter.h"
 #include "TvnViewer.h"
@@ -30,9 +31,11 @@
 #include "ViewerCmdLine.h"
 #include "util/ResourceLoader.h"
 
+
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
                        LPTSTR lpCmdLine, int nCmdShow)
 {
+
   ViewerSettingsManager::initInstance(RegistryPaths::VIEWER_PATH);
   SettingsManager *sm = ViewerSettingsManager::getInstance();
 
@@ -45,6 +48,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
   }
 
   LogWriter logWriter(config.getLogger());
+
+  
 
   // resource-loader initialization
   ResourceLoader resourceLoader(hInstance);
@@ -90,6 +95,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
                MB_OK | MB_ICONERROR);
     logWriter.debug(ex.getMessage());
   }
-
+     
   return result;
 }

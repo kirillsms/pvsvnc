@@ -40,7 +40,12 @@ public:
   static const UINT32 CHAT_REQ = 7;
   static const UINT32 CLIENT_CHAT_MSG = 8;
   static const UINT32 SERVER_CHAT_MSG = 9;
-
+  static const UINT32 CLIENT_SDP = 10;
+  static const UINT32 SERVER_SDP = 11;
+  static const UINT32 BEGIN_NEG = 12;
+  static const UINT32 ENABLE_P2P = 13;
+  static const UINT32 DISABLE_P2P = 14;
+  static const UINT32 P2P_OK = 15;
 };
 
 class ServerMsgDefs

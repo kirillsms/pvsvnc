@@ -126,6 +126,9 @@
     <ClCompile Include="TextCapability.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SdpCapability.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthHandler.h">
@@ -234,6 +237,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextCapability.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdpCapability.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

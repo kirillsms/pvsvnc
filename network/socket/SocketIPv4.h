@@ -36,6 +36,8 @@
 #include "win-system/WsaStartup.h"
 #include "thread/LocalMutex.h"
 
+#include "p2p/p2ptransport.h"
+
 /**
  * IPv4 Socket class.
  *
@@ -150,6 +152,8 @@ public:
   void enableNaggleAlgorithm(bool enabled) throw(SocketException);
   void setExclusiveAddrUse() throw(SocketException);
 
+  void setP2P(P2pTransport * p2p);
+
 private:
   WsaStartup m_wsaStartup;
 
@@ -168,7 +172,8 @@ protected:
    */
   SOCKET m_socket;
   bool m_isClosed;
-
+  bool m_dumpPacket;
+  bool m_gotP2p;
   SocketAddressIPv4 *m_localAddr;
   SocketAddressIPv4 *m_peerAddr;
 
@@ -176,6 +181,8 @@ protected:
    * Flag determinating if socket is server or client socket.
    */
   bool m_isBound;
+
+  P2pTransport * m_p2p;
 };
 
 #endif

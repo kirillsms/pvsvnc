@@ -64,8 +64,10 @@ protected:
   ViewerVncAuthHandler m_vncAuthHandler;
   FileTransferCapability m_fileTransfer;
   TextCapability m_textCap;
+  SdpCapability m_sdpCap;
   SocketIPv4 *m_socket;
   StatSender m_ssender;
+  P2pTransport m_p2p;
 
 };
 

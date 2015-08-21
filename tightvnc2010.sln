@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread", "thread\thread.vcxproj", "{5F629934-ED68-4D38-9BA5-CF3A139A44A1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "region", "region\region.vcxproj", "{14A47432-7AB8-4CA1-A36E-81117AABFD2C}"
@@ -81,6 +83,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avilog", "avilog\avilogv11.vcxproj", "{CD0D6EC9-D652-4D1B-B23B-18E1AC3AA683}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librevel", "revel-1.1.0\VC7\librevel.vcxproj", "{1B0CBE45-E581-44AE-8834-BF659759E3B0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "p2p", "p2p\p2p.vcxproj", "{3C56B11E-5211-4417-9A8F-87866BF5B800}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1150,6 +1154,35 @@ Global
 		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x64.ActiveCfg = Release|x64
 		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x64.Build.0 = Release|x64
 		{1B0CBE45-E581-44AE-8834-BF659759E3B0}.ReleaseNoUnicode|x86.ActiveCfg = Release|x64
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|Win32.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|x64.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Debug|x86.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|Mixed Platforms.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|Mixed Platforms.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|Win32.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|Win32.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|x64.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|x86.ActiveCfg = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.DebugNoUnicode|x86.Build.0 = Debug|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|Win32.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|Win32.Build.0 = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|x64.ActiveCfg = Release|x64
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|x64.Build.0 = Release|x64
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|x86.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.Release|x86.Build.0 = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|Mixed Platforms.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|Mixed Platforms.Build.0 = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|Win32.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|Win32.Build.0 = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|x64.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|x86.ActiveCfg = Release|Win32
+		{3C56B11E-5211-4417-9A8F-87866BF5B800}.ReleaseNoUnicode|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

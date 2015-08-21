@@ -34,7 +34,7 @@ public:
   static const UINT32 RFB_SHARE_DISPLAY = 153;
   static const UINT32 RFB_REQ_REBOOT = 154;
   static const UINT32 RFB_START_CP = 155;
-
+ 
   const static char RFB_VIDEO_FREEZE_SIG[];
 };
 

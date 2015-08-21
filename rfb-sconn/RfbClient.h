@@ -40,6 +40,7 @@
 #include "ClientTerminationListener.h"
 #include "ClientInputEventListener.h"
 #include "TextChatHandler.h"
+#include "SdpHandler.h"
 
 #include "tvnserver-app/NewConnectionEvents.h"
 
@@ -147,6 +148,8 @@ private:
   Desktop *m_desktop;
 
   TextChatHandler *m_chatHandler;
+  
+  SdpHandler *m_sdpHandler;
 
  ChatDialog * m_chatDialog; 
  FTStatusDialog * m_ftsDialog;

@@ -47,6 +47,7 @@ public:
 
   RfbInputGate *getInput() const;
   RfbOutputGate *getOutput() const;
+  SocketIPv4 *getSocket();
 private:
   StringStorage m_host;
   UINT16 m_port;

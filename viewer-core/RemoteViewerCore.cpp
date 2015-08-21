@@ -82,7 +82,7 @@ RemoteViewerCore::RemoteViewerCore(const TCHAR *host, UINT16 port,
 {
   init();
 
-  start(host, port, adapter, sharedFlag);
+  start(host, port, adapter,NULL,sharedFlag);
 }
 
 RemoteViewerCore::RemoteViewerCore(SocketIPv4 *socket,
@@ -200,9 +200,10 @@ void RemoteViewerCore::start(CoreEventsAdapter *adapter,
 
 void RemoteViewerCore::start(const TCHAR *host,
                              UINT16 port,
-                             CoreEventsAdapter *adapter,
+                             CoreEventsAdapter *adapter, P2pTransport * p2p,
                              bool sharedFlag)
 {
+  m_p2p = p2p;
   m_tcpConnection.bind(host, port);
   m_avilog.setPort(port);
   start(adapter, sharedFlag);
@@ -508,6 +509,7 @@ void RemoteViewerCore::connectToHost()
   m_logWriter.detail(_T("Connection is established"));
   try {
     m_adapter->onEstablished();
+	m_tcpConnection.getSocket()->setP2P(m_p2p);
   } catch (const Exception &ex) {
     m_logWriter.error(_T("Error in CoreEventsAdapter::onEstablished(): %s"), ex.getMessage());
   } catch (...) {
@@ -771,7 +773,26 @@ void RemoteViewerCore::reqReboot(){
 }
 
 void RemoteViewerCore::startCP(){
-  m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_START_CP);
+ // m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_START_CP);
+	//m_output->flush();
+	m_p2p->sctp.print_stats();
+}
+
+void RemoteViewerCore::beginNeg(){
+ 
+	m_output->writeUInt8(ClientMsgDefs::BEGIN_NEG);
+	m_output->flush();
+}
+void RemoteViewerCore::enableP2P(bool isEnable)
+{
+	if(isEnable)
+	m_output->writeUInt8(ClientMsgDefs::ENABLE_P2P);
+	else
+	m_output->writeUInt8(ClientMsgDefs::DISABLE_P2P);
+	
+	m_output->flush();
+
+	m_p2p->m_enable = isEnable;
 }
 
 
@@ -788,6 +809,20 @@ void RemoteViewerCore::sendTextMsg(StringStorage * msg){
   m_output->writeUInt32(length);
   m_output->writeFully(msg->getString(), length);
   m_output->flush();
+
+
+}
+
+void RemoteViewerCore::sendClientSdp(AnsiStringStorage * msg){
+
+  UINT32 length = static_cast<UINT32>(msg->getSize());
+  if (length > 0){
+  AutoLock al(m_output);
+  m_output->writeUInt8(ClientMsgDefs::CLIENT_SDP);
+  m_output->writeUInt32(length);
+  m_output->writeFully(msg->getString(), length);
+  m_output->flush();
+  }
 
 
 }
@@ -905,6 +940,12 @@ void RemoteViewerCore::execute()
     // send request of frame buffer update
     m_logWriter.info(_T("Protocol stage is \"Working phase\"."));
     sendFbUpdateRequest(false);
+	//is p2p supported?
+	vector<UINT32> clientCaps;
+	getEnabledClientMsgCapabilities(&clientCaps);
+	if(std::find(clientCaps.begin(), clientCaps.end(), ClientMsgDefs::BEGIN_NEG) != clientCaps.end()){
+		beginNeg();
+	}
 
     // received server messages
     while (!isTerminating()) {

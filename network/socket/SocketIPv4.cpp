@@ -33,7 +33,7 @@
 
 SocketIPv4::SocketIPv4()
 : m_localAddr(NULL), m_peerAddr(NULL), m_isBound(false),
-  m_wsaStartup(1, 2)
+  m_wsaStartup(1, 2),m_p2p(NULL),m_dumpPacket(false),m_gotP2p(false)
 {
   m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   m_isClosed = false;
@@ -217,7 +217,16 @@ int SocketIPv4::send(const char *data, int size, int flags)
 {
   int result;
   
-  result = ::send(m_socket, data, size, flags);
+
+  if(m_p2p != NULL && m_p2p->m_enable){
+	/*  if(!m_dumpPacket || !m_gotP2p){
+	  result = ::send(m_socket, data, size, flags);
+		m_dumpPacket = true;
+	  }*/
+	  result = m_p2p->send(data,size);
+  }else{
+	  result = ::send(m_socket, data, size, flags);
+  }
 
   if (result == -1) {
     throw IOException(_T("Ошибка отправки данных в сокет."));
@@ -230,7 +239,14 @@ int SocketIPv4::recv(char *buffer, int size, int flags)
 {
   int result;
 
-  result = ::recv(m_socket, buffer, size, flags);
+  if(m_p2p != NULL && m_p2p->m_enable){
+	  result = m_p2p->recv(buffer,size);
+	//  m_gotP2p = true;
+ }else{
+	result = ::recv(m_socket, buffer, size, flags);
+		/*if(m_p2p != NULL && m_p2p->sctp_tansp.handshake_done)
+			result = m_p2p->recv(buffer,size);*/
+  }
 
   // Connection has been gracefully closed.
   if (result == 0) {
@@ -248,7 +264,7 @@ int SocketIPv4::recv(char *buffer, int size, int flags)
 bool SocketIPv4::getLocalAddr(SocketAddressIPv4 *addr)
 {
   AutoLock l(&m_mutex);
-
+  
   if (m_localAddr == 0) {
     return false;
   }
@@ -298,4 +314,9 @@ void SocketIPv4::setExclusiveAddrUse()
   int val = 1;
 
   setSocketOptions(SOL_SOCKET, SO_EXCLUSIVEADDRUSE, &val, sizeof(val));
+}
+
+void SocketIPv4::setP2P(P2pTransport * p2p)
+{
+m_p2p = p2p;
 }

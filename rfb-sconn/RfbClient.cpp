@@ -31,6 +31,9 @@
 #include "ClientAuthListener.h"
 #include "server-config-lib/Configurator.h"
 
+#include "p2p/p2ptransport.h"
+
+
 RfbClient::RfbClient(NewConnectionEvents *newConnectionEvents,
                      SocketIPv4 *socket,
                      ClientTerminationListener *extTermListener,
@@ -187,6 +190,10 @@ void RfbClient::execute()
                                 !m_isOutgoing);
 
   
+  P2pTransport p2p(m_log,false, NULL);
+
+  m_socket->setP2P(&p2p);
+  
 
   try {
     // First initialization phase
@@ -245,6 +252,8 @@ void RfbClient::execute()
     m_log->debug(_T("ClipboardExchange has been created"));
 
 	m_chatHandler = new TextChatHandler(&codeRegtor, &output, m_log,m_chatDialog);
+	
+	m_sdpHandler= new SdpHandler(&codeRegtor, &output, m_log, &p2p);
 	//m_chatDialog->show();
 
     // FileTransfers initialization

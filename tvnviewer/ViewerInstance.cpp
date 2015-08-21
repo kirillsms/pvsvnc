@@ -40,9 +40,8 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger()),m_ssender(&m_condata)
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()),m_ssender(&m_condata),m_p2p(NULL,true,&m_viewerWnd)
 {
-
 	if(ViewerConfig::getInstance()->isAskComment()){
 	 CommentDialog comDialog;
 	 comDialog.showModal();
@@ -63,8 +62,9 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger()), m_ssender(&m_condata)
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()), m_ssender(&m_condata),m_p2p(NULL,true,&m_viewerWnd)
 {
+	m_socket->setP2P(&m_p2p);
 	if(ViewerConfig::getInstance()->isAskComment()){
 	 CommentDialog comDialog;
 	 comDialog.showModal();
@@ -116,7 +116,6 @@ void ViewerInstance::start()
   //Logger *logger = ViewerConfig::getInstance()->getLogger();
   m_viewerWnd.setRemoteViewerCore(&m_viewerCore);
 
-
   m_viewerWnd.setFileTransfer(&m_fileTransfer);
 
   m_vncAuthHandler.addAuthCapability(&m_viewerCore);
@@ -125,6 +124,8 @@ void ViewerInstance::start()
   
   m_textCap.addCapabilities(&m_viewerCore);
 
+  m_sdpCap.addCapabilities(&m_viewerCore);
+  m_sdpCap.setCore(&m_viewerCore,&m_p2p);
   m_viewerWnd.setChatHandler(&m_textCap);
 
   if (m_socket) {
@@ -135,6 +136,6 @@ void ViewerInstance::start()
     m_condata.getReducedHost(&strHost);
     UINT16 portVal = m_condata.getPort();
     m_viewerCore.start(strHost.getString(), portVal,
-                       &m_viewerWnd, m_conConf.getSharedFlag());
+                       &m_viewerWnd,&m_p2p, m_conConf.getSharedFlag());
   }
 }

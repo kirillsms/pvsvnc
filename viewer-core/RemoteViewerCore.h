@@ -43,6 +43,7 @@
 #include "TcpConnection.h"
 #include "tvnviewer/AvilogThread.h"
 
+#include "util/AnsiStringStorage.h"
 
 #include <map>
 
@@ -217,7 +218,7 @@ public:
   //       WindowsSocket::startup() prior to calling function.
   //
   void start(const TCHAR *host, UINT16 port,
-             CoreEventsAdapter *adapter,
+             CoreEventsAdapter *adapter, P2pTransport * p2p,
              bool sharedFlag = true);
 
   //
@@ -377,7 +378,12 @@ public:
   void setDisplay(int disp);
   void reqReboot();
   void startCP();
+  void beginNeg();
+  void enableP2P(bool isEnable);
+
   void sendTextMsg(StringStorage * msg);
+
+  void sendClientSdp(AnsiStringStorage * msg);
 
   //
   // Work with capabilities is documented in interface CapabilitiesManager.
@@ -627,7 +633,7 @@ private:
   AvilogThread m_avilog;
   int pad;
   bool m_isRecording;
-
+  P2pTransport * m_p2p;
 };
 
 #endif

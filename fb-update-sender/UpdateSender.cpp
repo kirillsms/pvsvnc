@@ -86,6 +86,11 @@ UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                             VendorDefs::TIGHTVNC,
                             UpdSenderClientMsgDefs::RFB_VIDEO_FREEZE_SIG);
 
+
+  codeRegtor->addClToSrvCap(ClientMsgDefs::BEGIN_NEG,
+							VendorDefs::TIGHTVNC,
+							("P2PBEGNE"));
+
   // Request codes
   
   codeRegtor->regCode(UpdSenderClientMsgDefs::RFB_START_CP, this);
