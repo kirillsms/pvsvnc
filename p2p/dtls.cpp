@@ -111,8 +111,7 @@ unsigned int len;
 unsigned char buf[32676];
 X509_digest(cert, EVP_sha256(), buf, &len);
 
-   
-for (int i = 0; i < len; ++i) {
+for (unsigned int i = 0; i < len; ++i) {
 	printf("%02X:", buf[i]);
 }
 

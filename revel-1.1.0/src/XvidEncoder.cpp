@@ -19,7 +19,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "XvidEncoder.h"
 
-#include <xvid.h>
+#include "xvid.h"
 
 #include <cassert>
 #include <cstring>
