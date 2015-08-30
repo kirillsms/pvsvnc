@@ -32,7 +32,7 @@
 
 #ifdef __FreeBSD__
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_uio.h 269945 2014-08-13 15:50:16Z tuexen $");
+__FBSDID("$FreeBSD: head/sys/netinet/sctp_uio.h 285237 2015-07-07 06:34:28Z tuexen $");
 #endif
 
 #ifndef _NETINET_SCTP_UIO_H_
@@ -1197,10 +1197,19 @@ struct xsctp_inpcb {
 #if defined(__Windows__)
 	uint16_t padding;
 #endif
+#if !(defined(__FreeBSD__) && (__FreeBSD_version < 1001517))
+	void *socket;
+#endif
 #if defined(__FreeBSD__) && __FreeBSD_version < 1000048
 	uint32_t extra_padding[32]; /* future */
-#else
+#elif defined(__FreeBSD__) && (__FreeBSD_version < 1001517)
 	uint32_t extra_padding[31]; /* future */
+#else
+#if defined(__LP64__)
+	uint32_t extra_padding[29]; /* future */
+#else
+	uint32_t extra_padding[30]; /* future */
+#endif
 #endif
 };
 
@@ -1270,12 +1279,14 @@ struct xsctp_raddr {
 #if __FreeBSD_version >= 800000
 	uint32_t rtt;
 	uint32_t heartbeat_interval;
-	uint32_t extra_padding[31];              /* future */
+	uint32_t ssthresh;
+	uint32_t extra_padding[30];              /* future */
 #endif
 #else
 	uint32_t rtt;
 	uint32_t heartbeat_interval;
-	uint32_t extra_padding[31];              /* future */
+	uint32_t ssthresh;
+	uint32_t extra_padding[30];              /* future */
 #endif
 };
 

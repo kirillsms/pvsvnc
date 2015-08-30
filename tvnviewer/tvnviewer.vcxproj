@@ -147,7 +147,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;comctl32.lib;WinMM.Lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;$(SolutionDir)revel-1.1.0\lib\revelD.lib;Secur32.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Debug.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Debug\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atlsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;comctl32.lib;WinMM.Lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;$(SolutionDir)revel-1.1.0\lib\revelD.lib;Secur32.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Debug.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)tvnviewer\lib\atlsd.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -247,7 +247,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Release\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MT.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MT.lib;$(SolutionDir)tvnviewer\lib\atls.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -257,6 +257,7 @@
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>CommonControls_win32.manifest;Compatibility.manifest;DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -304,7 +305,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;C:\Users\test\Desktop\revel-1.1.0\lib\revel.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>

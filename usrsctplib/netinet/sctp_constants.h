@@ -32,7 +32,7 @@
 
 #ifdef __FreeBSD__
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_constants.h 283650 2015-05-28 16:00:23Z tuexen $");
+__FBSDID("$FreeBSD: head/sys/netinet/sctp_constants.h 287294 2015-08-29 17:26:29Z tuexen $");
 #endif
 
 #ifndef _NETINET_SCTP_CONSTANTS_H_
@@ -466,7 +466,7 @@ extern void getwintimeofday(struct timeval *tv);
 
 
 /*
- * SCTP states for internal state machine XXX (should match "user" values)
+ * SCTP states for internal state machine
  */
 #define SCTP_STATE_EMPTY		0x0000
 #define SCTP_STATE_INUSE		0x0001
@@ -628,10 +628,6 @@ extern void getwintimeofday(struct timeval *tv);
 /* 30 seconds + RTO (in ms) */
 #define SCTP_HB_DEFAULT_MSEC	30000
 
-/* Max time I will wait for Shutdown to complete */
-#define SCTP_DEF_MAX_SHUTDOWN_SEC 180
-
-
 /*
  * This is how long a secret lives, NOT how long a cookie lives how many
  * ticks the current secret will live.
@@ -639,8 +635,8 @@ extern void getwintimeofday(struct timeval *tv);
 #define SCTP_DEFAULT_SECRET_LIFE_SEC 3600
 
 #define SCTP_RTO_UPPER_BOUND	(60000)	/* 60 sec in ms */
-#define SCTP_RTO_LOWER_BOUND	(100)	/* 1 sec is ms */
-#define SCTP_RTO_INITIAL	(300)	/* 3 sec in ms */
+#define SCTP_RTO_LOWER_BOUND	(1000)	/* 1 sec is ms */
+#define SCTP_RTO_INITIAL	(3000)	/* 3 sec in ms */
 
 
 #define SCTP_INP_KILL_TIMEOUT 20	/* number of ms to retry kill of inpcb */
@@ -719,7 +715,7 @@ extern void getwintimeofday(struct timeval *tv);
 
 #define SCTP_INITIAL_CWND 4380
 
-#define SCTP_DEFAULT_MTU 1200 /* emergency default MTU */
+#define SCTP_DEFAULT_MTU 1500 /* emergency default MTU */
 /* amount peer is obligated to have in rwnd or I will abort */
 #define SCTP_MIN_RWND	1500
 

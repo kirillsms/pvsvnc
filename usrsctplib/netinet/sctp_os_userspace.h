@@ -530,7 +530,6 @@ struct sx {int dummy;};
 #endif
 #if !defined(__Userspace_os_Windows)
 #include <netinet/ip6.h>
-#include <netinet/icmp6.h>
 #endif
 #if defined(__Userspace_os_Darwin) || defined(__Userspace_os_FreeBSD) || defined(__Userspace_os_Linux) || defined(__Userspace_os_NetBSD) || defined(__Userspace_os_OpenBSD) || defined(__Userspace_os_Windows)
 #include "user_ip6_var.h"
@@ -882,13 +881,13 @@ static inline void sctp_userspace_rtalloc(sctp_route_t *ro)
 			return;
 	}
 #endif
-	ro->ro_rt->rt_rmx.rmx_mtu = 1200; /* FIXME temporary solution */
+	ro->ro_rt->rt_rmx.rmx_mtu = 1500; /* FIXME temporary solution */
 
 	/* TODO enable the ability to obtain interface index of route for
 	 *  SCTP_GET_IF_INDEX_FROM_ROUTE macro.
 	 */
 }
-#define SCTP_RTALLOC(ro, vrf_id) sctp_userspace_rtalloc((sctp_route_t *)ro)
+#define SCTP_RTALLOC(ro, vrf_id, fibnum) sctp_userspace_rtalloc((sctp_route_t *)ro)
 
 /* dummy rtfree needed once user_route.h is included */
 static inline void sctp_userspace_rtfree(sctp_rtentry_t *rt)

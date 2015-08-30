@@ -19,34 +19,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3C56B11E-5211-4417-9A8F-87866BF5B800}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>p2p</RootNamespace>
+    <ProjectGuid>{1886D48F-B67F-49B4-8B99-9C0A42BDFA24}</ProjectGuid>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>usrsctplib</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
@@ -67,119 +69,155 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;SCTP_DEBUG;SCTP_SIMPLE_ALLOCATOR;SCTP_PROCESS_LEVEL_LOCKS;__Userspace__;__Userspace_os_Windows;INET;INET6;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>$(OutDir)usrsctplib.lib</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <StringPooling>true</StringPooling>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>WIN32;NDEBUG;SCTP_SIMPLE_ALLOCATOR;SCTP_PROCESS_LEVEL_LOCKS;__Userspace__;__Userspace_os_Windows;INET;INET6;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <StringPooling>true</StringPooling>
+      <CompileAsManaged>false</CompileAsManaged>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <CompileAs>Default</CompileAs>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(OutDir)usrsctplib.lib</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;SCTP_SIMPLE_ALLOCATOR;SCTP_PROCESS_LEVEL_LOCKS;__Userspace__;__Userspace_os_Windows;INET;INET6;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>$(OutDir)usrsctplib.lib</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dtls.cpp" />
-    <ClCompile Include="ice.cpp" />
-    <ClCompile Include="p2ptransport.cpp" />
-    <ClCompile Include="sctp.cpp" />
+    <ClInclude Include="netinet6\sctp6_var.h" />
+    <ClInclude Include="netinet\sctp.h" />
+    <ClInclude Include="netinet\sctputil.h" />
+    <ClInclude Include="netinet\sctp_asconf.h" />
+    <ClInclude Include="netinet\sctp_auth.h" />
+    <ClInclude Include="netinet\sctp_bsd_addr.h" />
+    <ClInclude Include="netinet\sctp_callout.h" />
+    <ClInclude Include="netinet\sctp_constants.h" />
+    <ClInclude Include="netinet\sctp_crc32.h" />
+    <ClInclude Include="netinet\sctp_header.h" />
+    <ClInclude Include="netinet\sctp_indata.h" />
+    <ClInclude Include="netinet\sctp_input.h" />
+    <ClInclude Include="netinet\sctp_lock_userspace.h" />
+    <ClInclude Include="netinet\sctp_os.h" />
+    <ClInclude Include="netinet\sctp_os_userspace.h" />
+    <ClInclude Include="netinet\sctp_output.h" />
+    <ClInclude Include="netinet\sctp_pcb.h" />
+    <ClInclude Include="netinet\sctp_peeloff.h" />
+    <ClInclude Include="netinet\sctp_process_lock.h" />
+    <ClInclude Include="netinet\sctp_sha1.h" />
+    <ClInclude Include="netinet\sctp_structs.h" />
+    <ClInclude Include="netinet\sctp_sysctl.h" />
+    <ClInclude Include="netinet\sctp_timer.h" />
+    <ClInclude Include="netinet\sctp_uio.h" />
+    <ClInclude Include="netinet\sctp_var.h" />
+    <ClInclude Include="user_atomic.h" />
+    <ClInclude Include="user_environment.h" />
+    <ClInclude Include="user_inpcb.h" />
+    <ClInclude Include="user_ip6_var.h" />
+    <ClInclude Include="user_ip_icmp.h" />
+    <ClInclude Include="user_malloc.h" />
+    <ClInclude Include="user_mbuf.h" />
+    <ClInclude Include="user_queue.h" />
+    <ClInclude Include="user_recv_thread.h" />
+    <ClInclude Include="user_route.h" />
+    <ClInclude Include="user_socketvar.h" />
+    <ClInclude Include="user_uma.h" />
+    <ClInclude Include="usrsctp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dtls.h" />
-    <ClInclude Include="ice.h" />
-    <ClInclude Include="P2pEventListener.h" />
-    <ClInclude Include="p2ptransport.h" />
-    <ClInclude Include="sctp.h" />
+    <ClCompile Include="netinet6\sctp6_usrreq.c" />
+    <ClCompile Include="netinet\sctputil.c" />
+    <ClCompile Include="netinet\sctp_asconf.c" />
+    <ClCompile Include="netinet\sctp_auth.c" />
+    <ClCompile Include="netinet\sctp_bsd_addr.c" />
+    <ClCompile Include="netinet\sctp_callout.c" />
+    <ClCompile Include="netinet\sctp_cc_functions.c" />
+    <ClCompile Include="netinet\sctp_crc32.c" />
+    <ClCompile Include="netinet\sctp_indata.c" />
+    <ClCompile Include="netinet\sctp_input.c" />
+    <ClCompile Include="netinet\sctp_output.c" />
+    <ClCompile Include="netinet\sctp_pcb.c" />
+    <ClCompile Include="netinet\sctp_peeloff.c" />
+    <ClCompile Include="netinet\sctp_sha1.c" />
+    <ClCompile Include="netinet\sctp_ss_functions.c" />
+    <ClCompile Include="netinet\sctp_sysctl.c" />
+    <ClCompile Include="netinet\sctp_timer.c" />
+    <ClCompile Include="netinet\sctp_userspace.c" />
+    <ClCompile Include="netinet\sctp_usrreq.c" />
+    <ClCompile Include="user_environment.c" />
+    <ClCompile Include="user_mbuf.c" />
+    <ClCompile Include="user_recv_thread.c" />
+    <ClCompile Include="user_socket.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
