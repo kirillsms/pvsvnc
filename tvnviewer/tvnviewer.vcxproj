@@ -147,7 +147,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;comctl32.lib;WinMM.Lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;$(SolutionDir)revel-1.1.0\lib\revelD.lib;Secur32.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc8-Debug.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc8-Debug.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc8-Debug.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Debug\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atlsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;comctl32.lib;WinMM.Lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;$(SolutionDir)revel-1.1.0\lib\revelD.lib;Secur32.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Debug.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Debug.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Debug\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atlsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -247,15 +247,16 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc8-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc8-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc8-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Release\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MTd.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MTd.lib;$(SolutionDir)usrsctplib\Release\usrsctplib.lib;$(SolutionDir)tvnviewer\lib\atls.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <SetChecksum>true</SetChecksum>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>CommonControls_win32.manifest;Compatibility.manifest;DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
