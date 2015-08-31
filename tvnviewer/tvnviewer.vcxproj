@@ -106,25 +106,25 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'" />
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EmbedManifest>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">kvnviewer</TargetName>
@@ -300,12 +300,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(WindowsSdkDir)Lib\x64\comctl32.lib;$(WindowsSdkDir)Lib\x64\Secur32.lib;$(WindowsSdkDir)Lib\x64\WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(OutDir)usrsctplib.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-x86_64-x64-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-x86_64-x64-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-x86_64-x64-vc10-Release.lib;$(SolutionDir)OpenSSL\lib64\VC\static\libeay32MT.lib;$(SolutionDir)OpenSSL\lib64\VC\static\ssleay32MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>

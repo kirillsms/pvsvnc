@@ -67,15 +67,16 @@
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
+    <TargetName>revel</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -129,10 +130,12 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4100</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>..\lib\libxvidcoreR.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)revel.lib</OutputFile>
+      <OutputFile>
+      </OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

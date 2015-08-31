@@ -11,7 +11,7 @@
 #include "thread/AutoLock.h"
 #include "win-system/WindowsEvent.h"
 
-#include <pj/addr_resolv.h>
+#include "pj/addr_resolv.h"
 #include <pjlib.h>
 #include <pjlib-util.h>
 #include <pjnath.h>

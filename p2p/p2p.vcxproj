@@ -75,11 +75,11 @@
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
@@ -128,7 +128,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..;$(SolutionDir)pjlib\pjlib\include\;$(SolutionDir)pjlib\pjlib-util\include\;$(SolutionDir)pjlib\pjnath\include\;$(SolutionDir)openssl\include\;$(SolutionDir)usrsctplib\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
@@ -152,8 +152,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..;$(SolutionDir)pjlib\pjlib\include\;$(SolutionDir)pjlib\pjlib-util\include\;$(SolutionDir)pjlib\pjnath\include\;$(SolutionDir)openssl\include\;$(SolutionDir)usrsctplib\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -106,21 +106,21 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugNoUnicode|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">$(SolutionDir)obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -177,7 +177,7 @@
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..;$(SolutionDir)pjlib\pjlib\include\;$(SolutionDir)pjlib\pjlib-util\include\;$(SolutionDir)pjlib\pjnath\include\;$(SolutionDir)openssl\include\;$(SolutionDir)usrsctplib\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level4</WarningLevel>
@@ -186,6 +186,9 @@
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|Win32'">
     <ClCompile>
@@ -205,15 +208,18 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..;$(SolutionDir)pjlib\pjlib\include\;$(SolutionDir)pjlib\pjlib-util\include\;$(SolutionDir)pjlib\pjnath\include\;$(SolutionDir)openssl\include\;$(SolutionDir)usrsctplib\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
     </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNoUnicode|x64'">
     <ClCompile>
