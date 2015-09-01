@@ -130,7 +130,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4005;4100</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;4100;4127</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>..\lib\libxvidcoreR.lib;%(AdditionalDependencies)</AdditionalDependencies>

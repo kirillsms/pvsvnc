@@ -126,7 +126,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>Default</CompileAs>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127;4131</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

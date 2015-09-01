@@ -6953,7 +6953,7 @@ sctp_setopt(struct socket *so, int optname, void *optval, size_t optsize,
 	}
 	case SCTP_RECVRCVINFO:
 	{
-		int *onoff;
+		int *onoff = 0;
 
 		SCTP_CHECK_AND_CAST(onoff, optval, int, optsize);
 		SCTP_INP_WLOCK(inp);

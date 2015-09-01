@@ -248,8 +248,8 @@ void Ice::OnReceiveData(pj_ice_strans* ice_st, unsigned comp_id, void* pkt, pj_s
 
 	IO(obj);
 	{
-	AutoLock al(&obj->dtls_tr->incoming_mutex);
-	int written = BIO_write(obj->dtls_tr->incoming_bio, pkt, size);
+		AutoLock al(&obj->dtls_tr->incoming_mutex);
+		int written = BIO_write(obj->dtls_tr->incoming_bio, pkt, size);
 	}
 
 	IO(obj);

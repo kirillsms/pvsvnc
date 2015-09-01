@@ -181,7 +181,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <UseFullPaths>true</UseFullPaths>
       <StringPooling>true</StringPooling>
-      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4127</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>Wtsapi32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>

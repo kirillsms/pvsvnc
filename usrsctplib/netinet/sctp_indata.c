@@ -2962,6 +2962,8 @@ sctp_strike_gap_ack_chunks(struct sctp_tcb *stcb, struct sctp_association *asoc,
 	struct sctp_nets *net;
 	int num_dests_sacked = 0;
 
+	ZeroMemory(&now, sizeof(now));
+
 	/*
 	 * select the sending_seq, this is either the next thing ready to be
 	 * sent but not transmitted, OR, the next seq we assign.
@@ -3386,6 +3388,8 @@ sctp_try_advance_peer_ack_point(struct sctp_tcb *stcb,
 	struct sctp_tmit_chunk *tp1, *tp2, *a_adv = NULL;
 	struct timeval now;
 	int now_filled = 0;
+
+	ZeroMemory(&now, sizeof(now));
 
 	if (asoc->prsctp_supported == 0) {
 		return (NULL);

@@ -391,9 +391,9 @@ int Sctp::sctp_data_received_cb(struct socket *sock, union sctp_sockstore addr, 
 
 
 Sctp::Sctp(LogWriter *log, Dtls::dtls_transport * dtls_tr, sctp_transport * sctp_, WindowsEvent * outEvent,WindowsEvent * inEvent, int port) {
-	 
-  //sctp = (struct sctp_transport *)calloc(1, sizeof *sctp);
-	
+
+	//sctp = (struct sctp_transport *)calloc(1, sizeof *sctp);
+
 	m_outEvent = outEvent;
 	m_inEvent = inEvent;
 
@@ -401,112 +401,114 @@ Sctp::Sctp(LogWriter *log, Dtls::dtls_transport * dtls_tr, sctp_transport * sctp
 
 	sctp->inEvent = m_inEvent;
 
-  if (sctp == NULL)
-    return;
-  sctp->error = false;
-  sctp->terminating = false;
-  sctp->local_port = port;
-  sctp->dtls_tr = dtls_tr;
+	if (sctp == NULL) {
+		return;
+	}
+	sctp->error = false;
+	sctp->terminating = false;
+	sctp->local_port = port;
+	sctp->dtls_tr = dtls_tr;
 
-  if(!dontbind)
-  usrsctp_init(0, sctp_data_ready_cb, NULL);
-  dontbind = true;
-
-  usrsctp_sysctl_set_sctp_ecn_enable(0);
-
-  usrsctp_register_address(sctp);
-  struct socket *s = usrsctp_socket(AF_CONN, SOCK_STREAM, IPPROTO_SCTP,sctp_data_received_cb, NULL, 0, sctp);
-  if (s == NULL)
-    goto trans_err;
-  sctp->sock = s;
-
-  BIO *bio = BIO_new(BIO_s_mem());
-  if (bio == NULL)
-    goto trans_err;
-  BIO_set_mem_eof_return(bio, -1);
-  sctp->incoming_bio = bio;
-
-  bio = BIO_new(BIO_s_mem());
-  if (bio == NULL)
-    goto trans_err;
-  BIO_set_mem_eof_return(bio, -1);
-  sctp->outgoing_bio = bio;
-
-  bio = BIO_new(BIO_s_mem());
-  if (bio == NULL)
-    goto trans_err;
-  
-  BIO_set_mem_eof_return(bio, -1);
-  sctp->recv_bio = bio;
-
-
-  struct linger lopt;
-  lopt.l_onoff = 1;
-  lopt.l_linger = 0;
-  usrsctp_setsockopt(s, SOL_SOCKET, SO_LINGER, &lopt, sizeof lopt);
-
-  struct sctp_paddrparams peer_param;
-  memset(&peer_param, 0, sizeof peer_param);
-  peer_param.spp_assoc_id = 0;
-  peer_param.spp_flags = SPP_PMTUD_DISABLE;
-  peer_param.spp_pathmtu = 1200;
-  usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_PEER_ADDR_PARAMS, &peer_param, sizeof peer_param);
-
-  struct sctp_assoc_value av;
-  av.assoc_id = SCTP_ALL_ASSOC;
-  av.assoc_value = 1;
-  usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_ENABLE_STREAM_RESET, &av, sizeof av);
-
-  uint32_t nodelay = 1;
-  usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_NODELAY, &nodelay, sizeof nodelay);
-
-  struct sctp_initmsg init_msg;
-  memset(&init_msg, 0, sizeof init_msg);
-  init_msg.sinit_num_ostreams = RTCDC_MAX_OUT_STREAM;
-  init_msg.sinit_max_instreams = RTCDC_MAX_IN_STREAM;
-  usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_INITMSG, &init_msg, sizeof init_msg);
-
-  int event_types[] =  {SCTP_ASSOC_CHANGE,
-  SCTP_PEER_ADDR_CHANGE,            
-  SCTP_REMOTE_ERROR,                
-  SCTP_SEND_FAILED,                 
-  SCTP_SHUTDOWN_EVENT,              
-  SCTP_ADAPTATION_INDICATION,       
-  SCTP_PARTIAL_DELIVERY_EVENT,      
-  SCTP_AUTHENTICATION_EVENT,        
-  SCTP_STREAM_RESET_EVENT,          
-  SCTP_SENDER_DRY_EVENT,            
-  SCTP_NOTIFICATIONS_STOPPED_EVENT, 
-  SCTP_ASSOC_RESET_EVENT,           
-  SCTP_STREAM_CHANGE_EVENT,         
-  SCTP_SEND_FAILED_EVENT};           
-
-  struct sctp_event event = {0};
-  event.se_assoc_id = SCTP_ALL_ASSOC;
-  event.se_on = 1;
-  for (size_t i = 0; i < 12; i++) {
-    event.se_type = event_types[i];
-    usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_EVENT, &event,sizeof(event));
-     
+	if(!dontbind) {
+		usrsctp_init(0, sctp_data_ready_cb, NULL);
+		dontbind = true;
 	}
 
-  struct sockaddr_conn sconn;
-  memset(&sconn, 0, sizeof sconn);
-  sconn.sconn_family = AF_CONN;
-  sconn.sconn_port = htons(sctp->local_port);
-  sconn.sconn_addr = (void *)sctp;
+	usrsctp_sysctl_set_sctp_ecn_enable(0);
 
-  usrsctp_bind(s, (struct sockaddr *)&sconn, sizeof sconn);
-  
-  if (0) {
+	usrsctp_register_address(sctp);
+	struct socket *s = usrsctp_socket(AF_CONN, SOCK_STREAM, IPPROTO_SCTP,sctp_data_received_cb, NULL, 0, sctp);
+	if (s == NULL) {
+		goto trans_err;
+	}
+	sctp->sock = s;
+
+	BIO *bio = BIO_new(BIO_s_mem());
+	if (bio == NULL) {
+		goto trans_err;
+	}
+	BIO_set_mem_eof_return(bio, -1);
+	sctp->incoming_bio = bio;
+
+	bio = BIO_new(BIO_s_mem());
+	if (bio == NULL) {
+		goto trans_err;
+	}
+	BIO_set_mem_eof_return(bio, -1);
+	sctp->outgoing_bio = bio;
+
+	bio = BIO_new(BIO_s_mem());
+	if (bio == NULL) {
+		goto trans_err;
+	}
+	BIO_set_mem_eof_return(bio, -1);
+	sctp->recv_bio = bio;
+
+	struct linger lopt;
+	lopt.l_onoff = 1;
+	lopt.l_linger = 0;
+	usrsctp_setsockopt(s, SOL_SOCKET, SO_LINGER, &lopt, sizeof lopt);
+
+	struct sctp_paddrparams peer_param;
+	memset(&peer_param, 0, sizeof peer_param);
+	peer_param.spp_assoc_id = 0;
+	peer_param.spp_flags = SPP_PMTUD_DISABLE;
+	peer_param.spp_pathmtu = 1200;
+	usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_PEER_ADDR_PARAMS, &peer_param, sizeof peer_param);
+
+	struct sctp_assoc_value av;
+	av.assoc_id = SCTP_ALL_ASSOC;
+	av.assoc_value = 1;
+	usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_ENABLE_STREAM_RESET, &av, sizeof av);
+
+	uint32_t nodelay = 1;
+	usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_NODELAY, &nodelay, sizeof nodelay);
+
+	struct sctp_initmsg init_msg;
+	memset(&init_msg, 0, sizeof init_msg);
+	init_msg.sinit_num_ostreams = RTCDC_MAX_OUT_STREAM;
+	init_msg.sinit_max_instreams = RTCDC_MAX_IN_STREAM;
+	usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_INITMSG, &init_msg, sizeof init_msg);
+
+	int event_types[] =  {SCTP_ASSOC_CHANGE,
+		SCTP_PEER_ADDR_CHANGE,            
+		SCTP_REMOTE_ERROR,                
+		SCTP_SEND_FAILED,                 
+		SCTP_SHUTDOWN_EVENT,              
+		SCTP_ADAPTATION_INDICATION,       
+		SCTP_PARTIAL_DELIVERY_EVENT,      
+		SCTP_AUTHENTICATION_EVENT,        
+		SCTP_STREAM_RESET_EVENT,          
+		SCTP_SENDER_DRY_EVENT,            
+		SCTP_NOTIFICATIONS_STOPPED_EVENT, 
+		SCTP_ASSOC_RESET_EVENT,           
+		SCTP_STREAM_CHANGE_EVENT,         
+		SCTP_SEND_FAILED_EVENT};           
+
+	struct sctp_event event = {0};
+	event.se_assoc_id = SCTP_ALL_ASSOC;
+	event.se_on = 1;
+	for (size_t i = 0; i < 12; i++) {
+		event.se_type = event_types[i];
+		usrsctp_setsockopt(s, IPPROTO_SCTP, SCTP_EVENT, &event,sizeof(event));
+	}
+
+	struct sockaddr_conn sconn;
+	memset(&sconn, 0, sizeof sconn);
+	sconn.sconn_family = AF_CONN;
+	sconn.sconn_port = htons(sctp->local_port);
+	sconn.sconn_addr = (void *)sctp;
+
+	usrsctp_bind(s, (struct sockaddr *)&sconn, sizeof sconn);
+
+	if (0) {
 trans_err:
-	usrsctp_finish();
-    free(sctp);
-    sctp = NULL;
-  }
-  this->resume();
- return;
-
+		usrsctp_finish();
+		free(sctp);
+		sctp = NULL;
+	}
+	this->resume();
+	return;
 }
 
 Sctp::~Sctp(){

@@ -7107,7 +7107,7 @@ sctp_load_addresses_from_init(struct sctp_tcb *stcb, struct mbuf *m,
 	uint8_t peer_supports_prsctp;
 	uint8_t peer_supports_auth;
 	uint8_t peer_supports_asconf;
-	uint8_t peer_supports_asconf_ack;
+	uint8_t peer_supports_asconf_ack = 0;
 	uint8_t peer_supports_reconfig;
 	uint8_t peer_supports_nrsack;
 	uint8_t peer_supports_pktdrop;

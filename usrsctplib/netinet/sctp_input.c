@@ -5835,7 +5835,7 @@ sctp_common_input_processing(struct mbuf **mm, int iphlen, int offset, int lengt
 #endif
                              uint32_t vrf_id, uint16_t port)
 {
-	uint32_t high_tsn;
+	uint32_t high_tsn = 0;
 	int fwd_tsn_seen = 0, data_processed = 0;
 	struct mbuf *m = *mm, *op_err;
 	char msg[SCTP_DIAG_INFO_LEN];

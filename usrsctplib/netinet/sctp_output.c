@@ -7134,7 +7134,7 @@ sctp_sendall_iterator(struct sctp_inpcb *inp, struct sctp_tcb *stcb, void *ptr,
 	if (do_chunk_output)
 		sctp_chunk_output(inp, stcb, SCTP_OUTPUT_FROM_USR_SEND, SCTP_SO_NOT_LOCKED);
 	else if (added_control) {
-		int num_out, reason, now_filled = 0;
+		int num_out = 0, reason, now_filled = 0;
 		struct timeval now;
 		int frag_point;
 
@@ -14489,7 +14489,7 @@ skip_out_eof:
 		}
 		sctp_chunk_output(inp, stcb, SCTP_OUTPUT_FROM_USR_SEND, SCTP_SO_LOCKED);
 	} else if (some_on_control) {
-		int num_out, reason, frag_point;
+		int num_out = 0, reason, frag_point;
 
 		/* Here we do control only */
 		if (hold_tcblock == 0) {
