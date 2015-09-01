@@ -54,14 +54,8 @@
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                        LPTSTR lpCmdLine, int nCmdShow)
 {
-//  LIBSSH2_SESSION *session;
 
 LogWriter preLog(0);
-
-  //session = libssh2_session_init();
-
-
-
 
   // Life time of the sysLog must be greater than a TvnService object
   // because the crashHook uses it but fully functional usage possible

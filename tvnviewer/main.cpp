@@ -31,10 +31,13 @@
 #include "ViewerCmdLine.h"
 #include "util/ResourceLoader.h"
 
+#include "ClientCrashHook.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE,
                        LPTSTR lpCmdLine, int nCmdShow)
 {
+
+  ClientCrashHook clientCrashHook(NULL);
 
   ViewerSettingsManager::initInstance(RegistryPaths::VIEWER_PATH);
   SettingsManager *sm = ViewerSettingsManager::getInstance();

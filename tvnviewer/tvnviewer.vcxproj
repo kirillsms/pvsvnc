@@ -250,7 +250,7 @@
       <AdditionalDependencies>$(OutDir)avilog.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;comctl32.lib;Secur32.lib;WinMM.Lib;$(SolutionDir)revel-1.1.0\lib\revel.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MT.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MT.lib;$(SolutionDir)tvnviewer\lib\atls.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
@@ -348,6 +348,7 @@
     <ClCompile Include="AvilogThread.cpp" />
     <ClCompile Include="BuildTime.cpp" />
     <ClCompile Include="ClientChatDialog.cpp" />
+    <ClCompile Include="ClientCrashHook.cpp" />
     <ClCompile Include="CommentDialog.cpp" />
     <ClCompile Include="ConfigurationDialog.cpp" />
     <ClCompile Include="ConnectionData.cpp" />
@@ -380,6 +381,7 @@
     <ClInclude Include="AuthenticationDialog.h" />
     <ClInclude Include="BuildTime.h" />
     <ClInclude Include="ClientChatDialog.h" />
+    <ClInclude Include="ClientCrashHook.h" />
     <ClInclude Include="CommentDialog.h" />
     <ClInclude Include="ConfigurationDialog.h" />
     <ClInclude Include="ConnectionData.h" />

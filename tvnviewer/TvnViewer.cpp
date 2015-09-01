@@ -30,6 +30,7 @@
 
 
 
+
 TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
                      const TCHAR *viewerWindowClassName)
 : WindowsApplication(appInstance, windowClassName),
@@ -39,6 +40,8 @@ TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
   m_logWriter(ViewerConfig::getInstance()->getLogger()),
   m_isListening(false)
 {
+  
+	  
   m_logWriter.info(_T("Init WinSock 2.1"));
   WindowsSocket::startup(2, 1);
   registerViewerWindowClass();
@@ -51,6 +54,7 @@ TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
 
   m_trayIcon = new ControlTrayIcon(this);
   m_loginDialog = new LoginDialog(this);
+  
 }
 
 TvnViewer::~TvnViewer()
