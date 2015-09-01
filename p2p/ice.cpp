@@ -542,7 +542,7 @@ void Ice::InputSession(char *dataArr) {
 
 	pj_thread_register("thread", desc, &this_thread);
 
-	char linebuf[256];
+	char linebuf[1024];
 	unsigned media_cnt = 0;
 	unsigned comp0_port = 0;
 	char     comp0_addr[80];
