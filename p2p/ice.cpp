@@ -887,7 +887,6 @@ void Ice::StartNego()
 		return;
 	}
 
-
 	status = pj_ice_strans_start_ice(obj->icest,
 		pj_cstr(&rufrag, rem.ufrag),
 		pj_cstr(&rpwd, rem.pwd),
