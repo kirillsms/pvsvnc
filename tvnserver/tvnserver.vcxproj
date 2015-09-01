@@ -261,7 +261,7 @@
     <Link>
       <AdditionalDependencies>comctl32.lib;$(SolutionDir)libjpeg-turbo\jpeg-static-64.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-x86_64-x64-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-x86_64-x64-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-x86_64-x64-vc10-Release.lib;$(SolutionDir)OpenSSL\lib64\VC\static\libeay32MT.lib;$(SolutionDir)OpenSSL\lib64\VC\static\ssleay32MT.lib;$(SolutionDir)/bin/Release_x64/usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27amd64%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
