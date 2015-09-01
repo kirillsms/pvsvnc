@@ -231,6 +231,9 @@ private:
   virtual LRESULT onHookProc(int code, WPARAM wParam, LPARAM lParam);
   WinHooks m_winHooks;
   bool m_hooksEnabledFirstTime;
+
+  bool m_p2pEnabled;
+
 };
 
 #endif

@@ -54,7 +54,7 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
   m_sizeIsChanged(false),
   m_hooksEnabledFirstTime(true),
   m_requiresReconnect(false),
-  m_stopped(false),displayCount(0)//,m_chatDialog(this)
+  m_stopped(false),displayCount(0),m_p2pEnabled(false)//,m_chatDialog(this)
 {
   m_standardScale.push_back(10);
   m_standardScale.push_back(15);
@@ -197,7 +197,7 @@ void ViewerWindow::enableUserElements()
   m_toolbar.checkButton(IDS_TB_REC, false);
   }
 
-  m_toolbar.enableButton(IDS_TB_P2P,false);
+  m_toolbar.enableButton(IDS_TB_P2P,m_p2pEnabled);
 
 }
 
@@ -677,6 +677,7 @@ void ViewerWindow::remoteCP()
 
 void ViewerWindow::beginP2P()
 {
+
 	LRESULT iState = m_toolbar.getState(IDS_TB_P2P);
   
   if (iState) {
@@ -1291,13 +1292,13 @@ Rect ViewerWindow::calculateDefaultSize()
 void ViewerWindow::onP2pSuccess()
 {
 	m_toolbar.enableButton(IDS_TB_P2P, true);
-	//m_viewerCore->stopUpdating(false);
+	m_p2pEnabled = true;
 }
 
 void ViewerWindow::onP2pFailed()
 {
 	m_toolbar.checkButton(IDS_TB_P2P, false);
-	//m_viewerCore->stopUpdating(false);
+	m_p2pEnabled = false;
 }
 
 void ViewerWindow::onConnected(RfbOutputGate *output)
