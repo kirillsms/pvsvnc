@@ -214,6 +214,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <PreLinkEvent>
       <Message>Updating BuildTime</Message>
@@ -223,13 +224,14 @@
       <AdditionalDependencies>comctl32.lib;$(SolutionDir)libjpeg-turbo\jpeg-static.lib;$(SolutionDir)pjlib\pjlib\lib\pjlib-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjlib-util\lib\pjlib-util-i386-Win32-vc10-Release.lib;$(SolutionDir)pjlib\pjnath\lib\pjnath-i386-Win32-vc10-Release.lib;$(SolutionDir)OpenSSL\lib\VC\static\libeay32MT.lib;$(SolutionDir)OpenSSL\lib\VC\static\ssleay32MT.lib;$(OutDir)usrsctplib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <SetChecksum>true</SetChecksum>
-      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>CommonControls_win32.manifest;Compatibility.manifest;DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -240,9 +242,9 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <Optimization>Full</Optimization>
+      <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>.;..;../pjlib/pjlib/include/;../pjlib/pjlib-util/include/;../pjlib/pjnath/include/;../openssl/include/;../usrsctplib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WIN64;PJ_WIN64=1;PJ_M_X86_64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -253,6 +255,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <PreLinkEvent>
       <Message>Updating BuildTime</Message>
@@ -267,7 +270,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
       <SetChecksum>true</SetChecksum>
-      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>CommonControls_x64.manifest;Compatibility.manifest;DPIAware.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
