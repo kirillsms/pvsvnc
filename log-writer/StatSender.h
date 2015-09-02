@@ -12,7 +12,7 @@
 class StatSender : public Thread
 {
 public:
-  StatSender(ConnectionData * condata);
+  StatSender(ConnectionData * condata, P2pTransport * p2p);
   void setComment(StringStorage * comment);
   virtual ~StatSender();
   
@@ -26,7 +26,7 @@ private:
 	AnsiStringStorage ausername;
 	AnsiStringStorage avp;
 	AnsiStringStorage acomment;
-
+	P2pTransport * m_p2p;
 };
 
 #endif // __STATSENDER_H__

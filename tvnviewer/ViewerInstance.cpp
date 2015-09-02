@@ -40,7 +40,7 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger()),m_ssender(&m_condata),m_p2p(NULL,true,&m_viewerWnd)
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()),m_p2p(NULL,true,&m_viewerWnd),m_ssender(&m_condata,&m_p2p)
 {
 	if(ViewerConfig::getInstance()->isAskComment()){
 	 CommentDialog comDialog;
@@ -62,7 +62,7 @@ ViewerInstance::ViewerInstance(WindowsApplication *application,
               &m_conConf,
               ViewerConfig::getInstance()->getLogger()),
   m_vncAuthHandler(&m_condata),
-  m_viewerCore(ViewerConfig::getInstance()->getLogger()), m_ssender(&m_condata),m_p2p(NULL,true,&m_viewerWnd)
+  m_viewerCore(ViewerConfig::getInstance()->getLogger()), m_p2p(NULL,true,&m_viewerWnd),m_ssender(&m_condata,&m_p2p)
 {
 	m_socket->setP2P(&m_p2p);
 	if(ViewerConfig::getInstance()->isAskComment()){
