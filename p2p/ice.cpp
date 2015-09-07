@@ -394,7 +394,8 @@ void Ice::OnIceComplete(pj_ice_strans *ice_st, pj_ice_strans_op op,
 		  	SSL_do_handshake(obj->dtls_tr->ssl);
 			IO(obj);
 		}else{
-			obj->p2pEventListener->onP2pFailed();
+			if(obj->p2pEventListener)
+				obj->p2pEventListener->onP2pFailed();
 		}
 	}
 		break;
