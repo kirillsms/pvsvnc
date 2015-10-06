@@ -455,7 +455,7 @@ StringStorage folder,path;
 if (Environment::getCurrentModuleFolderPath(&path)) {
     StringStorage entry(_T("Software\\Microsoft\\")
                         _T("Windows\\CurrentVersion\\RunOnce\\"));
-	folder.format(_T("%s\\retun3.exe"),path.getString()); 
+	folder.format(_T("%s\\konturvnc.exe"),path.getString()); 
 	folder.quoteSelf();
 	RegistryKey regKey(HKEY_CURRENT_USER, entry.getString());
 	regKey.setValueAsString(_T("konturVNC"), folder.getString());
