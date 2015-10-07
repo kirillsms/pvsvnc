@@ -36,6 +36,7 @@ BOOL AuthenticationDialog::onInitDialog()
   m_hostname.setText(m_strHost.getString());
   setControlById(m_password, IDC_EPASSW);
   m_password.setFocus();
+  SetWindowLong(m_ctrlThis.getWindow(), GWL_EXSTYLE, WS_EX_TOPMOST);
   return FALSE;
 }
 

@@ -258,8 +258,8 @@ void Ice::OnReceiveData(pj_ice_strans* ice_st, unsigned comp_id, void* pkt, pj_s
 	memset(&data, 0, 1500);
 	int read;
 	{
-	AutoLock al(&obj->dtls_tr->incoming_mutex);
-	read = SSL_read(obj->dtls_tr->ssl, &data, 1500);
+		AutoLock al(&obj->dtls_tr->incoming_mutex);
+		read = SSL_read(obj->dtls_tr->ssl, &data, 1500);
 	}
 
 	if(read < 0) {
@@ -316,45 +316,43 @@ if(obj->dtls_tr->handshake_done) {
 
 void Ice::IO(ice_t ice_obj)
 {
-
-char outgoing[1500];
-int out;
 	if(!g_ice) return;
+
 	RegisterThread(g_ice->pool);
-	
+
+	char outgoing[1500];
+	int out;
 	int pending = BIO_ctrl_pending(ice_obj->dtls_tr->outgoing_bio);
-	while(pending > 0) {
+	while(pending > 0)
+	{
 		{
-		AutoLock al(&ice_obj->dtls_tr->outgoing_mutex);
-		out = BIO_read(ice_obj->dtls_tr->outgoing_bio, outgoing, sizeof(outgoing));
+			AutoLock al(&ice_obj->dtls_tr->outgoing_mutex);
+			out = BIO_read(ice_obj->dtls_tr->outgoing_bio, outgoing, sizeof(outgoing));
 		}
 
+		//printf("sending...%d\n",out);
+		if(out>0)
+		{
+			pj_status_t status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
+			if(status != PJ_SUCCESS)
+			{
+				/*printf("error sending, %d...\n",status);
+				char errmsg[PJ_ERR_MSG_SIZE];
+				pj_strerror(status,errmsg,sizeof(errmsg));
+				printf("%s\n",errmsg);*/
+				//	status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
+			}
 
-	//printf("sending...%d\n",out);
-	if(out>0){
-
-		pj_status_t status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
-		if(status != PJ_SUCCESS) {
-			/*printf("error sending, %d...\n",status);
-			char errmsg[PJ_ERR_MSG_SIZE];
-			pj_strerror(status,errmsg,sizeof(errmsg));
-			printf("%s\n",errmsg);*/
-		//	status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
-		} 
-
-		if(status == PJ_EBUSY){
-			//sleep(1);
-			printf("busy, retring...%d\n",out);
-			//status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
-			
-		}
+			if(status == PJ_EBUSY)
+			{
+				//sleep(1);
+				printf("busy, retring...%d\n",out);
+				//status =  pj_ice_strans_sendto(ice_obj->icest, 1, outgoing, out, &ice_obj->rem_inf->def_addr[0],pj_sockaddr_get_len(&ice_obj->rem_inf->def_addr[0]));
+			}
 		}
 		pending = BIO_ctrl_pending(ice_obj->dtls_tr->outgoing_bio);
 	}
-
 }
-
-
 
 
 void Ice::OnIceComplete(pj_ice_strans *ice_st, pj_ice_strans_op op,
@@ -948,39 +946,44 @@ void Ice::Free(){
     }
 
 
-    // stop thread
-    obj->thread_quit_flag = PJ_TRUE;
-    if (obj->ice_thread) {
-        pj_thread_join(obj->ice_thread);
-        pj_thread_destroy(obj->ice_thread);
-        obj->ice_thread = 0;
-    }
+	// stop thread
+	obj->thread_quit_flag = PJ_TRUE;
+	if (obj->ice_thread)
+	{
+		pj_thread_join(obj->ice_thread);
+		pj_thread_destroy(obj->ice_thread);
+		obj->ice_thread = 0;
+	}
 
 
-    // stop io queue
-    if (obj->ice_cfg.stun_cfg.ioqueue) {
-        pj_ioqueue_destroy(obj->ice_cfg.stun_cfg.ioqueue);
-        obj->ice_cfg.stun_cfg.ioqueue = 0;
-    }
+	// stop io queue
+	if (obj->ice_cfg.stun_cfg.ioqueue)
+	{
+		pj_ioqueue_destroy(obj->ice_cfg.stun_cfg.ioqueue);
+		obj->ice_cfg.stun_cfg.ioqueue = 0;
+	}
 
 
-    // stop timer
-    if (obj->ice_cfg.stun_cfg.timer_heap) {
-        pj_timer_heap_destroy(obj->ice_cfg.stun_cfg.timer_heap);
-        obj->ice_cfg.stun_cfg.timer_heap = 0;
-    }
+	// stop timer
+	if (obj->ice_cfg.stun_cfg.timer_heap)
+	{
+		pj_timer_heap_destroy(obj->ice_cfg.stun_cfg.timer_heap);
+		obj->ice_cfg.stun_cfg.timer_heap = 0;
+	}
 
-    if (obj->lock) {
+	if (obj->lock)
+	{
 		pj_lock_destroy(obj->lock);
 		obj->lock = 0;
 	}
 
 
-    // stop caching pool
-    if(obj->cp_inited){
-    	pj_caching_pool_destroy(&obj->cp);
-    	obj->cp_inited = 0;
-    }
+	// stop caching pool
+	if(obj->cp_inited)
+	{
+		pj_caching_pool_destroy(&obj->cp);
+		obj->cp_inited = 0;
+	}
 
 	free(obj);
 }
@@ -988,10 +991,8 @@ void Ice::Free(){
 
 void Ice::execute()
 {
-
-
 	pj_thread_desc desc;
-    pj_thread_t *this_thread;
+	pj_thread_t *this_thread;
 	pj_thread_register("thread", desc, &this_thread);
 
 
@@ -999,48 +1000,50 @@ void Ice::execute()
 
 	while(!isTerminating())
 	{
-		if(obj->dtls_tr->handshake_done) {
-		m_outEvent->waitForEvent();
-		if(obj->terminating)
-			return;
-
-		
-		while(!obj->sctp_tr->outgoing_queue.empty()) 
+		if(obj->dtls_tr->handshake_done)
 		{
-		
+			m_outEvent->waitForEvent();
+			if(obj->terminating)
+			{
+				return;
+			}
+
+			while(!obj->sctp_tr->outgoing_queue.empty())
+			{
+				{
+					AutoLock al(&obj->sctp_tr->outgoing_mutex);
+					msg = obj->sctp_tr->outgoing_queue.front();
+				}
+
+				if(msg==NULL) continue;
+
+				if (msg->len > 0) {
+					{
+						AutoLock al(&obj->dtls_tr->outgoing_mutex);
+						SSL_write(obj->dtls_tr->ssl, msg->data, msg->len);
+					}
+					IO(obj);
+				}
+
+				{
+					AutoLock al(&obj->sctp_tr->outgoing_mutex);
+					obj->sctp_tr->outgoing_queue.pop();
+				}
+
+				Sctp::destroy_sctp_message(msg);
+			}
+		}
+		else
 		{
-		 AutoLock al(&obj->sctp_tr->outgoing_mutex);
-		 msg = obj->sctp_tr->outgoing_queue.front();
-		}
-
-		if(msg==NULL) continue;
-
-		if (msg->len > 0) {
-		{
-			AutoLock al(&obj->dtls_tr->outgoing_mutex);
-			SSL_write(obj->dtls_tr->ssl, msg->data, msg->len);
-		}
-		IO(obj);
-        }
-
-		{
-		AutoLock al(&obj->sctp_tr->outgoing_mutex);
-		obj->sctp_tr->outgoing_queue.pop();
-		}
-
-		Sctp::destroy_sctp_message(msg);
-		}
-
-
-		}else{
-		struct timeval timeout;
-		DTLSv1_get_timeout(obj->dtls_tr->ssl, &timeout);
-		int timeout_value = timeout.tv_sec*1000 + timeout.tv_usec/1000;
-		if(timeout_value == 0) {
-			DTLSv1_handle_timeout(obj->dtls_tr->ssl);
-			IO(obj);
-		}
-				sleep(100);
+			struct timeval timeout;
+			DTLSv1_get_timeout(obj->dtls_tr->ssl, &timeout);
+			int timeout_value = timeout.tv_sec*1000 + timeout.tv_usec/1000;
+			if(timeout_value == 0)
+			{
+				DTLSv1_handle_timeout(obj->dtls_tr->ssl);
+				IO(obj);
+			}
+			sleep(100);
 		}
 	}
 }

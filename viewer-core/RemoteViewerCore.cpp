@@ -895,11 +895,13 @@ StringStorage RemoteViewerCore::getRemoteDesktopName() const
 
 void RemoteViewerCore::execute()
 {
+  DWORD	dwTimeout = 3500;
   try {
     // connect to host and create RfbInputGate/RfbOutputGate
     // if already connected, then function do nothing
     m_logWriter.info(_T("Protocol stage is \"Connection establishing\"."));
     connectToHost();
+	m_tcpConnection.getSocket()->setSocketOptions(SOL_SOCKET, SO_RCVTIMEO, &dwTimeout, 4);
 
     // get server version and set client version
     m_logWriter.info(_T("Protocol stage is \"Handshake\"."));
@@ -936,6 +938,10 @@ void RemoteViewerCore::execute()
     // send supporting encoding
     m_logWriter.info(_T("Protocol stage is \"Encoding select\"."));
     sendEncodings();
+
+	dwTimeout = 0;
+	m_tcpConnection.getSocket()->setSocketOptions(SOL_SOCKET, SO_RCVTIMEO, &dwTimeout, 4);
+
 
     // send request of frame buffer update
     m_logWriter.info(_T("Protocol stage is \"Working phase\"."));

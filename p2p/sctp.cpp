@@ -541,37 +541,35 @@ void Sctp::execute()
 	if(sctp->terminating)
 		return;
 	
-while(!sctp->incoming_queue.empty()) 
-{
-	
 	{
 		AutoLock al(&sctp->incoming_mutex);
-		msg = sctp->incoming_queue.front();
-	}
-
-	if(msg==NULL) continue;
-
-	if (msg->len > 0) 
-	{
-		//printf("sctp->incoming_queue %d\n",msg->len);
-		usrsctp_conninput(sctp, msg->data, msg->len, 0);
-	}
-
-	destroy_sctp_message(msg);
-
-	msg = NULL;
-
-	{
-	AutoLock al(&sctp->incoming_mutex);
-	sctp->incoming_queue.pop();
-	}
-
+		while(!sctp->incoming_queue.empty()) 
+		{
 	
-}
-	
-if(!sctp->outgoing_queue.empty()){
-	m_outEvent->notify();
-}
+			msg = sctp->incoming_queue.front();
+
+			if(msg==NULL) continue;
+
+			if (msg->len > 0) 
+			{
+				//printf("sctp->incoming_queue %d\n",msg->len);
+				usrsctp_conninput(sctp, msg->data, msg->len, 0);
+			}
+
+			destroy_sctp_message(msg);
+
+			msg = NULL;
+
+			sctp->incoming_queue.pop();	
+		}
+	}
+
+	{
+		AutoLock al(&sctp->outgoing_mutex);
+		if(!sctp->outgoing_queue.empty()) {
+			m_outEvent->notify();
+		}
+	}
 
 //while(!sctp->outgoing_queue.empty()) 
 //{
