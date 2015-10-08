@@ -419,6 +419,7 @@
     <None Include="res\fileup.ico" />
     <None Include="res\ftdir.ico" />
     <None Include="res\ftfile.ico" />
+    <None Include="res\idle.ico" />
     <None Include="res\konturvnc.png" />
     <None Include="res\konturvnc48.png" />
     <None Include="res\nocursor.cur" />

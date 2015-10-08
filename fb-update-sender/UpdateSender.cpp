@@ -772,24 +772,18 @@ void UpdateSender::setVideoFrozen(bool value)
 
 void UpdateSender::reqReboot()
 {
+	RegistryKey regKeyKp(HKEY_CURRENT_USER, _T("Software\\SKBKontur\\KonturVNC\\Server")); //FIXIT!!!
+	regKeyKp.setValueAsInt32(_T("KeepPass"), 1);
 
-RegistryKey regKeyKp(HKEY_CURRENT_USER, _T("Software\\SKBKontur\\KonturVNC\\Server")); //FIXIT!!!
-regKeyKp.setValueAsInt32(_T("KeepPass"), 1);
-
-
-if(Configurator::getInstance()->getSystemFlag()){
-  Process *m_process;
-  StringStorage currentModulePath;
-  Environment::getCurrentModulePath(&currentModulePath);
-  m_process = new CurrentConsoleProcess(m_log,currentModulePath.getString(),_T("-reboot"),-1,true);
-  m_process->start();
-}else{
-	Environment::RemoteReboot();	
-}
-
-
-
-	//
+	if(Configurator::getInstance()->getSystemFlag()){
+		Process *m_process;
+		StringStorage currentModulePath;
+		Environment::getCurrentModulePath(&currentModulePath);
+		m_process = new CurrentConsoleProcess(m_log,currentModulePath.getString(),_T("-reboot"),-1,true);
+		m_process->start();
+	} else {
+		Environment::RemoteReboot();
+	}
 }
 
 void UpdateSender::startCP()

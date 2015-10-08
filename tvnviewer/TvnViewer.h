@@ -111,7 +111,6 @@ public:
   static const int WM_CONNECTED = WM_USER + 7;
   static const int WM_CONNECTION_CANCELED = WM_USER + 8;
   static const int WM_SET_ERROR = WM_USER + 9;
-  static const int WM_SET_WAS_CONNECTED = WM_USER + 10;
 
   // This timer is used for deleting dead instances of viewer.
   static const int TIMER_DELETE_DEAD_INSTANCE = 1;
@@ -142,29 +141,25 @@ protected:
   HACCEL m_hAccelTable;
 
 private:
-  void addInstance(ViewerInstance *viewerInstance);
+	void addInstance(ViewerInstance *viewerInstance);
 
-  bool m_isListening;
-  
-  LogWriter m_logWriter;
+	bool m_isListening;
 
-  AboutDialog m_aboutDialog;
-  ConfigurationDialog m_configurationDialog;
-  OptionsDialog m_optionsDialog;
+	LogWriter m_logWriter;
 
+	AboutDialog m_aboutDialog;
+	ConfigurationDialog m_configurationDialog;
+	OptionsDialog m_optionsDialog;
 
-  LoginDialog *m_loginDialog;
-  ControlTrayIcon *m_trayIcon;
-  ConnectionListener *m_conListener;
+	LoginDialog *m_loginDialog;
+	ControlTrayIcon *m_trayIcon;
+	ConnectionListener *m_conListener;
 
-  WNDCLASS m_viewerWndClass;
+	WNDCLASS m_viewerWndClass;
 
 public:
-  ReconnectDialog * m_reconnectDialog;
-  BOOL				bConnectionCanceled;
-  BOOL				bWasConnected;
-  BOOL				bStopReconnect;
-
+	ReconnectDialog *	m_reconnectDialog;
+	BOOL				bConnectionCanceled;
 };
 
 #endif

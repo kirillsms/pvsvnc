@@ -1152,7 +1152,7 @@ void ViewerWindow::reconnect(BOOL bResetPassword) {
 	pContext[1] = connectionConfig;
 	pContext[2] = m_application;
 	QueueUserWorkItem(ReconnectProc, pContext, 0);
- 	//m_application->postMessage(TvnViewer::WM_USER_RECONNECT, (WPARAM)connectionData, (LPARAM)connectionConfig);
+	//m_application->postMessage(TvnViewer::WM_USER_RECONNECT, (WPARAM)connectionData, (LPARAM)connectionConfig);
 }
 
 void ViewerWindow::notifyErrorWnd() {
@@ -1184,14 +1184,13 @@ bool ViewerWindow::onAuthError(WPARAM wParam)
 {
 	if (wParam != AuthException::AUTH_CANCELED) {
 		m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, FALSE);
-		reconnect(TRUE);		
+		reconnect(TRUE);
 	}
 	else {
 		m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, TRUE);
 		m_application->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
 	}
 	notifyErrorWnd();
-
 	m_dsktWnd.destroyWindow();
 	destroyWindow();
 	return true;
@@ -1199,7 +1198,7 @@ bool ViewerWindow::onAuthError(WPARAM wParam)
 
 bool ViewerWindow::onError()
 {
-	m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, FALSE);
+	m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, FALSE, TRUE);
 	reconnect(FALSE);
 	notifyErrorWnd();
 	m_dsktWnd.destroyWindow();
@@ -1293,7 +1292,6 @@ void ViewerWindow::onConnected(RfbOutputGate *output)
   m_dsktWnd.setConnected();
 
   m_application->postMessage(TvnViewer::WM_CONNECTED);
-  m_application->postMessage(TvnViewer::WM_SET_WAS_CONNECTED, TRUE);
 
   // Set output for client-to-server messages in file transfer.
   m_fileTransfer->setOutput(output);

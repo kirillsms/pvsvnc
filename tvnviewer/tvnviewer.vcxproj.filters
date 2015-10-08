@@ -253,6 +253,9 @@
     <None Include="res\konturvnc48.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\idle.ico">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tvnviewer.rc">

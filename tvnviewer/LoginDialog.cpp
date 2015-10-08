@@ -92,26 +92,26 @@ void LoginDialog::updateHistory()
 
 void LoginDialog::onConnect()
 {
-	ConnectionHistory *conHistory = ViewerConfig::getInstance()->getConnectionHistory();
-	int is_port;
-	m_server.getText(&m_serverHost);
+  ConnectionHistory *conHistory = ViewerConfig::getInstance()->getConnectionHistory();
+  int is_port;
+  m_server.getText(&m_serverHost);
 
-	if(StringParser::parseInt(m_serverHost.getString(), &is_port)){
-		if(is_port > 1 && is_port < 65535){
-			m_serverHost.format(_T("vnc.kontur.ru::%d"), is_port);
-		}
-	}
+  if(StringParser::parseInt(m_serverHost.getString(), &is_port)){
+  if(is_port>1 && is_port<65535){
+  m_serverHost.format(_T("vnc.kontur.ru::%d"), is_port);
+  }
+  }
 
-	conHistory->load();
-	conHistory->addHost(m_serverHost.getString());
-	conHistory->save();
+  conHistory->load();
+  conHistory->addHost(m_serverHost.getString());
+  conHistory->save();
 
-	if (!m_serverHost.isEmpty()) {
-		ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH, m_serverHost.getString());
-		m_connectionConfig.saveToStorage(&ccsm);
-	}
+  if (!m_serverHost.isEmpty()) {
+    ConnectionConfigSM ccsm(RegistryPaths::VIEWER_PATH, m_serverHost.getString());
+    m_connectionConfig.saveToStorage(&ccsm);
+  }
 
-	m_viewer->newConnection(&m_serverHost, &m_connectionConfig);
+  m_viewer->newConnection(&m_serverHost, &m_connectionConfig);
 }
 
 void LoginDialog::onConfiguration()
@@ -221,6 +221,7 @@ BOOL LoginDialog::onCommand(UINT controlID, UINT notificationID)
   // cancel connection
   case IDCANCEL:
     kill(0);
+	m_viewer->postMessage(WM_QUIT);
     break;
 
   case IDC_BCONFIGURATION:

@@ -56,7 +56,6 @@ TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
   m_loginDialog = new LoginDialog(this);
   m_reconnectDialog = new ReconnectDialog(this);
   bConnectionCanceled = FALSE;  
-  bStopReconnect = FALSE;
 }
 
 TvnViewer::~TvnViewer()
@@ -333,75 +332,78 @@ bool TvnViewer::onTimer(WPARAM idTimer)
 
 LRESULT CALLBACK TvnViewer::wndProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-  if (msg >= WM_USER || msg == WM_TIMER) {
-    TvnViewer *_this = reinterpret_cast<TvnViewer *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    if (_this != 0) {
-      switch (msg) {
-      case WM_TIMER:
-        return _this->onTimer(wparam);
+	if (msg >= WM_USER || msg == WM_TIMER) {
+		TvnViewer *_this = reinterpret_cast<TvnViewer *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		if (_this != 0) {
+			switch (msg) {
+				case WM_TIMER:
+					return _this->onTimer(wparam);
 
-      case WM_USER_NEW_LISTENING:
-        _this->newListeningConnection();
-        break;
+				case WM_USER_NEW_LISTENING:
+					_this->newListeningConnection();
+					break;
 
-      case WM_USER_SHOW_LOGIN_DIALOG:
-        _this->showLoginDialog();
-        break;
+				case WM_USER_SHOW_LOGIN_DIALOG:
+					_this->showLoginDialog();
+					_this->bConnectionCanceled = FALSE;
+					break;
 
-      case WM_USER_CONFIGURATION:
-        _this->showConfiguration();
-        break;
+				case WM_USER_CONFIGURATION:
+					_this->showConfiguration();
+					break;
 
-      case WM_USER_ABOUT:
-        _this->showAboutViewer();
-        break;
+				case WM_USER_ABOUT:
+					_this->showAboutViewer();
+					break;
 
-      case WM_USER_RECONNECT: {		  
-		if (_this->bStopReconnect) {
-			_this->bStopReconnect = FALSE;
-			_this->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
-			break;
-		}
-		ConnectionData *conData = reinterpret_cast<ConnectionData *>(wparam);
-		ConnectionConfig *conConfig = reinterpret_cast<ConnectionConfig *>(lparam);
-		_this->newConnection(conData, conConfig);
-		_this->m_instances.decreaseToReconnect();
-		if (!_this->m_reconnectDialog->isCreated()) {
-			_this->m_reconnectDialog->show();
-		}
-		_this->m_reconnectDialog->incrementAttempt();
-		break;
-      }
+				case WM_USER_RECONNECT: {
+					if (_this->bConnectionCanceled) {
+						_this->bConnectionCanceled = FALSE;
+						_this->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
+						break;
+					}
+					ConnectionData *conData = reinterpret_cast<ConnectionData *>(wparam);
+					ConnectionConfig *conConfig = reinterpret_cast<ConnectionConfig *>(lparam);
+					_this->newConnection(conData, conConfig);
+					_this->m_instances.decreaseToReconnect();
+					if (!_this->m_reconnectDialog->isCreated()) {
+						_this->m_reconnectDialog->show();
+					}
+					_this->m_reconnectDialog->incrementAttempt();
+					break;
+				}
 
-	  case WM_CONNECTION_CANCELED:
-		_this->bConnectionCanceled = wparam;
-		if (wparam){
-			_this->m_reconnectDialog->destroy();
-			_this->bStopReconnect = TRUE;
-		}
-		break;
+				case WM_CONNECTION_CANCELED:
+					// wparam - new value; lparam - request from connection thread
+					// ignore connection thread request if canceled by user
+					if (lparam && !wparam && _this->bConnectionCanceled) 
+						break;
+					_this->bConnectionCanceled = wparam;
+					if (wparam)
+						_this->m_reconnectDialog->destroy();
+					break;
 
-	  case WM_CONNECTED:
-		_this->m_reconnectDialog->destroy();
-		_this->bConnectionCanceled = FALSE;
-		break;
+				case WM_CONNECTED:
+					_this->m_reconnectDialog->destroy();
+					_this->bConnectionCanceled = FALSE;
+					break;
 
-	  case WM_SET_ERROR:
-			if (!_this->m_reconnectDialog->isCreated() && !_this->bConnectionCanceled && !_this->bStopReconnect) {
-				_this->m_reconnectDialog->show();
+				case WM_SET_ERROR:
+					if (_this->m_reconnectDialog->isCreated()) {
+						_this->m_reconnectDialog->setAdditionalInfo((LPTSTR)wparam);
+						free((PVOID)wparam);
+					} else {
+						_this->m_reconnectDialog->storeAdditionalInfo((LPTSTR)wparam);
+					}
+					break;
+
+				case WM_USER_CONFIGURATION_RELOAD:
+					_this->restartListeningServer();
+					break;
 			}
-		  _this->m_reconnectDialog->setAdditionalInfo((LPTSTR)wparam);
-		  free((PVOID)wparam);
-		  break;
-
-
-      case WM_USER_CONFIGURATION_RELOAD:
-        _this->restartListeningServer();
-        break;
-      }
-    }
-    return true;
-  } else {
-    return WindowsApplication::wndProc(hWnd, msg, wparam, lparam);
-  }
+		}
+		return true;
+	} else {
+		return WindowsApplication::wndProc(hWnd, msg, wparam, lparam);
+	}
 }

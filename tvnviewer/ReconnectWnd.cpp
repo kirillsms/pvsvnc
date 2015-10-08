@@ -6,14 +6,33 @@
 ReconnectDialog::ReconnectDialog(class TvnViewer * pViewer) : 
 	BaseDialog(IDD_RECONNECT),
 	dwAttempt(1),
-	pViewer(pViewer)
+	pViewer(pViewer),
+	szErrorInfo(NULL)
 {
+	InitializeCriticalSection(&csErrorInfo);
 }
 
 BOOL ReconnectDialog::onInitDialog() {
 	setControlById(tbAttempts, IDC_ATTEMPT);
 	setControlById(tbInfo, IDC_ADDITIONALINFO);
+	loadIcon(IDI_IDLE);
+	updateIcon();
+	EnterCriticalSection(&csErrorInfo);
+	if (szErrorInfo) {
+		setAdditionalInfo(szErrorInfo);
+		free(szErrorInfo);
+		szErrorInfo = NULL;
+	}
+	LeaveCriticalSection(&csErrorInfo);
 	return TRUE;
+}
+
+VOID ReconnectDialog::storeAdditionalInfo(LPTSTR szText){ 
+	EnterCriticalSection(&csErrorInfo);
+	if (szErrorInfo)
+		free(szErrorInfo);
+	szErrorInfo = szText;
+	LeaveCriticalSection(&csErrorInfo);
 }
 
 VOID ReconnectDialog::incrementAttempt() {
@@ -39,7 +58,8 @@ VOID ReconnectDialog::setAdditionalInfo(LPTSTR szText) {
 BOOL ReconnectDialog::onCommand(UINT controlID, UINT notificationID) {
 	if (controlID == IDCANCEL) {
 		pViewer->postMessage(TvnViewer::WM_CONNECTION_CANCELED, TRUE);
-		destroy();
+		loadIcon(IDI_APPICON);
+		updateIcon();
 		return TRUE;
 	}
 	return FALSE;

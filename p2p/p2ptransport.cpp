@@ -153,8 +153,6 @@ int P2pTransport::recv(char *buffer, int size)
 
 void P2pTransport::execute()
 {
-
-
 	sctp_tansp.handshake_done = FALSE;
 
 	struct sockaddr_conn sconn;
@@ -163,33 +161,30 @@ void P2pTransport::execute()
 	sconn.sconn_port = htons(m_pnum);
 	sconn.sconn_addr = (void *)&sctp_tansp;
 
+	if(m_isControl) {
 
-
-	if(m_isControl){	
-		
-	while(!isTerminating())
-	{
-		if(dtls_tansp.handshake_done && !sctp_tansp.handshake_done){
-			sconn.sconn_port = htons(ice.m_pnum);
-			printf("connecting sctp...\n");
-			sctp.resume();
-		if (usrsctp_connect(sctp_tansp.sock, (struct sockaddr *)&sconn, sizeof sconn) < 0) {
-			printf ("sctp handshake failed!");
-			if(m_p2pEventListener)
-				m_p2pEventListener->onP2pFailed();
-			return;
-		}else{
-			sctp_tansp.handshake_done = TRUE;
-			printf ("sctp handshake done!\n");
-			if(m_p2pEventListener)
-				m_p2pEventListener->onP2pSuccess();
-			return;
+		while(!isTerminating())
+		{
+			if(dtls_tansp.handshake_done && !sctp_tansp.handshake_done){
+				sconn.sconn_port = htons(ice.m_pnum);
+				printf("connecting sctp...\n");
+				sctp.resume();
+				if (usrsctp_connect(sctp_tansp.sock, (struct sockaddr *)&sconn, sizeof sconn) < 0) {
+					printf ("sctp handshake failed!");
+					if(m_p2pEventListener)
+						m_p2pEventListener->onP2pFailed();
+					return;
+				} else {
+					sctp_tansp.handshake_done = TRUE;
+					printf ("sctp handshake done!\n");
+					if(m_p2pEventListener)
+						m_p2pEventListener->onP2pSuccess();
+					return;
+				}
+			}
+			sleep(100);
 		}
-	}
-	sleep(100);
-	}
-	
-	}else{
+	} else {
 		sctp.resume();
 		printf("Listening sctp socket...\n");
 		usrsctp_listen(sctp_tansp.sock, 1);
@@ -204,14 +199,10 @@ void P2pTransport::execute()
 			sctp_tansp.sock = s;
 			usrsctp_close(t);
 			return;
-			
 		}
 
 		if(m_p2pEventListener)
-				m_p2pEventListener->onP2pFailed();
+			m_p2pEventListener->onP2pFailed();
 		return;
-
 	}
-
-
 }
