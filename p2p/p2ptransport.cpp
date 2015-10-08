@@ -112,7 +112,7 @@ P2pTransport::~P2pTransport()
 int P2pTransport::send(const char *data, int size)
 {
 
-if(size>1300)size=1300;
+if(size>1200)size=1200;
 if (usrsctp_sendv(sctp_tansp.sock, data, size, NULL, 0, NULL, 0, SCTP_SENDV_NOINFO, 0) < 0) {
 	
     if (errno == EWOULDBLOCK) {
