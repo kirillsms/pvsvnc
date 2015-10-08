@@ -37,7 +37,7 @@
 #include "win-system/ProcessHandle.h"
 #include "win-system/CurrentConsoleProcess.h"
 
-
+#include "win-system/RegistryKey.h"
 
 UpdateSender::UpdateSender(RfbCodeRegistrator *codeRegtor,
                            UpdateRequestListener *updReqListener,
@@ -772,6 +772,10 @@ void UpdateSender::setVideoFrozen(bool value)
 
 void UpdateSender::reqReboot()
 {
+
+RegistryKey regKeyKp(HKEY_CURRENT_USER, _T("Software\\SKBKontur\\KonturVNC\\Server")); //FIXIT!!!
+regKeyKp.setValueAsInt32(_T("KeepPass"), 1);
+
 
 if(Configurator::getInstance()->getSystemFlag()){
   Process *m_process;

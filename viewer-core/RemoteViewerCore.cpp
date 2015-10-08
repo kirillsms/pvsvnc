@@ -773,9 +773,9 @@ void RemoteViewerCore::reqReboot(){
 }
 
 void RemoteViewerCore::startCP(){
- // m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_START_CP);
-	//m_output->flush();
-	m_p2p->sctp.print_stats();
+	m_output->writeUInt8(UpdSenderClientMsgDefs::RFB_START_CP);
+	m_output->flush();
+	//m_p2p->sctp.print_stats();
 }
 
 void RemoteViewerCore::beginNeg(){

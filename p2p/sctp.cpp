@@ -7,6 +7,7 @@ usrsctp_shutdown(sctp->sock,SHUT_RDWR);
 wakeup_one(NULL);
 sctp->terminating = true;
 m_inEvent->notify();
+this->terminate();
 
 }
 
@@ -507,7 +508,7 @@ trans_err:
 		free(sctp);
 		sctp = NULL;
 	}
-	this->resume();
+	//this->resume();
 	return;
 }
 

@@ -163,6 +163,7 @@ public:
   ReconnectDialog * m_reconnectDialog;
   BOOL				bConnectionCanceled;
   BOOL				bWasConnected;
+  BOOL				bStopReconnect;
 
 };
 

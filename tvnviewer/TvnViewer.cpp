@@ -56,6 +56,7 @@ TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
   m_loginDialog = new LoginDialog(this);
   m_reconnectDialog = new ReconnectDialog(this);
   bConnectionCanceled = FALSE;  
+  bStopReconnect = FALSE;
 }
 
 TvnViewer::~TvnViewer()
@@ -356,8 +357,8 @@ LRESULT CALLBACK TvnViewer::wndProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM l
         break;
 
       case WM_USER_RECONNECT: {		  
-		if (_this->bConnectionCanceled) {
-			_this->bConnectionCanceled = FALSE;
+		if (_this->bStopReconnect) {
+			_this->bStopReconnect = FALSE;
 			_this->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
 			break;
 		}
@@ -374,8 +375,10 @@ LRESULT CALLBACK TvnViewer::wndProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM l
 
 	  case WM_CONNECTION_CANCELED:
 		_this->bConnectionCanceled = wparam;
-		if (wparam)
+		if (wparam){
 			_this->m_reconnectDialog->destroy();
+			_this->bStopReconnect = TRUE;
+		}
 		break;
 
 	  case WM_CONNECTED:
@@ -384,7 +387,7 @@ LRESULT CALLBACK TvnViewer::wndProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM l
 		break;
 
 	  case WM_SET_ERROR:
-			if (!_this->m_reconnectDialog->isCreated() && !_this->bConnectionCanceled) {
+			if (!_this->m_reconnectDialog->isCreated() && !_this->bConnectionCanceled && !_this->bStopReconnect) {
 				_this->m_reconnectDialog->show();
 			}
 		  _this->m_reconnectDialog->setAdditionalInfo((LPTSTR)wparam);

@@ -172,6 +172,7 @@ void P2pTransport::execute()
 		if(dtls_tansp.handshake_done && !sctp_tansp.handshake_done){
 			sconn.sconn_port = htons(ice.m_pnum);
 			printf("connecting sctp...\n");
+			sctp.resume();
 		if (usrsctp_connect(sctp_tansp.sock, (struct sockaddr *)&sconn, sizeof sconn) < 0) {
 			printf ("sctp handshake failed!");
 			if(m_p2pEventListener)
@@ -189,7 +190,7 @@ void P2pTransport::execute()
 	}
 	
 	}else{
-	
+		sctp.resume();
 		printf("Listening sctp socket...\n");
 		usrsctp_listen(sctp_tansp.sock, 1);
 		socklen_t len = sizeof sconn;
