@@ -31,6 +31,7 @@
 #include "NamingDefs.h"
 #include "OptionsDialog.h"
 #include "ScaleManager.h"
+#include "ReconnectWnd.h"
 #include "ViewerMenu.h"
 #include "gui/ToolBar.h"
 #include "log-writer/LogWriter.h"
@@ -79,6 +80,8 @@ public:
   virtual void onTextMsg(StringStorage * msg);
   virtual void onP2pSuccess();
   virtual void onP2pFailed();
+
+  void reconnect(BOOL bResetPassword);
 
   static const int WM_USER_ERROR = WM_USER + 1;
   static const int WM_USER_STOP = WM_USER + 2;
@@ -132,7 +135,6 @@ protected:
   void remoteReboot();
   void takeScreenShot();
   void commandScaleAuto();
-
   //
   // It is implementation of CoreEventsAdapter functions.
   //
@@ -144,6 +146,8 @@ protected:
   void onFrameBufferUpdate(const FrameBuffer *fb, const Rect *rect);
   void onFrameBufferPropChange(const FrameBuffer *fb);
   void onCutText(const StringStorage *cutText);
+
+  void notifyErrorWnd();
 
 
 
@@ -158,7 +162,7 @@ protected:
   LogWriter m_logWriter;
 
   Control m_control;
-
+  
   ConnectionConfigSM m_ccsm;
   ConnectionConfig *m_conConf;
   WindowsApplication *m_application;

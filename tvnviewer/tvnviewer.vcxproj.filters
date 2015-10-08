@@ -111,6 +111,9 @@
     <ClCompile Include="ClientCrashHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ReconnectWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthenticationDialog.h">
@@ -207,6 +210,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientCrashHook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReconnectWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

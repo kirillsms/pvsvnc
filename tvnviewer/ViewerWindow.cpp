@@ -82,8 +82,6 @@ ViewerWindow::ViewerWindow(WindowsApplication *application,
   SetTimer(m_hWnd, TIMER_DESKTOP_STATE, TIMER_DESKTOP_STATE_DELAY, (TIMERPROC)NULL);
   
   m_chatDialog = new ClientChatDialog(this);
-
-
 }
 
 ViewerWindow::~ViewerWindow()
@@ -665,7 +663,7 @@ void ViewerWindow::commandScale100()
 
 void ViewerWindow::remoteReboot()
 {
-        if (MessageBox(m_hWnd,_T("Sure?"), _T("Remote reboot"), MB_YESNO)==IDYES) {
+        if (MessageBox(m_hWnd,_T("Выполнить удаленную перезагрузку?"), _T("Удаленная перезагрузка"), MB_YESNO)==IDYES) {
 			m_viewerCore->reqReboot();
 		}
 }
@@ -1135,6 +1133,34 @@ bool ViewerWindow::onSize(WPARAM wParam, LPARAM lParam)
   return true;
 }
 
+DWORD WINAPI ReconnectProc(PVOID pContext) {
+	Sleep(10);
+	PVOID * p = (PVOID*)pContext;
+ 	((WindowsApplication*)p[2])->postMessage(TvnViewer::WM_USER_RECONNECT, (WPARAM)p[0], (LPARAM)p[1]);
+	free(p);
+	return 0;
+}
+
+void ViewerWindow::reconnect(BOOL bResetPassword) {
+	PVOID * pContext = (PVOID*) malloc(sizeof(PVOID) * 3);
+	m_requiresReconnect = true;
+	ConnectionData * connectionData = new ConnectionData(*m_conData);
+	if (bResetPassword)
+		connectionData->resetPassword();
+	ConnectionConfig * connectionConfig = new ConnectionConfig(*m_conConf);	
+	pContext[0] = connectionData;
+	pContext[1] = connectionConfig;
+	pContext[2] = m_application;
+	QueueUserWorkItem(ReconnectProc, pContext, 0);
+ 	//m_application->postMessage(TvnViewer::WM_USER_RECONNECT, (WPARAM)connectionData, (LPARAM)connectionConfig);
+}
+
+void ViewerWindow::notifyErrorWnd() {
+	LPTSTR szError = (LPTSTR)malloc((lstrlen(m_error.getMessage()) + 1 ) * sizeof(TCHAR));
+	lstrcpy(szError, m_error.getMessage());
+	m_application->postMessage(TvnViewer::WM_SET_ERROR, (WPARAM)szError);
+}
+
 void ViewerWindow::showWindow()
 {
   show();
@@ -1147,80 +1173,38 @@ void ViewerWindow::showWindow()
 
 bool ViewerWindow::onDisconnect()
 {
-  int result = MessageBox(getHWnd(),
-             m_disconnectMessage.getString(),
-             formatWindowName().getString(),
-             MB_RETRYCANCEL);
-  if (result == IDRETRY) {
-        m_requiresReconnect = true;
-        ConnectionData *connectionData = new ConnectionData(*m_conData);
-        ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
-        m_application->postMessage(TvnViewer::WM_USER_RECONNECT,
-                                   (WPARAM)connectionData,
-                                   (LPARAM)connectionConfig);
-  }else{
-	  commandNewConnection();
-  }
-
-  m_dsktWnd.destroyWindow();
-  destroyWindow();
-  return true;
+	reconnect(FALSE);
+	notifyErrorWnd();
+	m_dsktWnd.destroyWindow();
+	destroyWindow();
+	return true;
 }
 
 bool ViewerWindow::onAuthError(WPARAM wParam)
 {
-  // If authentication is canceled, then do quiet exit, else show error-message.
-  if (wParam != AuthException::AUTH_CANCELED) {
-    StringStorage error = m_error.getMessage();
-    int result = MessageBox(0,
-                            error.getString(),
-                            formatWindowName().getString(),
-                            MB_RETRYCANCEL | MB_ICONERROR);
-    if (result == IDRETRY) {
-      if (!m_conData->isIncoming()) {
-        // Retry connect to remote host.
-        m_requiresReconnect = true;
-        ConnectionData *connectionData = new ConnectionData(*m_conData);
-        connectionData->resetPassword();
-        ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
-        m_application->postMessage(TvnViewer::WM_USER_RECONNECT,
-                                   (WPARAM)connectionData,
-                                   (LPARAM)connectionConfig);
-      }
-    }
-  }
-  m_dsktWnd.destroyWindow();
-  destroyWindow();
-  return true;
+	if (wParam != AuthException::AUTH_CANCELED) {
+		m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, FALSE);
+		reconnect(TRUE);		
+	}
+	else {
+		m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, TRUE);
+		m_application->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
+	}
+	notifyErrorWnd();
+
+	m_dsktWnd.destroyWindow();
+	destroyWindow();
+	return true;
 }
 
 bool ViewerWindow::onError()
 {
-  int ret;
-  StringStorage error;
-  error.format(_T("Ошибка в %s: %s"), ProductNames::VIEWER_PRODUCT_NAME, m_error.getMessage());
-   ret = MessageBox(getHWnd(),
-             error.getString(),
-             formatWindowName().getString(),
-               MB_RETRYCANCEL | MB_ICONERROR);
-
-   if(ret == IDRETRY){
-        m_requiresReconnect = true;
-        ConnectionData *connectionData = new ConnectionData(*m_conData);
-        ConnectionConfig *connectionConfig = new ConnectionConfig(*m_conConf);
-        m_application->postMessage(TvnViewer::WM_USER_RECONNECT,
-                                   (WPARAM)connectionData,
-                                   (LPARAM)connectionConfig);
-
-
-  }else{
-	  commandNewConnection();
-  }
-
-
-  m_dsktWnd.destroyWindow();
-  destroyWindow();
-  return true;
+	m_application->postMessage(TvnViewer::WM_CONNECTION_CANCELED, FALSE);
+	reconnect(FALSE);
+	notifyErrorWnd();
+	m_dsktWnd.destroyWindow();
+	destroyWindow();
+	return true;
 }
 
 bool ViewerWindow::onFsWarning()
@@ -1308,6 +1292,9 @@ void ViewerWindow::onConnected(RfbOutputGate *output)
   m_sizeIsChanged = false;
   m_dsktWnd.setConnected();
 
+  m_application->postMessage(TvnViewer::WM_CONNECTED);
+  m_application->postMessage(TvnViewer::WM_SET_WAS_CONNECTED, TRUE);
+
   // Set output for client-to-server messages in file transfer.
   m_fileTransfer->setOutput(output);
 
@@ -1320,22 +1307,19 @@ void ViewerWindow::onConnected(RfbOutputGate *output)
 
   m_fileTransfer->getCore()->updateSupportedOperations(&clientMsgCodes, &serverMsgCodes);
 
-
-  
-
   // Start viewer window and applying settings.
   showWindow();
   setForegroundWindow();
   applySettings();
 
-  SetTimer(m_hWnd, REC_START, REC_START_DELAY, (TIMERPROC)NULL);
-
+  SetTimer(m_hWnd, REC_START, REC_START_DELAY, (TIMERPROC)NULL);  
 }
 
 void ViewerWindow::onDisconnect(const StringStorage *message)
 {
   m_logWriter.info(_T("onDisconnect: %s"), message->getString());
   m_disconnectMessage = *message;
+  m_error = Exception(m_disconnectMessage.getString());  
   if (!m_stopped) {
     postMessage(WM_USER_DISCONNECT);
   }

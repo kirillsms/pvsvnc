@@ -54,7 +54,8 @@ TvnViewer::TvnViewer(HINSTANCE appInstance, const TCHAR *windowClassName,
 
   m_trayIcon = new ControlTrayIcon(this);
   m_loginDialog = new LoginDialog(this);
-  
+  m_reconnectDialog = new ReconnectDialog(this);
+  bConnectionCanceled = FALSE;  
 }
 
 TvnViewer::~TvnViewer()
@@ -354,13 +355,42 @@ LRESULT CALLBACK TvnViewer::wndProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM l
         _this->showAboutViewer();
         break;
 
-      case WM_USER_RECONNECT: {
-        ConnectionData *conData = reinterpret_cast<ConnectionData *>(wparam);
-        ConnectionConfig *conConfig = reinterpret_cast<ConnectionConfig *>(lparam);
-        _this->newConnection(conData, conConfig);
-        _this->m_instances.decreaseToReconnect();
-        break;
+      case WM_USER_RECONNECT: {		  
+		if (_this->bConnectionCanceled) {
+			_this->bConnectionCanceled = FALSE;
+			_this->postMessage(TvnViewer::WM_USER_SHOW_LOGIN_DIALOG);
+			break;
+		}
+		ConnectionData *conData = reinterpret_cast<ConnectionData *>(wparam);
+		ConnectionConfig *conConfig = reinterpret_cast<ConnectionConfig *>(lparam);
+		_this->newConnection(conData, conConfig);
+		_this->m_instances.decreaseToReconnect();
+		if (!_this->m_reconnectDialog->isCreated()) {
+			_this->m_reconnectDialog->show();
+		}
+		_this->m_reconnectDialog->incrementAttempt();
+		break;
       }
+
+	  case WM_CONNECTION_CANCELED:
+		_this->bConnectionCanceled = wparam;
+		if (wparam)
+			_this->m_reconnectDialog->destroy();
+		break;
+
+	  case WM_CONNECTED:
+		_this->m_reconnectDialog->destroy();
+		_this->bConnectionCanceled = FALSE;
+		break;
+
+	  case WM_SET_ERROR:
+			if (!_this->m_reconnectDialog->isCreated() && !_this->bConnectionCanceled) {
+				_this->m_reconnectDialog->show();
+			}
+		  _this->m_reconnectDialog->setAdditionalInfo((LPTSTR)wparam);
+		  free((PVOID)wparam);
+		  break;
+
 
       case WM_USER_CONFIGURATION_RELOAD:
         _this->restartListeningServer();

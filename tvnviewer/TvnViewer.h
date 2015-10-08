@@ -32,6 +32,7 @@
 #include "LoginDialog.h"
 #include "OptionsDialog.h"
 #include "ViewerCollector.h"
+#include "ReconnectWnd.h"
 #include "win-system/WindowsApplication.h"
 
 #include "log-writer/LogWriter.h"
@@ -107,6 +108,11 @@ public:
   // This message need send if config is changed.
   static const int WM_USER_CONFIGURATION_RELOAD = WM_USER + 6;
 
+  static const int WM_CONNECTED = WM_USER + 7;
+  static const int WM_CONNECTION_CANCELED = WM_USER + 8;
+  static const int WM_SET_ERROR = WM_USER + 9;
+  static const int WM_SET_WAS_CONNECTED = WM_USER + 10;
+
   // This timer is used for deleting dead instances of viewer.
   static const int TIMER_DELETE_DEAD_INSTANCE = 1;
   static const int TIMER_DELETE_DEAD_INSTANCE_DELAY = 50;
@@ -146,11 +152,18 @@ private:
   ConfigurationDialog m_configurationDialog;
   OptionsDialog m_optionsDialog;
 
+
   LoginDialog *m_loginDialog;
   ControlTrayIcon *m_trayIcon;
   ConnectionListener *m_conListener;
 
   WNDCLASS m_viewerWndClass;
+
+public:
+  ReconnectDialog * m_reconnectDialog;
+  BOOL				bConnectionCanceled;
+  BOOL				bWasConnected;
+
 };
 
 #endif
