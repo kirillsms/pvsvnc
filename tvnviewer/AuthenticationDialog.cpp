@@ -30,18 +30,17 @@ AuthenticationDialog::AuthenticationDialog()
 }
 
 
-BOOL AuthenticationDialog::onInitDialog()
+BOOL AuthenticationDialog::onInitDialog() 
 {
-	setControlById(m_hostname, IDC_EHOST);
-	m_hostname.setText(m_strHost.getString());
-	setControlById(m_password, IDC_EPASSW);
-	m_password.setFocus();
-	{
-		HWND hwnd = m_ctrlThis.getWindow();
-		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE| SWP_NOACTIVATE);
-		SetFocus(hwnd);
-	}
-	return FALSE;
+  setControlById(m_hostname, IDC_EHOST);
+  m_hostname.setText(m_strHost.getString());
+  setControlById(m_password, IDC_EPASSW);
+  m_password.setFocus();
+  {
+	 HWND hwnd = m_ctrlThis.getWindow();
+	 SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE| SWP_NOACTIVATE);
+  }
+  return FALSE;
 }
 
 void AuthenticationDialog::setHostName(const StringStorage *hostname)
